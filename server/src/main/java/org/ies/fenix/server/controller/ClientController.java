@@ -14,91 +14,28 @@ public class ClientController {
     private ClientService clientService;
 
     @PostMapping("/register")
-    public ResponseEntity<ClientResponseDTO> register(@RequestBody ClientRegisterDTO dto) {
-        try {
-            ClientResponseDTO response = clientService.register(dto);
-            if (response == null) {
-                return ResponseEntity.badRequest().build();
-            }
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<RegisterResponseDTO> register(@RequestBody ClientRegisterDTO dto) {
+        return ResponseEntity.ok((RegisterResponseDTO) clientService.register(dto));
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody ClientLoginDTO dto) {
-        try {
-            LoginResponseDTO response = clientService.login(dto);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(clientService.login(dto));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ClientResponseDTO> getById(@PathVariable Integer id) {
-        try {
-            ClientResponseDTO response = clientService.getById(id);
-            if (response == null) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestHeader("Authorization") String authorization) {
+        String token = extractBearerToken(authorization);
+        if (token != null) {
+            clientService.logout(token);
         }
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/username/{username}")
-    public ResponseEntity<ClientResponseDTO> getByUsername(@PathVariable String username) {
-        try {
-            ClientResponseDTO response = clientService.getByUsername(username);
-            if (response == null) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+    private String extractBearerToken(String authorization) {
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            return null;
         }
+        return authorization.substring(7);
     }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ClientResponseDTO> update(@PathVariable Integer id,
-                                                    @RequestBody ClientUpdateDTO dto) {
-        try {
-            ClientResponseDTO response = clientService.update(id, dto);
-            if (response == null) {
-                return ResponseEntity.badRequest().build();
-            }
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        try {
-            boolean deleted = clientService.delete(id);
-            if (!deleted) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-//    @PatchMapping("/{id}/verify-email")
-//    public ResponseEntity<ClientResponseDTO> verifyEmail(@PathVariable Integer id) {
-//        try {
-//            ClientResponseDTO response = clientService.verifyEmail(id);
-//            if (response == null) {
-//                return ResponseEntity.notFound().build();
-//            }
-//            return ResponseEntity.ok(response);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
 }

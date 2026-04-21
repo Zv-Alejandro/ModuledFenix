@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Label?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0" prefWidth="460.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ies.fenix.client.controller.ClientControllerFx">
+<top>
+    <HBox alignment="TOP_RIGHT" prefHeight="40.0" prefWidth="454.0" BorderPane.alignment="CENTER">
+        <BorderPane.margin>
+            <Insets />
+        </BorderPane.margin>
+        <padding>
+            <Insets right="20.0" />
+        </padding>
+        <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="31.0" textAlignment="RIGHT" >
+            <graphic>
+                <ImageView fx:id="settingsImage" fitHeight="18.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                </ImageView>
+            </graphic>
+        </Button>
+    </HBox>
+</top>
+<center>
+    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" BorderPane.alignment="CENTER">
+        <opaqueInsets>
+            <Insets />
+        </opaqueInsets>
+        <ImageView fx:id="logoImage" fitHeight="154.0" fitWidth="294.0" pickOnBounds="true" preserveRatio="true">
+        </ImageView>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Iniciar sesión">
+            <font>
+                <Font name="System Bold" size="48.0" />
+            </font>
+        </Text>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="¿Es tu primera vez en Fenix?">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Text>
+        <Hyperlink text="Registrate" onAction="#switchEmailFormView">
+            <font>
+                <Font size="20.0" />
+            </font>
+            <VBox.margin>
+                <Insets />
+            </VBox.margin>
+        </Hyperlink>
+        <TextField fx:id="username" prefHeight="45.0" prefWidth="434.0" promptText="Usuario" style="-fx-background-radius: 8;">
+            <VBox.margin>
+                <Insets left="25.0" right="25.0" />
+            </VBox.margin>
+            <font>
+                <Font size="20.0" />
+            </font>
+        </TextField>
+        <PasswordField fx:id="password" prefHeight="45.0" prefWidth="434.0" promptText="Contraseña" style="-fx-background-radius: 8;">
+            <VBox.margin>
+                <Insets left="25.0" right="25.0" />
+            </VBox.margin>
+            <font>
+                <Font size="20.0" />
+            </font>
+        </PasswordField>
+        <Hyperlink text="&lt;/Text&gt; ">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Hyperlink>
+        <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="396.0" style="-fx-background-radius: 8;" text="Continuar" onAction="#loadUserAndOpenMarketPlace" >
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Button>
+        <Label fx:id="clientErrorLabel" layoutX="7.0" layoutY="223.0" prefHeight="45.0" prefWidth="434.0" text="Label" wrapText="true" alignment="CENTER" textAlignment="CENTER" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Al continuar, aceptas nuestra Política de privacidad">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Text>
+    </VBox>
+</center>
+</BorderPane>

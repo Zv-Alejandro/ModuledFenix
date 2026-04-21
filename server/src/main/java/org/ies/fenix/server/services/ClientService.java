@@ -1,5 +1,6 @@
 package org.ies.fenix.server.services;
 
+import dto.ServerResponseDTO;
 import dto.client.*;
 import org.ies.fenix.server.models.Client;
 import org.ies.fenix.server.repositories.ClientRepository;
@@ -18,135 +19,73 @@ public class ClientService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Optional<Client> findByUsername(String username) {
-        return clientRepository.findByUsername(username);
-    }
+    @Autowired
+    private TokenService tokenService;
 
-    public Client saveClient(String username, String passwordHashed) {
-        Client client = new Client();
-        client.setUsername(username);
-        client.setEmail(null);
-        client.setPasswordHashed(passwordHashed);
-        client.setBio(null);
-        return clientRepository.save(client);
-    }
-
-    public ClientResponseDTO register(ClientRegisterDTO dto) {
+    public ServerResponseDTO register(ClientRegisterDTO dto) {
         if (clientRepository.findByUsername(dto.getUsername()).isPresent()) {
-            return null;
+            return aResponseRegister("This username already exists", "WARN", false);
         }
-
         if (clientRepository.findByEmail(dto.getEmail()).isPresent()) {
-            return null;
+            return aResponseRegister("This email is already linked to an account", "WARN", false);
         }
-
+        if (dto.getEmail().isEmpty()) {
+            return aResponseRegister("No email attached", "ERROR", false);
+        }
+        if (dto.getUsername().isBlank()) {
+            return aResponseRegister("No username attached", "ERROR", false);
+        }
 
         Client client = new Client();
         client.setUsername(dto.getUsername());
         client.setEmail(dto.getEmail());
         client.setPasswordHashed(passwordEncoder.encode(dto.getPassword()));
         client.setBio(null);
-        Client saved = clientRepository.save(client);
-        return toResponseDTO(saved);
+        clientRepository.save(client);
+
+        return aResponseRegister("User registered successfully", "OK", true);
+    }
+
+    private RegisterResponseDTO aResponseRegister(String message, String status, boolean access) {
+        return RegisterResponseDTO.builder()
+                .status(status)
+                .message(message)
+                .access(access)
+                .build();
     }
 
     public LoginResponseDTO login(ClientLoginDTO dto) {
-        Client client = findByLogin(dto.getLogin());
+        Optional<Client> clientOpt = clientRepository.findByUsername(dto.getUsername());
 
-        if (client == null) {
-            return new LoginResponseDTO(-2, "Usuario no existe");
+        if (clientOpt.isEmpty()) {
+            return LoginResponseDTO.builder()
+                    .status("WARN")
+                    .message("Password incorrect")
+                    .build();
         }
 
+        Client client = clientOpt.get();
 
-        boolean passwordCorrecta = passwordEncoder.matches(dto.getPassword(), client.getPasswordHashed());
-
-
-        if (passwordCorrecta) {
-            clientRepository.save(client);
-            return new LoginResponseDTO(1, "Login correcto");
+        if (!passwordEncoder.matches(dto.getPassword(), client.getPasswordHashed())) {
+            return LoginResponseDTO.builder()
+                    .status("WARN")
+                    .message("Password incorrect")
+                    .build();
         }
 
+        String token = tokenService.generateToken(client.getId());
 
-        clientRepository.save(client);
-        return new LoginResponseDTO(-1, "Password incorrecta");
+        return LoginResponseDTO.builder()
+                .status("OK")
+                .message("Login successful")
+                .clientId(client.getId())
+                .username(client.getUsername())
+                .token(token)
+                .build();
     }
 
-    public ClientResponseDTO getById(Integer id) {
-        Client client = clientRepository.findById(id).orElse(null);
-        if (client == null) {
-            return null;
-        }
-        return toResponseDTO(client);
-    }
-
-    public ClientResponseDTO getByUsername(String username) {
-        Client client = clientRepository.findByUsername(username).orElse(null);
-        if (client == null) {
-            return null;
-        }
-        return toResponseDTO(client);
-    }
-
-    public ClientResponseDTO update(Integer id, ClientUpdateDTO dto) {
-        Client client = clientRepository.findById(id).orElse(null);
-        if (client == null) {
-            return null;
-        }
-
-
-        if (dto.getEmail() != null && !dto.getEmail().equals(client.getEmail())) {
-            Optional<Client> existingEmail = clientRepository.findByEmail(dto.getEmail());
-            if (existingEmail.isPresent()) {
-                return null;
-            }
-            client.setEmail(dto.getEmail());
-        }
-
-        client.setBio(dto.getBio());
-
-        Client updated = clientRepository.save(client);
-        return toResponseDTO(updated);
-    }
-
-    public boolean delete(Integer id) {
-        if (!clientRepository.existsById(id)) {
-            return false;
-        }
-        clientRepository.deleteById(id);
+    public boolean logout(String token) {
+        tokenService.revoke(token);
         return true;
-    }
-
-//    public ClientResponseDTO verifyEmail(Integer id) {
-//        Client client = clientRepository.findById(id).orElse(null);
-//        if (client == null) {
-//            return null;
-//        }
-//
-//        client.setEmailVerificado(true);
-//        client.setFechaVerificado(LocalDate.now());
-//
-//        Client updated = clientRepository.save(client);
-//        return toResponseDTO(updated);
-//    }
-
-    private Client findByLogin(String login) {
-        if (login == null) {
-            return null;
-        }
-
-        if (login.contains("@")) {
-            return clientRepository.findByEmail(login).orElse(null);
-        }
-
-        return clientRepository.findByUsername(login).orElse(null);
-    }
-
-    private ClientResponseDTO toResponseDTO(Client client) {
-        ClientResponseDTO dto = new ClientResponseDTO();
-        dto.setId(client.getId());
-        dto.setUsername(client.getUsername());
-        dto.setEmail(client.getEmail());
-        dto.setBio(client.getBio());
-        return dto;
     }
 }

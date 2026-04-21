@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="root"
+            prefHeight="800.0"
+            prefWidth="1300.0"
+            stylesheets="@../styles/styles.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+>
+
+    <center>
+        <ScrollPane fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="AS_NEEDED"
+                    styleClass="main-scroll">
+            <content>
+                <VBox spacing="35.0" styleClass="content-container">
+                    <padding>
+                        <Insets top="30.0" right="30.0" bottom="30.0" left="30.0"/>
+                    </padding>
+
+                    <HBox alignment="CENTER_LEFT" spacing="20.0">
+                        <Button text="&lt;" styleClass="nav-button"/>
+                        <Button text="&gt;" styleClass="nav-button"/>
+
+                        <Label text="MARKET PLACE" styleClass="tab-active"/>
+                        <Label text="LIBRARY" styleClass="tab-inactive"/>
+                        <Label text="USERNAME" styleClass="tab-inactive"/>
+
+                        <Region HBox.hgrow="ALWAYS"/>
+
+                        <Button text="Create your own visual novel" styleClass="main-action-button"/>
+
+                        <HBox alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="profile-wrapper">
+                            <ImageView fitHeight="28.0"
+                                       fitWidth="28.0"
+                                       pickOnBounds="true"
+                                       preserveRatio="true"
+                                       styleClass="profile-image"/>
+                        </HBox>
+
+                        <Label text="⌄" styleClass="dropdown-icon"/>
+                    </HBox>
+
+                    <VBox spacing="18.0">
+                        <HBox alignment="CENTER_LEFT">
+                            <VBox spacing="5.0">
+                                <Label text="Latest released" styleClass="section-title"/>
+                                <Label text="New histories to play!" styleClass="section-subtitle"/>
+                            </VBox>
+
+                            <Region HBox.hgrow="ALWAYS"/>
+
+                            <TextField promptText="Search"
+                                       prefWidth="420.0"
+                                       styleClass="search-field"/>
+                        </HBox>
+
+                        <ScrollPane fitToHeight="true"
+                                    fitToWidth="false"
+                                    hbarPolicy="AS_NEEDED"
+                                    vbarPolicy="NEVER"
+                                    pannable="true"
+                                    prefViewportHeight="250.0"
+                                    styleClass="horizontal-games-scroll">
+                            <content>
+                                <HBox spacing="24.0" styleClass="games-row">
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 1" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 2" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 3" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 4" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 5" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                </HBox>
+                            </content>
+                        </ScrollPane>
+                    </VBox>
+
+                    <VBox spacing="18.0">
+                        <VBox spacing="5.0">
+                            <Label text="Recommendations" styleClass="section-title"/>
+                            <Label text="Based on you like to play" styleClass="section-subtitle"/>
+                        </VBox>
+
+                        <ScrollPane fitToHeight="true"
+                                    fitToWidth="false"
+                                    hbarPolicy="AS_NEEDED"
+                                    vbarPolicy="NEVER"
+                                    pannable="true"
+                                    prefViewportHeight="250.0"
+                                    styleClass="horizontal-games-scroll">
+                            <content>
+                                <HBox spacing="24.0" styleClass="games-row">
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 1" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 2" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 3" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 4" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 5" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                </HBox>
+                            </content>
+                        </ScrollPane>
+                    </VBox>
+
+                    <VBox spacing="18.0">
+                        <VBox spacing="5.0">
+                            <Label text="Offers" styleClass="section-title"/>
+                            <Label text="More stories to discover" styleClass="section-subtitle"/>
+                        </VBox>
+
+                        <ScrollPane fitToHeight="true"
+                                    fitToWidth="false"
+                                    hbarPolicy="AS_NEEDED"
+                                    vbarPolicy="NEVER"
+                                    pannable="true"
+                                    prefViewportHeight="250.0"
+                                    styleClass="horizontal-games-scroll">
+                            <content>
+                                <HBox spacing="24.0" styleClass="games-row">
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 1" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 2" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 3" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 4" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox styleClass="card">
+                                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="280.0" styleClass="card-image-wrapper">
+                                            <ImageView fitHeight="150.0" fitWidth="260.0" preserveRatio="false" styleClass="card-image"/>
+                                        </HBox>
+                                        <Label text="Título 5" styleClass="card-title"/>
+                                        <HBox spacing="8.0">
+                                            <Label text="Tag 1" styleClass="tag"/>
+                                            <Label text="Tag 2" styleClass="tag"/>
+                                            <Label text="Tag 3" styleClass="tag"/>
+                                        </HBox>
+                                    </VBox>
+
+                                </HBox>
+                            </content>
+                        </ScrollPane>
+                    </VBox>
+
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>

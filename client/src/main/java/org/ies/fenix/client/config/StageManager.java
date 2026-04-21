@@ -1,76 +1,72 @@
 package org.ies.fenix.client.config;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
+import org.ies.fenix.client.listener.SceneResizeListener;
 
 import java.io.IOException;
 import java.util.Objects;
 
 public class StageManager {
 
-    private Stage primaryStage;
+    private final Stage primaryStage;
     private final FxmlLoader fxmlLoader;
     private final String applicationTitle;
-    private final java.util.function.Function<Class<?>, Object> controllerFactory;
+    private final SceneResizeListener sceneResizeListener;
 
     public StageManager(FxmlLoader fxmlLoader,
+                        Stage primaryStage,
                         String applicationTitle,
-                        java.util.function.Function<Class<?>, Object> controllerFactory) {
+                        SceneResizeListener sceneResizeListener) {
+        this.primaryStage = primaryStage;
         this.fxmlLoader = fxmlLoader;
         this.applicationTitle = applicationTitle;
-        this.controllerFactory = controllerFactory;
-        this.fxmlLoader.setControllerFactory(controllerFactory);
-    }
-
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
+        this.sceneResizeListener = sceneResizeListener;
     }
 
     public void switchScene(final FxmlView view) {
         primaryStage.setTitle(applicationTitle);
+
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-
         Parent rootNode = loadRootNode(view.getFxmlPath());
-        Scene scene = new Scene(rootNode);
 
-        String stylesheet = Objects.requireNonNull(getClass()
-                        .getResource("/styles/styles.css"))
-                .toExternalForm();
-        scene.getStylesheets().add(stylesheet);
+        createAndSetScene(rootNode);
 
-        scene.widthProperty().addListener(new ChangeListener<>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue,
-                                Number oldSceneWidth,
-                                Number newSceneWidth) {
-                // no Spring event bus; handle resize locally if needed
-            }
-        });
-
-        primaryStage.setScene(scene);
         rootNode.applyCss();
         rootNode.autosize();
+
         primaryStage.sizeToScene();
         primaryStage.centerOnScreen();
         primaryStage.show();
     }
 
-    public void switchToNextScene(final FxmlView view) {
-        Parent rootNode = loadRootNode(view.getFxmlPath());
-        rootNode.applyCss();
-        rootNode.autosize();
-
+    private void createAndSetScene(Parent rootNode) {
         Scene scene = new Scene(rootNode);
         String stylesheet = Objects.requireNonNull(getClass()
                         .getResource("/styles/styles.css"))
                 .toExternalForm();
+
         scene.getStylesheets().add(stylesheet);
 
+        scene.widthProperty().addListener((observableValue, oldSceneWidth, newSceneWidth) -> {
+            if (sceneResizeListener != null) {
+                sceneResizeListener.onSceneResized(newSceneWidth);
+            }
+        });
+
         primaryStage.setScene(scene);
+    }
+
+    public void switchToNextScene(final FxmlView view) {
+        Parent rootNode = loadRootNode(view.getFxmlPath());
+
+        rootNode.applyCss();
+        rootNode.autosize();
+
+        createAndSetScene(rootNode);
         primaryStage.sizeToScene();
         primaryStage.show();
         primaryStage.centerOnScreen();

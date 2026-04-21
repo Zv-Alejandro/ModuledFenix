@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.net.URL;
 import java.util.Optional;
@@ -64,14 +65,11 @@ public class ClientControllerFx implements Initializable {
 
     private final StageManager stageManager;
     private final ClientService clientService;
-    private final PasswordEncoder encoder;
 
     public ClientControllerFx(StageManager stageManager,
-                              ClientService clientService,
-                              PasswordEncoder encoder) {
+                              ClientService clientService) {
         this.stageManager = stageManager;
         this.clientService = clientService;
-        this.encoder = encoder;
     }
 
 
