@@ -22,7 +22,7 @@ public class ClientService {
     @Autowired
     private TokenService tokenService;
 
-    public ServerResponseDTO register(ClientRegisterDTO dto) {
+    public RegisterResponseDTO register(ClientRegisterDTO dto) {
         if (clientRepository.findByUsername(dto.getUsername()).isPresent()) {
             return aResponseRegister("This username already exists", "WARN", false);
         }

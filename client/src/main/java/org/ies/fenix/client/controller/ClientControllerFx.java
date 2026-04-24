@@ -1,5 +1,7 @@
 package org.ies.fenix.client.controller;
 
+import dto.client.LoginResponseDTO;
+import dto.client.RegisterResponseDTO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -15,12 +17,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import org.ies.fenix.client.api.ClientApiService;
+import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ClientControllerFx implements Initializable {
@@ -64,64 +66,95 @@ public class ClientControllerFx implements Initializable {
     private final StringProperty errorProperty = new SimpleStringProperty();
 
     private final StageManager stageManager;
-    private final ClientService clientService;
+    private final ClientApiService clientApiService;
+    private final SessionManager sessionManager;
 
     public ClientControllerFx(StageManager stageManager,
-                              ClientService clientService) {
+                              ClientApiService clientApiService,
+                              SessionManager sessionManager) {
         this.stageManager = stageManager;
-        this.clientService = clientService;
+        this.clientApiService = clientApiService;
+        this.sessionManager = sessionManager;
     }
 
-
+    @FXML
     public void loadUserAndOpenMarketPlace() {
-        String name = username.getText();
         clientErrorLabel.setVisible(true);
 
-        Optional<Client> user = clientService.findByUsername(name);
-        if (user.isEmpty()) {
-            errorProperty.setValue("No user with this name found.");
-            throw new NotFoundException(errorProperty.getValue());
+        String name = username.getText();
+        String rawPassword = password.getText();
+
+        if (name == null || name.isBlank()) {
+            errorProperty.setValue("Username must not be blank.");
+            return;
         }
 
-        Client client = user.get();
-        if (!encoder.matches(password.getText(), client.getPasswordHashed())) {
-            errorProperty.setValue("Incorrect password, did you forgot your password?");
-            throw new NotFoundException(errorProperty.getValue());
+        if (rawPassword == null || rawPassword.isBlank()) {
+            errorProperty.setValue("Password must not be blank.");
+            return;
         }
 
-        clientErrorLabel.setVisible(false);
-        stageManager.switchToNextScene(FxmlView.MARKETPLACE);
+        try {
+            LoginResponseDTO response = clientApiService.login(name, rawPassword);
+
+            if (!"OK".equalsIgnoreCase(response.getStatus()) || response.getToken() == null) {
+                errorProperty.setValue(response.getMessage());
+                return;
+            }
+
+            sessionManager.saveSession(
+                    response.getToken(),
+                    response.getClientId(),
+                    response.getUsername()
+            );
+
+            clientErrorLabel.setVisible(false);
+            stageManager.switchToNextScene(FxmlView.MARKETPLACE);
+        } catch (RuntimeException e) {
+            errorProperty.setValue("Could not connect to server.");
+        }
     }
 
+    @FXML
     public void saveUserAndOpenLogInView() {
-        String name = username.getText();
-        Optional<Client> user = clientService.findByUsername(name);
         clientErrorLabel.setVisible(true);
 
-        if (user.isPresent()) {
-            errorProperty.setValue("User with this name already exists! Sign in or use another name.");
-            throw new UserExistsException(errorProperty.getValue());
+        String name = username.getText();
+        String rawPassword = password.getText();
+        String repeatedPassword = passwordCheck.getText();
+
+        if (name == null || name.isBlank() || name.length() > 20) {
+            errorProperty.setValue("Username must not be blank or longer than 20 characters.");
+            return;
         }
 
-        if (name.isBlank() || name.length() > 20) {
-            errorProperty.setValue("Username must not be blank or longer that 20 characters");
-            throw new ConstraintsException(errorProperty.getValue());
+        if (!rawPassword.equals(repeatedPassword)) {
+            errorProperty.setValue("Passwords don't match.");
+            return;
         }
 
-        if (!password.getText().equals(passwordCheck.getText())) {
-            errorProperty.setValue("Passwords don't match");
-            throw new ConstraintsException(errorProperty.getValue());
+        if (rawPassword.length() >= 10) {
+            errorProperty.setValue("The password must be less than 10 characters long.");
+            return;
         }
 
-        if (password.getText().length() >= 10) {
-            errorProperty.setValue("The password must be less than 10 characters long");
-            throw new ConstraintsException(errorProperty.getValue());
-        }
+        try {
+            RegisterResponseDTO response = clientApiService.register(
+                    name,
+                    name + "@fenix.local",
+                    rawPassword
+            );
 
-        clientErrorLabel.setVisible(false);
-        String hash = encoder.encode(password.getText());
-        clientService.saveClient(name, hash);
-        stageManager.switchToNextScene(FxmlView.LOGIN);
+            if (!"OK".equalsIgnoreCase(response.getStatus())) {
+                errorProperty.setValue(response.getMessage());
+                return;
+            }
+
+            clientErrorLabel.setVisible(false);
+            stageManager.switchToNextScene(FxmlView.LOGIN);
+        } catch (RuntimeException e) {
+            errorProperty.setValue("Could not connect to server.");
+        }
     }
 
     @Override
@@ -134,7 +167,8 @@ public class ClientControllerFx implements Initializable {
             public void changed(ObservableValue<? extends String> observable,
                                 String oldText,
                                 String newText) {
-                // Spring event publishing removed; handle locally if needed.
+                errorProperty.setValue("");
+                clientErrorLabel.setVisible(false);
             }
         });
     }
