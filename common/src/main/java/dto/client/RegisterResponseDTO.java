@@ -1,10 +1,10 @@
 package dto.client;
 
+import dto.ServerResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import dto.ServerResponseDTO;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
@@ -12,8 +12,6 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginResponseDTO extends ServerResponseDTO {
-    private Integer clientId;
-    private String username;
-    private String token;
+public class RegisterResponseDTO extends ServerResponseDTO {
+    private boolean access;
 }
