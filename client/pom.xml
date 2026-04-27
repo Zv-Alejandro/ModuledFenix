@@ -134,7 +134,7 @@
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>org.ies.fenix.client/org.ies.fenix.client.HelloApplication</mainClass>
+                    <mainClass>org.ies.fenix.client/org.ies.fenix.client.Launcher</mainClass>
                     <launcher>app</launcher>
                     <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

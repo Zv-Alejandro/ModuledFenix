@@ -35,6 +35,13 @@ public enum FxmlView {
         }
     },
 
+    LIBRARY {
+        @Override
+        public String getFxmlPath() {
+            return "/fxml/library.fxml";
+        }
+    },
+
     SCALES_THEORY {
 
         @Override

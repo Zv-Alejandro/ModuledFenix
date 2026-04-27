@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="root"
+            prefHeight="800.0"
+            prefWidth="1300.0"
+            styleClass="library-root"
+            stylesheets="@../styles/styles.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.ies.fenix.client.controller.LibraryControllerFx">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="content-container">
+            <padding>
+                <Insets top="30.0" right="30.0" bottom="0.0" left="30.0"/>
+            </padding>
+
+            <Button text="&lt;" styleClass="nav-button"/>
+            <Button text="&gt;" styleClass="nav-button"/>
+
+            <Label text="MARKET PLACE" styleClass="tab-inactive"/>
+            <Label text="LIBRARY" styleClass="tab-active"/>
+            <Label fx:id="usernameLabel" text="USERNAME" styleClass="tab-inactive"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button text="Create your own visual novel" styleClass="main-action-button"/>
+
+            <HBox alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="profile-wrapper">
+                <ImageView fitHeight="28.0"
+                           fitWidth="28.0"
+                           pickOnBounds="true"
+                           preserveRatio="true"
+                           styleClass="profile-image"/>
+            </HBox>
+
+            <Label text="⌄" styleClass="dropdown-icon"/>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="0.0" styleClass="library-main-container">
+
+            <!-- Panel izquierdo -->
+            <VBox prefWidth="360.0"
+                  minWidth="360.0"
+                  maxWidth="360.0"
+                  styleClass="library-left-panel">
+
+                <padding>
+                    <Insets top="20.0" right="15.0" bottom="20.0" left="20.0"/>
+                </padding>
+
+                <HBox alignment="CENTER_LEFT" styleClass="library-search-wrapper">
+                    <TextField fx:id="searchField"
+                               promptText="Search"
+                               HBox.hgrow="ALWAYS"
+                               styleClass="library-search-field"/>
+                    <Label text="≡" styleClass="library-filter-icon"/>
+                </HBox>
+
+                <ScrollPane fitToWidth="true"
+                            hbarPolicy="NEVER"
+                            vbarPolicy="AS_NEEDED"
+                            VBox.vgrow="ALWAYS"
+                            styleClass="library-left-scroll">
+                    <content>
+                        <VBox fx:id="leftGamesList"
+                              spacing="22.0"
+                              styleClass="library-left-games-list">
+
+                            <padding>
+                                <Insets top="28.0" right="5.0" bottom="20.0" left="0.0"/>
+                            </padding>
+
+                            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="library-left-game-row">
+                                <HBox alignment="CENTER" styleClass="library-left-game-icon-wrapper">
+                                    <ImageView fitWidth="36.0" fitHeight="36.0" preserveRatio="true" styleClass="library-left-game-image"/>
+                                </HBox>
+                                <Label text="Game" styleClass="library-left-game-title"/>
+                            </HBox>
+
+                            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="library-left-game-row">
+                                <HBox alignment="CENTER" styleClass="library-left-game-icon-wrapper">
+                                    <ImageView fitWidth="36.0" fitHeight="36.0" preserveRatio="true" styleClass="library-left-game-image"/>
+                                </HBox>
+                                <Label text="Game" styleClass="library-left-game-title"/>
+                            </HBox>
+
+                            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="library-left-game-row">
+                                <HBox alignment="CENTER" styleClass="library-left-game-icon-wrapper">
+                                    <ImageView fitWidth="36.0" fitHeight="36.0" preserveRatio="true" styleClass="library-left-game-image"/>
+                                </HBox>
+                                <Label text="Game" styleClass="library-left-game-title"/>
+                            </HBox>
+
+                            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="library-left-game-row">
+                                <HBox alignment="CENTER" styleClass="library-left-game-icon-wrapper">
+                                    <ImageView fitWidth="36.0" fitHeight="36.0" preserveRatio="true" styleClass="library-left-game-image"/>
+                                </HBox>
+                                <Label text="Game" styleClass="library-left-game-title"/>
+                            </HBox>
+
+                            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="library-left-game-row">
+                                <HBox alignment="CENTER" styleClass="library-left-game-icon-wrapper">
+                                    <ImageView fitWidth="36.0" fitHeight="36.0" preserveRatio="true" styleClass="library-left-game-image"/>
+                                </HBox>
+                                <Label text="Game" styleClass="library-left-game-title"/>
+                            </HBox>
+
+                            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="library-left-game-row">
+                                <HBox alignment="CENTER" styleClass="library-left-game-icon-wrapper">
+                                    <ImageView fitWidth="36.0" fitHeight="36.0" preserveRatio="true" styleClass="library-left-game-image"/>
+                                </HBox>
+                                <Label text="Game" styleClass="library-left-game-title"/>
+                            </HBox>
+
+                            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="library-left-game-row">
+                                <HBox alignment="CENTER" styleClass="library-left-game-icon-wrapper">
+                                    <ImageView fitWidth="36.0" fitHeight="36.0" preserveRatio="true" styleClass="library-left-game-image"/>
+                                </HBox>
+                                <Label text="Game" styleClass="library-left-game-title"/>
+                            </HBox>
+
+                            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="library-left-game-row">
+                                <HBox alignment="CENTER" styleClass="library-left-game-icon-wrapper">
+                                    <ImageView fitWidth="36.0" fitHeight="36.0" preserveRatio="true" styleClass="library-left-game-image"/>
+                                </HBox>
+                                <Label text="Game" styleClass="library-left-game-title"/>
+                            </HBox>
+
+                            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="library-left-game-row">
+                                <HBox alignment="CENTER" styleClass="library-left-game-icon-wrapper">
+                                    <ImageView fitWidth="36.0" fitHeight="36.0" preserveRatio="true" styleClass="library-left-game-image"/>
+                                </HBox>
+                                <Label text="Game" styleClass="library-left-game-title"/>
+                            </HBox>
+
+                            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="library-left-game-row">
+                                <HBox alignment="CENTER" styleClass="library-left-game-icon-wrapper">
+                                    <ImageView fitWidth="36.0" fitHeight="36.0" preserveRatio="true" styleClass="library-left-game-image"/>
+                                </HBox>
+                                <Label text="Game" styleClass="library-left-game-title"/>
+                            </HBox>
+
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </VBox>
+
+            <!-- Panel derecho -->
+            <ScrollPane fitToWidth="true"
+                        hbarPolicy="NEVER"
+                        vbarPolicy="AS_NEEDED"
+                        HBox.hgrow="ALWAYS"
+                        styleClass="library-right-scroll">
+                <content>
+                    <GridPane fx:id="libraryGrid"
+                              hgap="18.0"
+                              vgap="24.0"
+                              styleClass="library-grid">
+
+                        <padding>
+                            <Insets top="70.0" right="28.0" bottom="30.0" left="28.0"/>
+                        </padding>
+
+                        <VBox styleClass="library-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <HBox alignment="CENTER" styleClass="library-cover-wrapper">
+                                <ImageView fitWidth="170.0" fitHeight="245.0" preserveRatio="true" styleClass="library-cover-image"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox styleClass="library-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <HBox alignment="CENTER" styleClass="library-cover-wrapper">
+                                <ImageView fitWidth="170.0" fitHeight="245.0" preserveRatio="true" styleClass="library-cover-image"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox styleClass="library-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                            <HBox alignment="CENTER" styleClass="library-cover-wrapper">
+                                <ImageView fitWidth="170.0" fitHeight="245.0" preserveRatio="true" styleClass="library-cover-image"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox styleClass="library-card" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                            <HBox alignment="CENTER" styleClass="library-cover-wrapper">
+                                <ImageView fitWidth="170.0" fitHeight="245.0" preserveRatio="true" styleClass="library-cover-image"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox styleClass="library-card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <HBox alignment="CENTER" styleClass="library-cover-wrapper">
+                                <ImageView fitWidth="170.0" fitHeight="245.0" preserveRatio="true" styleClass="library-cover-image"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox styleClass="library-card" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <HBox alignment="CENTER" styleClass="library-cover-wrapper">
+                                <ImageView fitWidth="170.0" fitHeight="245.0" preserveRatio="true" styleClass="library-cover-image"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox styleClass="library-card" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                            <HBox alignment="CENTER" styleClass="library-cover-wrapper">
+                                <ImageView fitWidth="170.0" fitHeight="245.0" preserveRatio="true" styleClass="library-cover-image"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox styleClass="library-card" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                            <HBox alignment="CENTER" styleClass="library-cover-wrapper">
+                                <ImageView fitWidth="170.0" fitHeight="245.0" preserveRatio="true" styleClass="library-cover-image"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox styleClass="library-card" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                            <HBox alignment="CENTER" styleClass="library-cover-wrapper">
+                                <ImageView fitWidth="170.0" fitHeight="245.0" preserveRatio="true" styleClass="library-cover-image"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox styleClass="library-card" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                            <HBox alignment="CENTER" styleClass="library-cover-wrapper">
+                                <ImageView fitWidth="170.0" fitHeight="245.0" preserveRatio="true" styleClass="library-cover-image"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox styleClass="library-card" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                            <HBox alignment="CENTER" styleClass="library-cover-wrapper">
+                                <ImageView fitWidth="170.0" fitHeight="245.0" preserveRatio="true" styleClass="library-cover-image"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox styleClass="library-card" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                            <HBox alignment="CENTER" styleClass="library-cover-wrapper">
+                                <ImageView fitWidth="170.0" fitHeight="245.0" preserveRatio="true" styleClass="library-cover-image"/>
+                            </HBox>
+                        </VBox>
+
+                    </GridPane>
+                </content>
+            </ScrollPane>
+
+        </HBox>
+    </center>
+</BorderPane>

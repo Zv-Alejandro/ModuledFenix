@@ -161,3 +161,123 @@
     -fx-text-fill: #FF0000;
     -fx-font-size: 12px;
 }
+
+
+/* LIBRARY */
+
+
+.library-root {
+    -fx-background-color: #f5f5f5;
+}
+
+.library-main-container {
+    -fx-background-color: #f5f5f5;
+}
+
+.library-left-panel {
+    -fx-background-color: #f7f7f7;
+    -fx-border-color: transparent #e5e5e5 transparent transparent;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.library-left-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.library-left-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.library-right-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.library-right-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.library-search-wrapper {
+    -fx-background-color: white;
+    -fx-border-color: #d6d6d6;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 0 10 0 0;
+}
+
+.library-search-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 10 14 10 14;
+    -fx-font-size: 15px;
+}
+
+.library-filter-icon {
+    -fx-text-fill: #111111;
+    -fx-opacity: 0.25;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.library-left-games-list {
+    -fx-background-color: transparent;
+}
+
+.library-left-game-row {
+    -fx-cursor: hand;
+}
+
+.library-left-game-icon-wrapper {
+    -fx-background-color: #ebebeb;
+    -fx-border-color: #cfcfcf;
+    -fx-border-width: 2px;
+    -fx-border-radius: 26px;
+    -fx-background-radius: 26px;
+
+    -fx-min-width: 52px;
+    -fx-min-height: 52px;
+    -fx-pref-width: 52px;
+    -fx-pref-height: 52px;
+    -fx-max-width: 52px;
+    -fx-max-height: 52px;
+}
+
+.library-left-game-image {
+    -fx-opacity: 0.0;
+}
+
+.library-left-game-title {
+    -fx-text-fill: #111111;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.library-grid {
+    -fx-background-color: transparent;
+}
+
+.library-card {
+    -fx-cursor: hand;
+}
+
+.library-cover-wrapper {
+    -fx-background-color: #ebebeb;
+    -fx-border-color: #cfcfcf;
+    -fx-border-width: 2px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+
+    -fx-min-width: 210px;
+    -fx-min-height: 285px;
+    -fx-pref-width: 210px;
+    -fx-pref-height: 285px;
+    -fx-max-width: 210px;
+    -fx-max-height: 285px;
+}
+
+.library-cover-image {
+    -fx-opacity: 0.0;
+}
