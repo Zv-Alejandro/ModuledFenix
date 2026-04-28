@@ -1,7 +1,8 @@
 package org.ies.fenix.client.controller;
 
+import dto.client.ClientLoginDTO;
+import dto.client.ClientRegisterDTO;
 import dto.client.LoginResponseDTO;
-import dto.client.RegisterResponseDTO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -17,10 +18,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import org.ies.fenix.client.api.ClientApiService;
 import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
+import org.ies.fenix.controller.IClientController;
+import org.springframework.http.ResponseEntity;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -66,11 +68,11 @@ public class ClientControllerFx implements Initializable {
     private final StringProperty errorProperty = new SimpleStringProperty();
 
     private final StageManager stageManager;
-    private final ClientApiService clientApiService;
+    private final IClientController clientApiService;
     private final SessionManager sessionManager;
 
     public ClientControllerFx(StageManager stageManager,
-                              ClientApiService clientApiService,
+                              IClientController clientApiService,
                               SessionManager sessionManager) {
         this.stageManager = stageManager;
         this.clientApiService = clientApiService;
@@ -95,22 +97,23 @@ public class ClientControllerFx implements Initializable {
         }
 
         try {
-            LoginResponseDTO response = clientApiService.login(name, rawPassword);
+            ResponseEntity<LoginResponseDTO> response = clientApiService.login(new ClientLoginDTO(name, rawPassword));
 
-            if (!"OK".equalsIgnoreCase(response.getStatus()) || response.getToken() == null) {
-                errorProperty.setValue(response.getMessage());
+            if (response.getStatusCode().value() != 200 || response.getBody().getToken() == null) {
+                errorProperty.setValue(response.getBody().getMessage());
                 return;
             }
 
             sessionManager.saveSession(
-                    response.getToken(),
-                    response.getClientId(),
-                    response.getUsername()
+                    response.getBody().getToken(),
+                    response.getBody().getClientId(),
+                    response.getBody().getUsername()
             );
 
             clientErrorLabel.setVisible(false);
             stageManager.switchToNextScene(FxmlView.MARKETPLACE);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             errorProperty.setValue("Could not connect to server.");
         }
     }
@@ -139,20 +142,24 @@ public class ClientControllerFx implements Initializable {
         }
 
         try {
-            RegisterResponseDTO response = clientApiService.register(
-                    name,
-                    name + "@fenix.local",
-                    rawPassword
+            var response = clientApiService.register(
+                    new ClientRegisterDTO(
+                            name,
+                            name + "@fenix.local",
+                            rawPassword
+                    )
+
             );
 
-            if (!"OK".equalsIgnoreCase(response.getStatus())) {
-                errorProperty.setValue(response.getMessage());
+            if (response.getStatusCode().value() != 200) {
+                errorProperty.setValue(response.getBody().getMessage());
                 return;
             }
 
             clientErrorLabel.setVisible(false);
             stageManager.switchToNextScene(FxmlView.LOGIN);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             errorProperty.setValue("Could not connect to server.");
         }
     }

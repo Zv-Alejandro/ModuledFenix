@@ -3,23 +3,22 @@ package org.ies.fenix.server.controller;
 import dto.game.GameResponseDTO;
 import org.ies.fenix.server.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.ies.fenix.controller.IGameController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/games")
-public class GameController {
+public class GameController implements IGameController {
 
     @Autowired
     private GameService gameService;
 
-    @GetMapping("")
     public ResponseEntity<List<GameResponseDTO>> getGames(
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) Integer devId,
-            @RequestParam(required = false) Integer tagId
+            String title,
+            Integer devId,
+            Integer tagId
     ) {
         try {
             if (title != null) {
@@ -40,8 +39,7 @@ public class GameController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<GameResponseDTO> getById(@PathVariable Integer id) {
+    public ResponseEntity<GameResponseDTO> getById(Integer id) {
         try {
             GameResponseDTO response = gameService.getById(id);
             if (response == null) {

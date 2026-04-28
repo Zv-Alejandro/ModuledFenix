@@ -2,7 +2,6 @@ package org.ies.fenix.client;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.ies.fenix.client.api.ClientApiService;
 import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlLoader;
 import org.ies.fenix.client.config.FxmlView;
@@ -12,6 +11,11 @@ import org.ies.fenix.client.controller.EmailFormController;
 import org.ies.fenix.client.controller.HomeController;
 import org.ies.fenix.client.controller.MarketplaceController;
 import org.ies.fenix.client.listener.SceneResizeListener;
+import org.ies.fenix.controller.IClientController;
+import org.ies.fenix.controller.IGameController;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.support.RestClientAdapter;
+import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 public class Main extends Application {
 
@@ -30,7 +34,13 @@ public class Main extends Application {
         FxmlLoader fxmlLoader = new FxmlLoader();
         String applicationTitle = "Fenix";
 
-        ClientApiService clientApiService = new ClientApiService();
+        RestClient rc = RestClient.create("http://localhost:8080");
+        HttpServiceProxyFactory factory = HttpServiceProxyFactory
+                .builderFor(RestClientAdapter.create(rc))
+                .build();
+        var  clientApiService = factory.createClient(IClientController.class);
+        var  gamesApiService = factory.createClient(IGameController.class);
+        //ClientApiService clientApiService = new ClientApiService();
         SessionManager sessionManager = new SessionManager();
 
         stageManager = new StageManager(
