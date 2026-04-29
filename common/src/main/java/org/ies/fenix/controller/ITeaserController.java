@@ -1,6 +1,6 @@
 package org.ies.fenix.controller;
 
-import dto.teaser.TeaserResponseDTO;
+import org.ies.fenix.controller.dto.teaser.TeaserResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
