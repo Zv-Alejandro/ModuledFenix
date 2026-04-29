@@ -1,6 +1,6 @@
 package org.ies.fenix.server.services;
 
-import dto.teaser.TeaserResponseDTO;
+import org.ies.fenix.controller.dto.teaser.TeaserResponseDTO;
 import org.ies.fenix.server.models.Teaser;
 import org.ies.fenix.server.repositories.TeaserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

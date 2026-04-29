@@ -1,8 +1,11 @@
-package dto.tag;
+package org.ies.fenix.controller.dto.tag;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class TagResponseDTO {
     private Integer id;
     private String name;

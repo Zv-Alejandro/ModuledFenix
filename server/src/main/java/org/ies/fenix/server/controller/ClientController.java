@@ -1,6 +1,9 @@
 package org.ies.fenix.server.controller;
 
-import dto.client.*;
+import org.ies.fenix.controller.dto.client.ClientLoginDTO;
+import org.ies.fenix.controller.dto.client.ClientRegisterDTO;
+import org.ies.fenix.controller.dto.client.LoginResponseDTO;
+import org.ies.fenix.controller.dto.client.RegisterResponseDTO;
 import org.ies.fenix.server.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +16,12 @@ public class ClientController implements IClientController {
     @Autowired
     private ClientService clientService;
 
-    public ResponseEntity<RegisterResponseDTO> register( ClientRegisterDTO dto) {
+    public ResponseEntity<RegisterResponseDTO> register(ClientRegisterDTO dto) {
         return ResponseEntity.ok(clientService.register(dto));
     }
 
 
-    public ResponseEntity<LoginResponseDTO> login( ClientLoginDTO dto) {
+    public ResponseEntity<LoginResponseDTO> login(ClientLoginDTO dto) {
         return ResponseEntity.ok(clientService.login(dto));
     }
 

@@ -1,4 +1,4 @@
-package dto;
+package org.ies.fenix.controller.dto;
 
 
 import lombok.AllArgsConstructor;

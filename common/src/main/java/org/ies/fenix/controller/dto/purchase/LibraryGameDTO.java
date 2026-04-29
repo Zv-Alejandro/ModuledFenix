@@ -1,10 +1,13 @@
-package dto.purchase;
+package org.ies.fenix.controller.dto.purchase;
 
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class LibraryGameDTO {
     private Integer gameId;
     private String title;

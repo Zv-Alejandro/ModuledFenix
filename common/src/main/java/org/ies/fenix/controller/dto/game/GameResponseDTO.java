@@ -1,11 +1,14 @@
-package dto.game;
+package org.ies.fenix.controller.dto.game;
 
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class GameResponseDTO {
     private Integer id;
     private String title;
