@@ -1,6 +1,6 @@
-package dto.client;
+package org.ies.fenix.controller.dto.client;
 
-import dto.ServerResponseDTO;
+import org.ies.fenix.controller.dto.ServerResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

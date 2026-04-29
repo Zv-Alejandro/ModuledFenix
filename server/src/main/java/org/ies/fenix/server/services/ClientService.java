@@ -1,7 +1,9 @@
 package org.ies.fenix.server.services;
 
-import dto.ServerResponseDTO;
-import dto.client.*;
+import org.ies.fenix.controller.dto.client.ClientLoginDTO;
+import org.ies.fenix.controller.dto.client.ClientRegisterDTO;
+import org.ies.fenix.controller.dto.client.LoginResponseDTO;
+import org.ies.fenix.controller.dto.client.RegisterResponseDTO;
 import org.ies.fenix.server.models.Client;
 import org.ies.fenix.server.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;

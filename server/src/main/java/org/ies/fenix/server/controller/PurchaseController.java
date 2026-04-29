@@ -1,9 +1,9 @@
 package org.ies.fenix.server.controller;
 
-import dto.purchase.DownloadResponseDTO;
-import dto.purchase.LibraryGameDTO;
-import dto.purchase.PurchaseCreateDTO;
-import dto.purchase.PurchaseResponseDTO;
+import org.ies.fenix.controller.dto.purchase.DownloadResponseDTO;
+import org.ies.fenix.controller.dto.purchase.LibraryGameDTO;
+import org.ies.fenix.controller.dto.purchase.PurchaseCreateDTO;
+import org.ies.fenix.controller.dto.purchase.PurchaseResponseDTO;
 import org.ies.fenix.server.exception.AlreadyPurchasedException;
 import org.ies.fenix.server.services.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
