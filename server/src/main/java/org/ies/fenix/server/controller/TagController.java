@@ -1,6 +1,6 @@
 package org.ies.fenix.server.controller;
 
-import dto.tag.TagResponseDTO;
+import org.ies.fenix.controller.dto.tag.TagResponseDTO;
 import org.ies.fenix.server.services.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

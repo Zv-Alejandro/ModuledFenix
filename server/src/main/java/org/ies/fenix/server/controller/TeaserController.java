@@ -1,7 +1,7 @@
 package org.ies.fenix.server.controller;
 
 
-import dto.teaser.TeaserResponseDTO;
+import org.ies.fenix.controller.dto.teaser.TeaserResponseDTO;
 import org.ies.fenix.server.services.TeaserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

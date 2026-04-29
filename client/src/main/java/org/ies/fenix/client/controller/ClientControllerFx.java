@@ -1,8 +1,8 @@
 package org.ies.fenix.client.controller;
 
-import dto.client.ClientLoginDTO;
-import dto.client.ClientRegisterDTO;
-import dto.client.LoginResponseDTO;
+import org.ies.fenix.controller.dto.client.ClientLoginDTO;
+import org.ies.fenix.controller.dto.client.ClientRegisterDTO;
+import org.ies.fenix.controller.dto.client.LoginResponseDTO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;

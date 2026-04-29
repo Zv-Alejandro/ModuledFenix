@@ -1,8 +1,11 @@
-package dto.purchase;
+package org.ies.fenix.controller.dto.purchase;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class DownloadResponseDTO {
     private Integer gameId;
     private String title;

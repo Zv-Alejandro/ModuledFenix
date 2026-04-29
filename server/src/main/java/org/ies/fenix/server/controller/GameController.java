@@ -1,6 +1,6 @@
 package org.ies.fenix.server.controller;
 
-import dto.game.GameResponseDTO;
+import org.ies.fenix.controller.dto.game.GameResponseDTO;
 import org.ies.fenix.server.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ies.fenix.controller.IGameController;

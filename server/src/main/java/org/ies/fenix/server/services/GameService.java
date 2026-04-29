@@ -1,6 +1,6 @@
 package org.ies.fenix.server.services;
 
-import dto.game.GameResponseDTO;
+import org.ies.fenix.controller.dto.game.GameResponseDTO;
 import org.ies.fenix.server.models.Game;
 import org.ies.fenix.server.models.Tag;
 import org.ies.fenix.server.repositories.GameRepository;

@@ -1,4 +1,4 @@
-package dto.teaser;
+package org.ies.fenix.controller.dto.teaser;
 
 import lombok.Data;
 

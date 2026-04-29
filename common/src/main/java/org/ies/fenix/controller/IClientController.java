@@ -1,9 +1,9 @@
 package org.ies.fenix.controller;
 
-import dto.client.ClientLoginDTO;
-import dto.client.ClientRegisterDTO;
-import dto.client.LoginResponseDTO;
-import dto.client.RegisterResponseDTO;
+import org.ies.fenix.controller.dto.client.ClientLoginDTO;
+import org.ies.fenix.controller.dto.client.ClientRegisterDTO;
+import org.ies.fenix.controller.dto.client.LoginResponseDTO;
+import org.ies.fenix.controller.dto.client.RegisterResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
