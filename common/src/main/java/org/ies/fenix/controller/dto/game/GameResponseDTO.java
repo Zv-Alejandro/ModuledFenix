@@ -1,4 +1,4 @@
-package dto.game;
+package org.ies.fenix.controller.dto.game;
 
 import lombok.Data;
 
