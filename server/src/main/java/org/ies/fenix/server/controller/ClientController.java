@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.ies.fenix.controller.IClientController;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 public class ClientController implements IClientController {
 
