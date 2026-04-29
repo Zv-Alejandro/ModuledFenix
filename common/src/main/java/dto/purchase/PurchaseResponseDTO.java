@@ -1,4 +1,4 @@
-package org.ies.fenix.controller.dto.purchase;
+package dto.purchase;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package org.ies.fenix.controller.dto.tag;
+package dto.tag;
 
 import lombok.Data;
 
