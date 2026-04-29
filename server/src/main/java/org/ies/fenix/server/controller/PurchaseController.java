@@ -4,6 +4,7 @@ import dto.purchase.DownloadResponseDTO;
 import dto.purchase.LibraryGameDTO;
 import dto.purchase.PurchaseCreateDTO;
 import dto.purchase.PurchaseResponseDTO;
+import org.ies.fenix.controller.IPurchaseController;
 import org.ies.fenix.server.exception.AlreadyPurchasedException;
 import org.ies.fenix.server.services.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/purchases")
-public class PurchaseController {
+public class PurchaseController implements IPurchaseController {
 
     @Autowired
     private PurchaseService purchaseService;
 
-    @PostMapping("")
-    public ResponseEntity<?> createPurchase(@RequestBody PurchaseCreateDTO dto) {
+    public ResponseEntity<?> createPurchase(PurchaseCreateDTO dto) {
         try {
             PurchaseResponseDTO response = purchaseService.createPurchase(dto);
             if (response == null) {
@@ -34,8 +33,7 @@ public class PurchaseController {
         }
     }
 
-    @GetMapping("/client/{clientId}")
-    public ResponseEntity<List<PurchaseResponseDTO>> getByClientId(@PathVariable Integer clientId) {
+    public ResponseEntity<List<PurchaseResponseDTO>> getByClientId(Integer clientId) {
         try {
             return ResponseEntity.ok(purchaseService.getByClientId(clientId));
         } catch (Exception e) {
@@ -43,8 +41,7 @@ public class PurchaseController {
         }
     }
 
-    @GetMapping("/client/{clientId}/library")
-    public ResponseEntity<List<LibraryGameDTO>> getLibraryByClientId(@PathVariable Integer clientId) {
+    public ResponseEntity<List<LibraryGameDTO>> getLibraryByClientId(Integer clientId) {
         try {
             return ResponseEntity.ok(purchaseService.getLibraryByClientId(clientId));
         } catch (Exception e) {
@@ -52,9 +49,7 @@ public class PurchaseController {
         }
     }
 
-    @GetMapping("/client/{clientId}/download/{gameId}")
-    public ResponseEntity<DownloadResponseDTO> downloadGame(@PathVariable Integer clientId,
-                                                            @PathVariable Integer gameId) {
+    public ResponseEntity<DownloadResponseDTO> downloadGame(Integer clientId, Integer gameId) {
         try {
             DownloadResponseDTO response = purchaseService.downloadGame(clientId, gameId);
             if (response == null) {

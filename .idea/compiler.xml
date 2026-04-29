@@ -34,7 +34,6 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
         </processorPath>
         <module name="server" />
-        <module name="backend" />
       </profile>
       <profile name="Annotation profile for frontend" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -45,6 +44,15 @@
         </processorPath>
         <module name="frontend" />
       </profile>
+      <profile name="Annotation profile for backend" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="backend" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="clientx" target="21" />
@@ -53,6 +61,8 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="backend" options="-parameters" />
+      <module name="common" options="-parameters" />
+      <module name="frontend" options="-parameters" />
       <module name="server" options="-parameters" />
     </option>
   </component>

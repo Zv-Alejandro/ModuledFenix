@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/teasers")
-public class TeaserController {
+public class TeaserController implements org.ies.fenix.controller.ITeaserController {
 
     @Autowired
     private TeaserService teaserService;
