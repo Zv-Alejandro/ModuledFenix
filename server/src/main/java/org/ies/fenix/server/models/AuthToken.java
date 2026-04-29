@@ -22,13 +22,14 @@ public class AuthToken {
     private String token;
 
     @Column(nullable = false)
-    private Integer clientId;
-
-    @Column(nullable = false)
     private Instant createdAt;
 
     @Column(nullable = false)
     private Instant expiresAt;
 
     private Instant revokedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client user;
 }

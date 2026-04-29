@@ -19,7 +19,7 @@
             stylesheets="@../styles/styles.css"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.ies.fenix.client.controller.LibraryControllerFx">
+            fx:controller="org.ies.fenix.client.controller.LibraryController">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="content-container">

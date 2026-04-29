@@ -1,9 +1,6 @@
 package org.ies.fenix.server.services;
 
-import org.ies.fenix.controller.dto.client.ClientLoginDTO;
-import org.ies.fenix.controller.dto.client.ClientRegisterDTO;
-import org.ies.fenix.controller.dto.client.LoginResponseDTO;
-import org.ies.fenix.controller.dto.client.RegisterResponseDTO;
+import org.ies.fenix.controller.dto.client.*;
 import org.ies.fenix.server.models.Client;
 import org.ies.fenix.server.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,4 +87,8 @@ public class ClientService {
         tokenService.revoke(token);
         return true;
     }
+    public Client getClient(String token){
+        return clientRepository.findByAuthTokensToken(token);
+
+    } //needs to develop the null return statement
 }

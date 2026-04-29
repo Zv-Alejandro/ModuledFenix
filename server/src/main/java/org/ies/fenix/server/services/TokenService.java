@@ -1,7 +1,9 @@
 package org.ies.fenix.server.services;
 
 import org.ies.fenix.server.models.AuthToken;
+import org.ies.fenix.server.models.Client;
 import org.ies.fenix.server.repositories.AuthTokenRepository;
+import org.ies.fenix.server.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +14,8 @@ import java.util.UUID;
 public class TokenService {
 
     private static final long TOKEN_TTL_SECONDS = 60 * 60 * 24; // 24h
-
+    @Autowired
+    private ClientRepository clientRepository;
     @Autowired
     private AuthTokenRepository authTokenRepository;
 
@@ -20,9 +23,12 @@ public class TokenService {
         String tokenValue = UUID.randomUUID().toString().replace("-", "")
                 + UUID.randomUUID().toString().replace("-", "");
 
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow();
+
         AuthToken token = AuthToken.builder()
                 .token(tokenValue)
-                .clientId(clientId)
+                .user(client)
                 .createdAt(Instant.now())
                 .expiresAt(Instant.now().plusSeconds(TOKEN_TTL_SECONDS))
                 .build();
@@ -38,13 +44,13 @@ public class TokenService {
                 .isPresent();
     }
 
-    public Integer getClientId(String tokenValue) {
-        return authTokenRepository.findByToken(tokenValue)
-                .filter(token -> token.getRevokedAt() == null)
-                .filter(token -> token.getExpiresAt().isAfter(Instant.now()))
-                .map(AuthToken::getClientId)
-                .orElse(null);
-    }
+//    public Integer getClientId(String tokenValue) {
+//        return authTokenRepository.findByToken(tokenValue)
+//                .filter(token -> token.getRevokedAt() == null)
+//                .filter(token -> token.getExpiresAt().isAfter(Instant.now()))
+//                .map(AuthToken::getClientId)
+//                .orElse(null);
+//    }
 
     public void revoke(String tokenValue) {
         authTokenRepository.findByToken(tokenValue).ifPresent(token -> {

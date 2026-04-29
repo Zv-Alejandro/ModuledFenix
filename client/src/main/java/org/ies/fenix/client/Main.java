@@ -6,7 +6,7 @@ import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlLoader;
 import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
-import org.ies.fenix.client.controller.ClientControllerFx;
+import org.ies.fenix.client.controller.ClientController;
 import org.ies.fenix.client.controller.EmailFormController;
 import org.ies.fenix.client.controller.HomeController;
 import org.ies.fenix.client.controller.MarketplaceController;
@@ -51,8 +51,8 @@ public class Main extends Application {
         );
 
         fxmlLoader.setControllerFactory(clazz -> {
-            if (clazz == ClientControllerFx.class) {
-                return new ClientControllerFx(stageManager, clientApiService, sessionManager);
+            if (clazz == ClientController.class) {
+                return new ClientController(stageManager, clientApiService, sessionManager);
             }
 
             if (clazz == EmailFormController.class) {
@@ -64,7 +64,7 @@ public class Main extends Application {
             }
 
             if (clazz == MarketplaceController.class) {
-                return new MarketplaceController();
+                return new MarketplaceController(stageManager, clientApiService, sessionManager);
             }
 
             try {

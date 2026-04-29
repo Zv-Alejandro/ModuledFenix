@@ -31,6 +31,8 @@ public class Client {
 
     private String bio;
 
+    @OneToMany(mappedBy = "user")
+    private List<AuthToken> authTokens;
 
     @OneToMany(mappedBy = "dev")
     private List<Game> developedGames;

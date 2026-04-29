@@ -27,7 +27,7 @@ import org.springframework.http.ResponseEntity;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ClientControllerFx implements Initializable {
+public class ClientController implements Initializable {
 
     @FXML
     private Text title;
@@ -71,9 +71,9 @@ public class ClientControllerFx implements Initializable {
     private final IClientController clientApiService;
     private final SessionManager sessionManager;
 
-    public ClientControllerFx(StageManager stageManager,
-                              IClientController clientApiService,
-                              SessionManager sessionManager) {
+    public ClientController(StageManager stageManager,
+                            IClientController clientApiService,
+                            SessionManager sessionManager) {
         this.stageManager = stageManager;
         this.clientApiService = clientApiService;
         this.sessionManager = sessionManager;
