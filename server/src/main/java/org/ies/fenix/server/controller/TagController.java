@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tags")
-public class TagController {
+public class TagController implements org.ies.fenix.controller.ITagController {
 
     @Autowired
     private TagService tagService;
