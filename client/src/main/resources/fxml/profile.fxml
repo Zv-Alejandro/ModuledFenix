@@ -12,13 +12,16 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.PasswordField?>
 <BorderPane fx:id="root"
             prefHeight="800.0"
             prefWidth="1300.0"
             styleClass="profile-root"
             stylesheets="@../styles/styles.css"
             xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1">
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.ies.fenix.client.controller.ProfileController">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="content-container">
@@ -29,9 +32,9 @@
             <Button text="&lt;" styleClass="nav-button"/>
             <Button text="&gt;" styleClass="nav-button"/>
 
-            <Label text="MARKET PLACE" styleClass="tab-inactive"/>
-            <Label text="LIBRARY" styleClass="tab-inactive"/>
-            <Label text="USERNAME" styleClass="tab-active"/>
+            <Hyperlink text="MARKET PLACE" styleClass="tab-inactive" onAction="#switchToMarketplaceScene"/>
+            <Hyperlink text="LIBRARY" styleClass="tab-inactive" onAction="#switchLibraryScene"/>
+            <Hyperlink fx:id="username" text="USERNAME" styleClass="tab-active" onAction="#reloadView"/>
 
             <Region HBox.hgrow="ALWAYS"/>
 
@@ -113,8 +116,8 @@
                                        styleClass="profile-input"/>
 
                             <Label text="Password" styleClass="profile-label"/>
-                            <TextField promptText="************"
-                                       styleClass="profile-input"/>
+                            <PasswordField promptText="esto es una contraseña"
+                                           styleClass="profile-input"/>
                         </VBox>
 
                         <!-- RIGHT -->
