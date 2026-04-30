@@ -1,6 +1,7 @@
 package org.ies.fenix.server.controller;
 
 
+import org.ies.fenix.controller.ITeaserController;
 import org.ies.fenix.controller.dto.teaser.TeaserResponseDTO;
 import org.ies.fenix.server.services.TeaserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +13,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/teasers")
-public class TeaserController implements org.ies.fenix.controller.ITeaserController {
+public class TeaserController implements ITeaserController {
 
     @Autowired
     private TeaserService teaserService;
 
-    @GetMapping("/game/{gameId}")
-    public ResponseEntity<List<TeaserResponseDTO>> getByGameId(
-            @PathVariable Integer gameId,
-            @RequestParam(required = false) String type
-    ) {
+    @Override
+    public ResponseEntity<List<TeaserResponseDTO>> getByGameId(Integer gameId, String type) {
         try {
             if (type != null) {
                 return ResponseEntity.ok(teaserService.getByGameIdAndType(gameId, type));
