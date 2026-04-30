@@ -1,6 +1,7 @@
 package org.ies.fenix.server.controller;
 
 import org.ies.fenix.controller.dto.game.GameResponseDTO;
+import org.ies.fenix.controller.dto.game.GameSearchDTO;
 import org.ies.fenix.server.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ies.fenix.controller.IGameController;
@@ -15,37 +16,25 @@ public class GameController implements IGameController {
     @Autowired
     private GameService gameService;
 
-    public ResponseEntity<List<GameResponseDTO>> getGames(
-            String title,
-            Integer devId,
-            Integer tagId
-    ) {
+    @Override
+    public ResponseEntity<List<GameResponseDTO>> getManyGames(GameSearchDTO dto) {
         try {
-            if (title != null) {
-                return ResponseEntity.ok(gameService.getByTitle(title));
+            if (dto == null) {
+                return ResponseEntity.badRequest().build();
             }
-
-            if (devId != null) {
-                return ResponseEntity.ok(gameService.getByDevId(devId));
-            }
-
-            if (tagId != null) {
-                return ResponseEntity.ok(gameService.getByTagId(tagId));
-            }
-
-            return ResponseEntity.ok(gameService.getAll());
+            return ResponseEntity.ok(gameService.getGames(dto));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
+    @Override
     public ResponseEntity<GameResponseDTO> getById(Integer id) {
         try {
-            GameResponseDTO response = gameService.getById(id);
-            if (response == null) {
-                return ResponseEntity.notFound().build();
+            if (id == null) {
+                return ResponseEntity.badRequest().build();
             }
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(gameService.getGameById(id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

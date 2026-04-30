@@ -1,5 +1,6 @@
 package org.ies.fenix.server.controller;
 
+import org.ies.fenix.controller.ITagController;
 import org.ies.fenix.controller.dto.tag.TagResponseDTO;
 import org.ies.fenix.server.services.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tags")
-public class TagController implements org.ies.fenix.controller.ITagController {
+public class TagController implements ITagController {
 
     @Autowired
     private TagService tagService;
 
-    @GetMapping("")
+    @Override
     public ResponseEntity<List<TagResponseDTO>> getAll() {
         try {
             return ResponseEntity.ok(tagService.getAll());
@@ -27,8 +28,8 @@ public class TagController implements org.ies.fenix.controller.ITagController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TagResponseDTO> getById(@PathVariable Integer id) {
+    @Override
+    public ResponseEntity<TagResponseDTO> getById(Integer id) {
         try {
             TagResponseDTO response = tagService.getById(id);
             if (response == null) {

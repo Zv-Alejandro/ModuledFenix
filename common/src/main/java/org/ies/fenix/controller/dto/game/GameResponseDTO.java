@@ -13,10 +13,9 @@ public class GameResponseDTO {
     private Integer id;
     private String title;
     private String description;
-    private BigDecimal tamanoMb;
-    private Integer downloads;
+    private String sizeApproximation;
+    private String downloadsApproximation;
     private BigDecimal price;
-    private Integer devId;
     private String devUsername;
     private List<String> tags;
 }

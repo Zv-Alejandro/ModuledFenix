@@ -44,13 +44,13 @@ public class TokenService {
                 .isPresent();
     }
 
-//    public Integer getClientId(String tokenValue) {
-//        return authTokenRepository.findByToken(tokenValue)
-//                .filter(token -> token.getRevokedAt() == null)
-//                .filter(token -> token.getExpiresAt().isAfter(Instant.now()))
-//                .map(AuthToken::getClientId)
-//                .orElse(null);
-//    }
+    public Client getClient(String tokenValue) {
+        return authTokenRepository.findByToken(tokenValue)
+                .filter(token -> token.getRevokedAt() == null)
+                .filter(token -> token.getExpiresAt().isAfter(Instant.now()))
+                .map(AuthToken::getUser)
+                .orElse(null);
+    }
 
     public void revoke(String tokenValue) {
         authTokenRepository.findByToken(tokenValue).ifPresent(token -> {
