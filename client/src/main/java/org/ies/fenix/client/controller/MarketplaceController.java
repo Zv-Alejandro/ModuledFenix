@@ -43,10 +43,11 @@ public class MarketplaceController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            ResponseEntity<ClientNameDTO> response = clientApiService.getUsername("Bearer " + sessionManager.getToken());
+            ResponseEntity<ClientNameDTO> response = clientApiService.getUsername("Bearer " + sessionManager.getToken()); //tokens en todos lados para peticiones de las interfaces Ike
+            //si sale error en consola 404 Unauthorized xd es porque no has puesto token
 
             if (response.getStatusCode().value() == 200 && response.getBody() != null) {
-                username.setText(response.getBody().getUsername());
+                username.setText(response.getBody().getUsername().toUpperCase());
             }
         } catch (RuntimeException e) {
             e.printStackTrace(); //needs to be handled

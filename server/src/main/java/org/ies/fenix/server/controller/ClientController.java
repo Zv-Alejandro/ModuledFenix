@@ -15,11 +15,17 @@ public class ClientController implements IClientController {
     private ClientService clientService;
 
     public ResponseEntity<RegisterResponseDTO> register(ClientRegisterDTO dto) {
+        if (dto == null) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(clientService.register(dto));
     }
 
 
     public ResponseEntity<LoginResponseDTO> login(ClientLoginDTO dto) {
+        if (dto == null) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(clientService.login(dto));
     }
 

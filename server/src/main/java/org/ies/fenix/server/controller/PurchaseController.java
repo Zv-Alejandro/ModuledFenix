@@ -20,6 +20,7 @@ public class PurchaseController implements IPurchaseController {
     @Autowired
     private PurchaseService purchaseService;
 
+    @Override
     public ResponseEntity<?> createPurchase(PurchaseCreateDTO dto) {
         try {
             PurchaseResponseDTO response = purchaseService.createPurchase(dto);
@@ -34,6 +35,7 @@ public class PurchaseController implements IPurchaseController {
         }
     }
 
+    @Override
     public ResponseEntity<List<PurchaseResponseDTO>> getByClientId(Integer clientId) {
         try {
             return ResponseEntity.ok(purchaseService.getByClientId(clientId));
@@ -42,6 +44,7 @@ public class PurchaseController implements IPurchaseController {
         }
     }
 
+    @Override
     public ResponseEntity<List<LibraryGameDTO>> getLibraryByClientId(Integer clientId) {
         try {
             return ResponseEntity.ok(purchaseService.getLibraryByClientId(clientId));
@@ -50,6 +53,7 @@ public class PurchaseController implements IPurchaseController {
         }
     }
 
+    @Override
     public ResponseEntity<DownloadResponseDTO> downloadGame(Integer clientId, Integer gameId) {
         try {
             DownloadResponseDTO response = purchaseService.downloadGame(clientId, gameId);
