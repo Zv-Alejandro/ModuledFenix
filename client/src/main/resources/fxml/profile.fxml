@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="root"
+            prefHeight="800.0"
+            prefWidth="1300.0"
+            styleClass="profile-root"
+            stylesheets="@../styles/styles.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="content-container">
+            <padding>
+                <Insets top="30.0" right="30.0" bottom="0.0" left="30.0"/>
+            </padding>
+
+            <Button text="&lt;" styleClass="nav-button"/>
+            <Button text="&gt;" styleClass="nav-button"/>
+
+            <Label text="MARKET PLACE" styleClass="tab-inactive"/>
+            <Label text="LIBRARY" styleClass="tab-inactive"/>
+            <Label text="USERNAME" styleClass="tab-active"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button text="Create your own visual novel"
+                    styleClass="main-action-button"/>
+
+            <HBox alignment="CENTER"
+                  prefHeight="40.0"
+                  prefWidth="40.0"
+                  styleClass="profile-wrapper">
+                <ImageView fitHeight="28.0"
+                           fitWidth="28.0"
+                           preserveRatio="true"
+                           styleClass="profile-image"/>
+            </HBox>
+
+            <Label text="⌄" styleClass="dropdown-icon"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="AS_NEEDED"
+                    styleClass="main-scroll">
+
+            <content>
+                <VBox spacing="28.0" styleClass="profile-container">
+                    <padding>
+                        <Insets top="30.0" right="30.0" bottom="30.0" left="30.0"/>
+                    </padding>
+
+                    <!-- TITLE -->
+                    <Label text="USER PROFILE"
+                           styleClass="profile-section-title"/>
+
+                    <!-- Cambia estos bloques para que los recuadros sí se vean claramente -->
+
+                    <!-- MAIN CARD -->
+                    <HBox spacing="0.0" styleClass="profile-main-card">
+
+                        <!-- LEFT -->
+                        <VBox alignment="TOP_CENTER"
+                              spacing="28.0"
+                              prefWidth="330.0"
+                              styleClass="profile-left-panel">
+
+                            <padding>
+                                <Insets top="35.0" right="30.0" bottom="35.0" left="30.0"/>
+                            </padding>
+
+                            <HBox alignment="CENTER"
+                                  styleClass="profile-avatar-wrapper">
+                                <ImageView fitWidth="240.0"
+                                           fitHeight="260.0"
+                                           preserveRatio="false"
+                                           styleClass="profile-avatar-image"/>
+                            </HBox>
+
+                            <Button text="EDIT ▶"
+                                    styleClass="profile-edit-button"/>
+                        </VBox>
+
+                        <!-- CENTER -->
+                        <VBox spacing="22.0"
+                              prefWidth="430.0"
+                              styleClass="profile-center-panel">
+
+                            <padding>
+                                <Insets top="40.0" right="35.0" bottom="35.0" left="35.0"/>
+                            </padding>
+
+                            <Label text="Name" styleClass="profile-label"/>
+                            <TextField promptText="[USER-NAME]"
+                                       styleClass="profile-input"/>
+
+                            <Label text="Email" styleClass="profile-label"/>
+                            <TextField promptText="user@gmail.com"
+                                       styleClass="profile-input"/>
+
+                            <Label text="Password" styleClass="profile-label"/>
+                            <TextField promptText="************"
+                                       styleClass="profile-input"/>
+                        </VBox>
+
+                        <!-- RIGHT -->
+                        <VBox spacing="22.0"
+                              prefWidth="420.0"
+                              styleClass="profile-right-panel">
+
+                            <padding>
+                                <Insets top="40.0" right="35.0" bottom="35.0" left="35.0"/>
+                            </padding>
+
+                            <Label text="Description"
+                                   styleClass="profile-label"/>
+
+                            <TextArea wrapText="true"
+                                      editable="false"
+                                      prefHeight="220.0"
+                                      text="Lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est."
+                                      styleClass="profile-description"/>
+
+                            <Region VBox.vgrow="ALWAYS"/>
+
+                            <HBox alignment="CENTER_RIGHT">
+                                <Button text="EDIT ▶"
+                                        styleClass="profile-edit-button"/>
+                            </HBox>
+                        </VBox>
+
+                    </HBox>
+
+
+                    <!-- OVERVIEW -->
+                    <HBox spacing="28.0">
+
+                        <HBox HBox.hgrow="ALWAYS"
+                              alignment="CENTER_LEFT"
+                              spacing="20.0"
+                              styleClass="profile-overview-card">
+
+                            <padding>
+                                <Insets top="24.0" right="28.0" bottom="24.0" left="28.0"/>
+                            </padding>
+
+                            <HBox alignment="CENTER"
+                                  styleClass="profile-overview-icon">
+                                <ImageView fitWidth="34.0"
+                                           fitHeight="34.0"
+                                           preserveRatio="true"/>
+                            </HBox>
+
+                            <VBox spacing="6.0">
+                                <Label text="Games acquired"
+                                       styleClass="profile-overview-title"/>
+                                <Label text="0"
+                                       styleClass="profile-overview-value"/>
+                            </VBox>
+                        </HBox>
+
+                        <HBox HBox.hgrow="ALWAYS"
+                              alignment="CENTER_LEFT"
+                              spacing="20.0"
+                              styleClass="profile-overview-card">
+
+                            <padding>
+                                <Insets top="24.0" right="28.0" bottom="24.0" left="28.0"/>
+                            </padding>
+
+                            <HBox alignment="CENTER"
+                                  styleClass="profile-overview-icon">
+                                <ImageView fitWidth="34.0"
+                                           fitHeight="34.0"
+                                           preserveRatio="true"/>
+                            </HBox>
+
+                            <VBox spacing="6.0">
+                                <Label text="Games created"
+                                       styleClass="profile-overview-title"/>
+                                <Label text="0"
+                                       styleClass="profile-overview-value"/>
+                            </VBox>
+                        </HBox>
+
+                    </HBox>
+
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
