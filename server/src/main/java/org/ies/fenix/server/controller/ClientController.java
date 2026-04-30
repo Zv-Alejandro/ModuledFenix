@@ -1,9 +1,6 @@
 package org.ies.fenix.server.controller;
 
-import org.ies.fenix.controller.dto.client.ClientLoginDTO;
-import org.ies.fenix.controller.dto.client.ClientRegisterDTO;
-import org.ies.fenix.controller.dto.client.LoginResponseDTO;
-import org.ies.fenix.controller.dto.client.RegisterResponseDTO;
+import org.ies.fenix.controller.dto.client.*;
 import org.ies.fenix.server.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,4 +37,14 @@ public class ClientController implements IClientController {
         }
         return authorization.substring(7);
     }
+
+    @Override
+    public ResponseEntity<ClientNameDTO> getUsername(String authorization) {
+        String token = extractBearerToken(authorization);
+        if (token != null) {
+            return ResponseEntity.ok( new ClientNameDTO(clientService.getClient(token).getUsername()));
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
 }
