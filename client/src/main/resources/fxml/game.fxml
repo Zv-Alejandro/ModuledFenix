@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Hyperlink?>
 <BorderPane fx:id="root"
             prefHeight="850.0"
             prefWidth="1400.0"
@@ -19,7 +20,7 @@
             stylesheets="@../styles/styles.css"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.ies.fenix.client.controller.GameControllerFx">
+            fx:controller="org.ies.fenix.client.controller.GameController">
 
     <!-- TOP NAVBAR -->
     <top>
@@ -34,9 +35,9 @@
             <Button text="&lt;" styleClass="nav-button"/>
             <Button text="&gt;" styleClass="nav-button"/>
 
-            <Label text="MARKET PLACE" styleClass="tab-inactive"/>
-            <Label text="LIBRARY" styleClass="tab-active"/>
-            <Label fx:id="usernameLabel"
+            <Hyperlink text="MARKET PLACE" styleClass="tab-inactive"/>
+            <Hyperlink text="LIBRARY" styleClass="tab-active"/>
+            <Hyperlink fx:id="username"
                    text="USERNAME"
                    styleClass="tab-inactive"/>
 
