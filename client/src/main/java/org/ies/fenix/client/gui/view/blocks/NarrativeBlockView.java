@@ -1,6 +1,5 @@
 package org.ies.fenix.client.gui.view.blocks;
 
-
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import org.ies.fenix.client.gui.model.script.NarrativeBlockModel;
@@ -10,7 +9,9 @@ public class NarrativeBlockView extends BaseBlockView {
     private TextArea textArea;
     private NarrativeBlockModel model;
 
-    //metodo para mostrar en el espacio de trabajo
+    // ============================================================
+    //  MODO EDITOR (bloque real con modelo)
+    // ============================================================
     public NarrativeBlockView(NarrativeBlockModel model) {
         this.model = model;
 
@@ -18,6 +19,10 @@ public class NarrativeBlockView extends BaseBlockView {
 
         textArea = new TextArea();
         textArea.setPromptText("Describe the scene...");
+        textArea.setPrefHeight(80);
+
+        // Cargar valor inicial
+        textArea.setText(model.getNarration());
 
         // Listener: actualiza el modelo cuando el usuario escribe
         textArea.textProperty().addListener((obs, oldValue, newValue) -> {
@@ -25,20 +30,33 @@ public class NarrativeBlockView extends BaseBlockView {
         });
 
         getChildren().addAll(title, textArea);
+
+        // Estilo opcional para distinguirlo del catálogo
+        setStyle("-fx-background-color: #fff7c2; -fx-padding: 10; -fx-border-color: black;");
     }
 
-    //metodo para mostrar en el catalogo
+    // ============================================================
+    //  MODO CATÁLOGO (solo imagen, sin modelo, sin listeners)
+    // ============================================================
     public NarrativeBlockView() {
         Label title = new Label("TEXT");
-        TextArea textArea = new TextArea();
-        textArea.setDisable(true); // opcional: para que no se pueda escribir
-        getChildren().addAll(title, textArea);
+
+        TextArea preview = new TextArea("Scene description...");
+        preview.setDisable(true);
+        preview.setPrefHeight(80);
+
+        getChildren().addAll(title, preview);
+
+        // Estilo tipo tarjeta para toolbox
+        setStyle("-fx-background-color: #f7d75c; -fx-padding: 10; -fx-border-color: black;");
     }
 
-
-    // Si quieres cargar datos existentes (por ejemplo al editar un script)
+    // ============================================================
+    //  Cargar datos existentes (si se reabre un script)
+    // ============================================================
     public void loadFromModel() {
-        textArea.setText(model.getNarration());
+        if (model != null) {
+            textArea.setText(model.getNarration());
+        }
     }
 }
-
