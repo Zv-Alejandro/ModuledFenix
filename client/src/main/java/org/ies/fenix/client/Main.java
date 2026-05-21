@@ -86,6 +86,9 @@ public class Main extends Application {
             if (clazz == NavbarController.class) {
                 return new NavbarController(stageManager, clientApiService, sessionManager);
             }
+            if (clazz == ScriptEditorController.class) {
+                return new ScriptEditorController();
+            }
 
             try {
                 return clazz.getDeclaredConstructor().newInstance();

@@ -1,26 +1,18 @@
 package org.ies.fenix.client.gui.model.script;
 
-import org.ies.fenix.client.gui.util.FenixCharacter;
+public class DialogBlockModel extends BaseBlockModel {
 
-public class DialogBlockModel {
+    private FenixCharacterModel character;
     private String dialog;
 
-    public String getDialog() {
-        return dialog;
+    public DialogBlockModel() {
+        super("dialog"); // ← ESTO ES OBLIGATORIO
     }
 
-    public void setDialog(String dialog) {
-        this.dialog = dialog;
-    }
+    public FenixCharacterModel getCharacter() { return character; }
+    public void setCharacter(FenixCharacterModel character) { this.character = character; }
 
-    public FenixCharacter getCharacter() {
-        return character;
-    }
-
-    public void setCharacter(FenixCharacter character) {
-        this.character = character;
-    }
-
-    private FenixCharacter character;
-
+    public String getDialog() { return dialog; }
+    public void setDialog(String dialog) { this.dialog = dialog; }
 }
+
