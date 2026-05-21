@@ -15,40 +15,41 @@ public class NarrativeBlockView extends BaseBlockView {
     public NarrativeBlockView(NarrativeBlockModel model) {
         this.model = model;
 
+        getStyleClass().add("block-editor");
+
         Label title = new Label("TEXT");
+        title.getStyleClass().add("block-label");
 
         textArea = new TextArea();
         textArea.setPromptText("Describe the scene...");
         textArea.setPrefHeight(80);
+        textArea.getStyleClass().add("block-textarea");
 
-        // Cargar valor inicial
         textArea.setText(model.getNarration());
 
-        // Listener: actualiza el modelo cuando el usuario escribe
         textArea.textProperty().addListener((obs, oldValue, newValue) -> {
             model.setNarration(newValue);
         });
 
         getChildren().addAll(title, textArea);
-
-        // Estilo opcional para distinguirlo del catálogo
-        setStyle("-fx-background-color: #fff7c2; -fx-padding: 10; -fx-border-color: black;");
     }
 
     // ============================================================
     //  MODO CATÁLOGO (solo imagen, sin modelo, sin listeners)
     // ============================================================
     public NarrativeBlockView() {
+
+        getStyleClass().add("block-catalog");
+
         Label title = new Label("TEXT");
+        title.getStyleClass().add("block-label");
 
         TextArea preview = new TextArea("Scene description...");
         preview.setDisable(true);
         preview.setPrefHeight(80);
+        preview.getStyleClass().add("block-textarea");
 
         getChildren().addAll(title, preview);
-
-        // Estilo tipo tarjeta para toolbox
-        setStyle("-fx-background-color: #f7d75c; -fx-padding: 10; -fx-border-color: black;");
     }
 
     // ============================================================

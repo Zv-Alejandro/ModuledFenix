@@ -14,14 +14,21 @@ public class SceneBlockView extends BaseBlockView {
     private TextField sceneNameField;
     private VBox childrenContainer;
 
+    // ============================================================
+    //  MODO EDITOR
+    // ============================================================
     public SceneBlockView(SceneBlockModel model) {
         this.model = model;
 
+        getStyleClass().add("block-scene");
+
         Label title = new Label("SCENE");
+        title.getStyleClass().add("block-label");
 
         sceneNameField = new TextField();
         sceneNameField.setPromptText("Scene name");
         sceneNameField.setText(model.getName());
+        sceneNameField.getStyleClass().add("block-textfield");
 
         sceneNameField.textProperty().addListener((obs, oldV, newV) -> {
             model.setName(newV);
@@ -29,43 +36,41 @@ public class SceneBlockView extends BaseBlockView {
 
         childrenContainer = new VBox(10);
 
-        // Cargar hijos existentes
         for (BaseBlockModel child : model.getChildren()) {
             childrenContainer.getChildren().add(BlockFactory.createView(child));
         }
 
-        setSpacing(10);
-        getChildren().addAll(title, sceneNameField, childrenContainer);
+        HBox row = new HBox(10, title, sceneNameField);
+        row.getStyleClass().add("block-row");
 
-        setStyle("-fx-background-color: #dfe8ff; -fx-padding: 15; -fx-border-color: #4a6aff; -fx-border-width: 2;");
+        getChildren().addAll(row, childrenContainer);
     }
 
+    // ============================================================
+    //  MODO CATÁLOGO
+    // ============================================================
     public SceneBlockView() {
 
-        // --- BARRA SUPERIOR ---
+        getStyleClass().add("block-catalog");
+
         HBox topBar = new HBox(10);
+        topBar.getStyleClass().add("block-row");
 
         Label sceneLabel = new Label("SCENE");
-        sceneLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: black;");
+        sceneLabel.getStyleClass().add("block-label");
 
         TextField emptyField = new TextField();
         emptyField.setDisable(true);
         emptyField.setPrefWidth(200);
-        emptyField.setStyle("-fx-background-color: white; -fx-border-color: black;");
+        emptyField.getStyleClass().add("block-textfield");
 
         topBar.getChildren().addAll(sceneLabel, emptyField);
-        topBar.setStyle("-fx-background-color: #f7d75c; -fx-padding: 5; -fx-border-color: black;");
 
-        // --- BARRA INFERIOR ---
         HBox bottomBar = new HBox();
-        bottomBar.setStyle("-fx-background-color: #f7d75c; -fx-padding: 10; -fx-border-color: black;");
         bottomBar.setPrefHeight(20);
+        bottomBar.getStyleClass().add("block-row");
 
-        // --- LAYOUT GENERAL ---
-        setSpacing(0);
         getChildren().addAll(topBar, bottomBar);
-
-        setStyle("-fx-border-color: black; -fx-border-width: 2;");
     }
 
     public VBox getChildrenContainer() {

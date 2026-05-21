@@ -11,17 +11,125 @@
     -fx-background-color: #D7B45A;
 }
 
+/* ============================================================
+   BLOQUES BASE
+   ============================================================ */
+
 .block {
-
-    -fx-background-color: white;
-
-    -fx-background-radius: 10;
-
-    -fx-border-radius: 10;
-
-    -fx-border-color: #CCCCCC;
-
+    -fx-padding: 12;
+    -fx-spacing: 10;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
     -fx-border-width: 2;
+    -fx-border-color: black;
+}
 
+/* Modo catálogo (amarillo) */
+.block-catalog {
+    -fx-background-color: #f7d75c;
+}
+
+/* Modo editor (crema) */
+.block-editor {
+    -fx-background-color: #fff7c2;
+}
+
+/* Modo escena (azul claro) */
+.block-scene {
+    -fx-background-color: #dfe8ff;
+    -fx-border-color: #4a6aff;
+}
+
+/* ============================================================
+   ETIQUETAS DE BLOQUE (CHR, COL, SHOW, OPTION, etc.)
+   ============================================================ */
+
+.block-label {
+    -fx-background-color: #d7b4ff;
+    -fx-padding: 5 8;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-font-weight: bold;
+}
+
+/* ============================================================
+   CAMPOS DE TEXTO
+   ============================================================ */
+
+.block-textfield {
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-background-color: #ffffff;
+}
+
+.block-textarea {
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-background-color: #ffffff;
+    -fx-padding: 6;
+}
+
+/* ============================================================
+   COMBOBOX
+   ============================================================ */
+
+.block-combo {
+    -fx-border-color: black;
+    -fx-border-width: 1;
+}
+
+/* ============================================================
+   BOTONES
+   ============================================================ */
+
+.block-button {
+    -fx-background-color: #e8e8e8;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-padding: 5 10;
+    -fx-cursor: hand;
+}
+
+.block-button:hover {
+    -fx-background-color: #dcdcdc;
+}
+
+/* ============================================================
+   FILAS (HBox)
+   ============================================================ */
+
+.block-row {
+    -fx-spacing: 10;
+    -fx-alignment: CENTER_LEFT;
+}
+/* PANEL IZQUIERDO */
+.palette {
+    -fx-background-color: #ececec;
     -fx-padding: 15;
+}
+
+.palette-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.palette-button {
+    -fx-background-color: #ffffff;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-padding: 6 10;
+    -fx-cursor: hand;
+}
+
+.palette-button:hover {
+    -fx-background-color: #e6e6e6;
+}
+
+/* WORKSPACE */
+.workspace-scroll {
+    -fx-background-color: transparent;
+}
+
+.workspace {
+    -fx-padding: 20;
 }

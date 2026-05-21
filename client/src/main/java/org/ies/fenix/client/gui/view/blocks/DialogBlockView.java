@@ -3,10 +3,10 @@ package org.ies.fenix.client.gui.view.blocks;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
+import org.ies.fenix.client.gui.util.EditorRegistry;
 import org.ies.fenix.client.gui.model.script.DialogBlockModel;
 import org.ies.fenix.client.gui.model.script.FenixCharacterModel;
-
-import java.util.List;
 
 public class DialogBlockView extends BaseBlockView {
 
@@ -19,36 +19,42 @@ public class DialogBlockView extends BaseBlockView {
     // ============================================================
     public DialogBlockView() {
 
+        getStyleClass().add("block-catalog");
+
         Label instruction1 = new Label("SHOW");
+        instruction1.getStyleClass().add("block-label");
 
         ComboBox<FenixCharacterModel> previewCombo = new ComboBox<>();
         previewCombo.setDisable(true);
+        previewCombo.getStyleClass().add("block-combo");
 
         TextArea previewText = new TextArea("Character dialog...");
         previewText.setDisable(true);
         previewText.setPrefHeight(60);
+        previewText.getStyleClass().add("block-textarea");
 
-        getChildren().addAll(instruction1, previewCombo, previewText);
+        HBox row1 = new HBox(10, instruction1, previewCombo);
+        row1.getStyleClass().add("block-row");
 
-        // Estilo opcional para que parezca un bloque
-        setStyle("-fx-background-color: #f7d75c; -fx-padding: 10; -fx-border-color: black;");
+        getChildren().addAll(row1, previewText);
     }
 
     // ============================================================
     //  MODO EDITOR (bloque real con modelo)
     // ============================================================
-    public DialogBlockView(List<FenixCharacterModel> characterList, DialogBlockModel model) {
+    public DialogBlockView(DialogBlockModel model) {
         this.model = model;
 
+        getStyleClass().add("block-editor");
+
         Label instruction1 = new Label("SHOW");
+        instruction1.getStyleClass().add("block-label");
 
         characterCombo = new ComboBox<>();
-        characterCombo.getItems().addAll(characterList);
-
-        // Cargar valor inicial
+        characterCombo.setItems(EditorRegistry.getCharacters());
         characterCombo.setValue(model.getCharacter());
+        characterCombo.getStyleClass().add("block-combo");
 
-        // Listener → actualiza modelo
         characterCombo.valueProperty().addListener((obs, oldValue, newValue) -> {
             model.setCharacter(newValue);
         });
@@ -56,30 +62,22 @@ public class DialogBlockView extends BaseBlockView {
         textArea = new TextArea();
         textArea.setPromptText("What does the character say?");
         textArea.setPrefHeight(60);
-
-        // Cargar valor inicial
         textArea.setText(model.getDialog());
+        textArea.getStyleClass().add("block-textarea");
 
-        // Listener → actualiza modelo
         textArea.textProperty().addListener((obs, oldValue, newValue) -> {
             model.setDialog(newValue);
         });
 
-        getChildren().addAll(instruction1, characterCombo, textArea);
+        HBox row1 = new HBox(10, instruction1, characterCombo);
+        row1.getStyleClass().add("block-row");
 
-        setStyle("-fx-background-color: #fff7c2; -fx-padding: 10; -fx-border-color: black;");
+        getChildren().addAll(row1, textArea);
     }
 
     // ============================================================
     //  MÉTODOS AUXILIARES
     // ============================================================
-
-    public void updateCharacters(List<FenixCharacterModel> characterList) {
-        if (characterCombo != null) {
-            characterCombo.getItems().setAll(characterList);
-        }
-    }
-
     public DialogBlockModel getModel() {
         return model;
     }
