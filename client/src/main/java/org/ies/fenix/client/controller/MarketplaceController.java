@@ -205,9 +205,9 @@ public class MarketplaceController implements Initializable {
         card.getStyleClass().add("card");
 
         HBox imageWrapper = createImageWrapper(game);
-        HBox infoRow = createInfoRow(game);
+        VBox infoBox = createInfoRow(game);
 
-        card.getChildren().addAll(imageWrapper, infoRow);
+        card.getChildren().addAll(imageWrapper, infoBox);
 
         wrapper.getChildren().add(card);
         wrapper.setOnMouseClicked(event -> openGame(game));
@@ -236,24 +236,23 @@ public class MarketplaceController implements Initializable {
         return imageWrapper;
     }
 
-    private HBox createInfoRow(GameResponseDTO game) {
+    private VBox createInfoRow(GameResponseDTO game) {
         Label titleLabel = new Label(getSafeText(game.getTitle(), "Untitled"));
         titleLabel.getStyleClass().add("card-title");
         titleLabel.setWrapText(true);
-        titleLabel.setMaxWidth(110.0);
+        titleLabel.setMaxWidth(280.0);
 
         GridPane tagsGrid = createMarketplaceTagsGrid(game.getTags());
+        tagsGrid.setAlignment(Pos.CENTER_LEFT);
 
-        HBox infoRow = new HBox(10.0);
-        infoRow.setAlignment(Pos.TOP_LEFT);
-        infoRow.setPrefWidth(280.0);
-        infoRow.setMaxWidth(280.0);
+        VBox infoBox = new VBox(8.0);
+        infoBox.setAlignment(Pos.TOP_LEFT);
+        infoBox.setPrefWidth(280.0);
+        infoBox.setMaxWidth(280.0);
 
-        HBox.setHgrow(titleLabel, Priority.ALWAYS);
+        infoBox.getChildren().addAll(titleLabel, tagsGrid);
 
-        infoRow.getChildren().addAll(titleLabel, tagsGrid);
-
-        return infoRow;
+        return infoBox;
     }
 
     // ============================================================

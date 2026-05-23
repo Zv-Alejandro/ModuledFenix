@@ -9,6 +9,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -35,7 +36,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import static org.ies.fenix.client.utils.ImageUtils.initialConfig;
 
@@ -378,7 +384,7 @@ public class GameController {
         String filename = resource.getFilename();
 
         if (filename == null || filename.isBlank()) {
-            return "game_" + selectedGameId;
+            return "game_" + selectedGameId + ".zip";
         }
 
         return filename;
@@ -393,7 +399,12 @@ public class GameController {
                 .bind(downloadTask.progressProperty());
 
         downloadTask.setOnSucceeded(event -> finishDownload());
-        downloadTask.setOnFailed(event -> finishDownload());
+
+        downloadTask.setOnFailed(event -> {
+            finishDownload();
+            showError("Download failed", "The game could not be downloaded or extracted.");
+        });
+
         downloadTask.setOnCancelled(event -> finishDownload());
 
         new Thread(downloadTask).start();
@@ -420,9 +431,65 @@ public class GameController {
                     }
                 }
 
+                if (isZipFile(target)) {
+                    updateProgress(ProgressBar.INDETERMINATE_PROGRESS, 1);
+                    unzipFile(target);
+                }
+
                 return null;
             }
         };
+    }
+
+    private boolean isZipFile(File file) {
+        return file != null
+                && file.getName() != null
+                && file.getName().toLowerCase().endsWith(".zip");
+    }
+
+    private void unzipFile(File zipFile) throws Exception {
+        Path outputDirectory = getExtractionDirectory(zipFile);
+
+        Files.createDirectories(outputDirectory);
+
+        try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(zipFile.toPath()))) {
+            ZipEntry entry;
+
+            while ((entry = zipInputStream.getNextEntry()) != null) {
+                Path targetPath = outputDirectory
+                        .resolve(entry.getName())
+                        .normalize();
+
+                if (!targetPath.startsWith(outputDirectory)) {
+                    throw new SecurityException("Invalid ZIP entry: " + entry.getName());
+                }
+
+                if (entry.isDirectory()) {
+                    Files.createDirectories(targetPath);
+                } else {
+                    Files.createDirectories(targetPath.getParent());
+                    Files.copy(zipInputStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                }
+
+                zipInputStream.closeEntry();
+            }
+        }
+    }
+
+    private Path getExtractionDirectory(File zipFile) {
+        String fileName = zipFile.getName();
+
+        if (fileName.toLowerCase().endsWith(".zip")) {
+            fileName = fileName.substring(0, fileName.length() - 4);
+        }
+
+        File parent = zipFile.getParentFile();
+
+        if (parent == null) {
+            return Path.of(fileName);
+        }
+
+        return parent.toPath().resolve(fileName);
     }
 
     private void finishDownload() {
