@@ -9,28 +9,45 @@ import javafx.scene.layout.StackPane;
 import org.ies.fenix.client.config.FxmlView;
 
 public class BaseLayoutController {
+
+    // ============================================================
+    // FXML FIELDS
+    // ============================================================
+
     @FXML
     private HBox navbar;
+
     @FXML
     private StackPane contentArea;
+
     @FXML
     private ProgressBar progressBar;
+
     @FXML
     private BorderPane root;
+
     @FXML
     private NavbarController navbarController;
 
-    public void setActiveView(FxmlView view) {
-        navbarController.setActiveTab(view);
-    }
+    // ============================================================
+    // CONTENT
+    // ============================================================
 
     public void setContent(Node node) {
         contentArea.getChildren().setAll(node);
     }
 
+    public void setActiveView(FxmlView view) {
+        navbarController.setActiveTab(view);
+    }
+
+    // ============================================================
+    // PROGRESS BAR
+    // ============================================================
+
     public void showProgress() {
         progressBar.setVisible(true);
-        progressBar.setProgress(-1); // modo indeterminado
+        progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
     }
 
     public void hideProgress() {
@@ -46,6 +63,10 @@ public class BaseLayoutController {
     public ProgressBar getGlobalProgressBar() {
         return progressBar;
     }
+
+    // ============================================================
+    // CHILD CONTROLLERS
+    // ============================================================
 
     public NavbarController getNavbarController() {
         return navbarController;
