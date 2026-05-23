@@ -1,28 +1,26 @@
 package org.ies.fenix.client.gui.view.blocks;
 
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import java.io.File;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.scene.layout.HBox;
-import org.ies.fenix.client.gui.model.script.BackgroundBlockModel;
+import org.ies.fenix.client.gui.model.script.CharacterBlockModel;
 
-import java.io.File;
+public class CharacterBlockView extends BaseBlockView {
 
-public class BackgroundBlockView extends BaseBlockView {
-
-    private BackgroundBlockModel model;
+    private CharacterBlockModel model;
     private TextField selectedFileField;
 
     // ============================================================
     //  MODO CATÁLOGO (solo imagen, sin modelo, sin listeners)
     // ============================================================
-    public BackgroundBlockView() {
+    public CharacterBlockView() {
 
-        getStyleClass().add("block");
         getStyleClass().add("block-catalog");
 
-        Label title = new Label("SET BACKGROUND");
+        Label title = new Label("SET CHARACTER");
         title.getStyleClass().add("block-label");
 
         TextField preview = new TextField("Select file...");
@@ -39,13 +37,12 @@ public class BackgroundBlockView extends BaseBlockView {
     // ============================================================
     //  MODO EDITOR (bloque real con modelo)
     // ============================================================
-    public BackgroundBlockView(BackgroundBlockModel model) {
+    public CharacterBlockView(CharacterBlockModel model) {
         this.model = model;
 
-        getStyleClass().add("block");
         getStyleClass().add("block-editor");
 
-        Label title = new Label("SET BACKGROUND");
+        Label title = new Label("SET CHARACTER");
         title.getStyleClass().add("block-label");
 
         selectedFileField = new TextField();
@@ -53,6 +50,7 @@ public class BackgroundBlockView extends BaseBlockView {
         selectedFileField.setEditable(false);
         selectedFileField.getStyleClass().add("block-textfield");
 
+        // Mostrar archivo actual si existe
         if (model.getImage() != null) {
             selectedFileField.setText(model.getImage().getName());
         }
@@ -72,7 +70,7 @@ public class BackgroundBlockView extends BaseBlockView {
     // ============================================================
     private void openFileChooser() {
         FileChooser chooser = new FileChooser();
-        chooser.setTitle("Select Background Image");
+        chooser.setTitle("Select Character Image");
         chooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
         );

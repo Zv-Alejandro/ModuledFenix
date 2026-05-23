@@ -2,41 +2,58 @@ package org.ies.fenix.client.gui.view.blocks;
 
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
+import org.ies.fenix.client.gui.util.EditorRegistry;
 import org.ies.fenix.client.gui.model.script.DialogBlockModel;
-import org.ies.fenix.client.gui.util.FenixCharacter;
-
-import java.util.List;
+import org.ies.fenix.client.gui.model.script.FenixCharacterModel;
 
 public class DialogBlockView extends BaseBlockView {
 
-    private ComboBox<FenixCharacter> characterCombo;
+    private ComboBox<FenixCharacterModel> characterCombo;
     private TextArea textArea;
     private DialogBlockModel model;
 
-    // MODO CATÁLOGO (bloque inactivo)
+    // ============================================================
+    //  MODO CATÁLOGO (solo imagen, sin modelo, sin listeners)
+    // ============================================================
     public DialogBlockView() {
+
+        getStyleClass().add("block-catalog");
+
         Label instruction1 = new Label("SHOW");
+        instruction1.getStyleClass().add("block-label");
 
-        ComboBox<FenixCharacter> previewCombo = new ComboBox<>();
+        ComboBox<FenixCharacterModel> previewCombo = new ComboBox<>();
         previewCombo.setDisable(true);
+        previewCombo.getStyleClass().add("block-combo");
 
-        TextArea previewText = new TextArea();
-        previewText.setPromptText("What does the character say?");
+        TextArea previewText = new TextArea("Character dialog...");
         previewText.setDisable(true);
+        previewText.setPrefHeight(60);
+        previewText.getStyleClass().add("block-textarea");
 
-        getChildren().addAll(instruction1, previewCombo, previewText);
+        HBox row1 = new HBox(10, instruction1, previewCombo);
+        row1.getStyleClass().add("block-row");
+
+        getChildren().addAll(row1, previewText);
     }
 
-    // MODO EDITOR (bloque activo con modelo)
-    public DialogBlockView(List<FenixCharacter> characterList, DialogBlockModel model) {
+    // ============================================================
+    //  MODO EDITOR (bloque real con modelo)
+    // ============================================================
+    public DialogBlockView(DialogBlockModel model) {
         this.model = model;
 
+        getStyleClass().add("block-editor");
+
         Label instruction1 = new Label("SHOW");
+        instruction1.getStyleClass().add("block-label");
 
         characterCombo = new ComboBox<>();
-        characterCombo.getItems().addAll(characterList);
+        characterCombo.setItems(EditorRegistry.getCharacters());
+        characterCombo.setValue(model.getCharacter());
+        characterCombo.getStyleClass().add("block-combo");
 
         characterCombo.valueProperty().addListener((obs, oldValue, newValue) -> {
             model.setCharacter(newValue);
@@ -44,18 +61,24 @@ public class DialogBlockView extends BaseBlockView {
 
         textArea = new TextArea();
         textArea.setPromptText("What does the character say?");
+        textArea.setPrefHeight(60);
+        textArea.setText(model.getDialog());
+        textArea.getStyleClass().add("block-textarea");
 
         textArea.textProperty().addListener((obs, oldValue, newValue) -> {
             model.setDialog(newValue);
         });
 
-        getChildren().addAll(instruction1, characterCombo, textArea);
+        HBox row1 = new HBox(10, instruction1, characterCombo);
+        row1.getStyleClass().add("block-row");
+
+        getChildren().addAll(row1, textArea);
     }
 
-    public void updateCharacters(List<FenixCharacter> characterList) {
-        if (characterCombo != null) {
-            characterCombo.getItems().setAll(characterList);
-        }
+    // ============================================================
+    //  MÉTODOS AUXILIARES
+    // ============================================================
+    public DialogBlockModel getModel() {
+        return model;
     }
 }
-

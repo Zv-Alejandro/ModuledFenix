@@ -1,6 +1,6 @@
-package org.ies.fenix.client.gui.util;
+package org.ies.fenix.client.gui.model.script;
 
-public class FenixCharacter {
+public class FenixCharacterModel {
     private String name;
 
     public String getName() {
