@@ -24,6 +24,12 @@ import java.io.File;
 
 public class UploadGameController {
 
+    private static final String DEFAULT_PRICE = "0";
+
+    // ============================================================
+    // FXML FIELDS
+    // ============================================================
+
     @FXML
     private TextField titleField;
 
@@ -60,10 +66,18 @@ public class UploadGameController {
     @FXML
     private ImageView horizontalImageTwoView;
 
+    // ============================================================
+    // DEPENDENCIES
+    // ============================================================
+
     private final StageManager stageManager;
     private final IGameController gameApiService;
     private final SessionManager sessionManager;
     private final RestClient restClient;
+
+    // ============================================================
+    // SELECTED FILES
+    // ============================================================
 
     private File selectedGameFile;
     private File selectedLogoImage;
@@ -81,6 +95,10 @@ public class UploadGameController {
         this.restClient = restClient;
     }
 
+    // ============================================================
+    // FORM ACTIONS
+    // ============================================================
+
     @FXML
     private void clearForm() {
         stageManager.goBack();
@@ -93,42 +111,16 @@ public class UploadGameController {
                 return;
             }
 
-            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-
-            body.add("title", titleField.getText().trim());
-            body.add("description", descriptionArea.getText() != null ? descriptionArea.getText().trim() : "");
-            body.add("tags", tagsField.getText() != null ? tagsField.getText().trim() : "");
-            body.add("price", "0");
-
-            body.add("gameFile", new FileSystemResource(selectedGameFile));
-            body.add("logoFile", new FileSystemResource(selectedLogoImage));
-
-            if (selectedVerticalImage != null) {
-                body.add("verticalImage", new FileSystemResource(selectedVerticalImage));
-            }
-
-            if (selectedHorizontalImageOne != null) {
-                body.add("horizontalImageOne", new FileSystemResource(selectedHorizontalImageOne));
-            }
-
-            if (selectedHorizontalImageTwo != null) {
-                body.add("horizontalImageTwo", new FileSystemResource(selectedHorizontalImageTwo));
-            }
-
-            ResponseEntity<GameResponseDTO> response = restClient.post()
-                    .uri("/api/games/create/upload")
-                    .header("Authorization", sessionManager.getAuthorizationHeader())
-                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                    .body(body)
-                    .retrieve()
-                    .toEntity(GameResponseDTO.class);
+            MultiValueMap<String, Object> body = buildUploadBody();
+            ResponseEntity<GameResponseDTO> response = uploadGame(body);
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 showInfo("Game published", "Your game has been published successfully.");
                 stageManager.switchScene(FxmlView.MARKETPLACE);
-            } else {
-                showError("Upload failed", "The server could not publish the game.");
+                return;
             }
+
+            showError("Upload failed", "The server could not publish the game.");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -155,12 +147,56 @@ public class UploadGameController {
         return true;
     }
 
+    // ============================================================
+    // UPLOAD
+    // ============================================================
+
+    private MultiValueMap<String, Object> buildUploadBody() {
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+
+        body.add("title", titleField.getText().trim());
+        body.add("description", getDescriptionText());
+        body.add("tags", getTagsText());
+        body.add("price", DEFAULT_PRICE);
+
+        body.add("gameFile", new FileSystemResource(selectedGameFile));
+        body.add("logoFile", new FileSystemResource(selectedLogoImage));
+
+        addOptionalFile(body, "verticalImage", selectedVerticalImage);
+        addOptionalFile(body, "horizontalImageOne", selectedHorizontalImageOne);
+        addOptionalFile(body, "horizontalImageTwo", selectedHorizontalImageTwo);
+
+        return body;
+    }
+
+    private void addOptionalFile(MultiValueMap<String, Object> body,
+                                 String name,
+                                 File file) {
+        if (file != null) {
+            body.add(name, new FileSystemResource(file));
+        }
+    }
+
+    private ResponseEntity<GameResponseDTO> uploadGame(MultiValueMap<String, Object> body) {
+        return restClient.post()
+                .uri("/api/games/create/upload")
+                .header("Authorization", sessionManager.getAuthorizationHeader())
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(body)
+                .retrieve()
+                .toEntity(GameResponseDTO.class);
+    }
+
+    // ============================================================
+    // FILE CHOOSERS
+    // ============================================================
+
     @FXML
     private void chooseGameFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose game file");
 
-        fileChooser.getExtensionFilters().addAll(
+        fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Game files", "*.zip")
         );
 
@@ -243,6 +279,10 @@ public class UploadGameController {
         return fileChooser.showOpenDialog(null);
     }
 
+    // ============================================================
+    // ALERTS
+    // ============================================================
+
     private void showInfo(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -257,5 +297,25 @@ public class UploadGameController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    // ============================================================
+    // HELPERS
+    // ============================================================
+
+    private String getDescriptionText() {
+        if (descriptionArea.getText() == null) {
+            return "";
+        }
+
+        return descriptionArea.getText().trim();
+    }
+
+    private String getTagsText() {
+        if (tagsField.getText() == null) {
+            return "";
+        }
+
+        return tagsField.getText().trim();
     }
 }

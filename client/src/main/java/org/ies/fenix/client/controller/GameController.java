@@ -4,7 +4,11 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -26,12 +30,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import static org.ies.fenix.client.utils.ImageUtils.initialConfig;
 
 public class GameController {
+
+    // ============================================================
+    // FXML FIELDS
+    // ============================================================
 
     @FXML
     public FontIcon topProfileIcon;
@@ -72,6 +84,10 @@ public class GameController {
     @FXML
     private Hyperlink username;
 
+    // ============================================================
+    // DEPENDENCIES
+    // ============================================================
+
     private final StageManager stageManager;
     private final IClientController clientApiService;
     private final IGameController gameApiService;
@@ -95,6 +111,10 @@ public class GameController {
         this.purchaseApiService = purchaseApiService;
     }
 
+    // ============================================================
+    // INITIALIZATION
+    // ============================================================
+
     @FXML
     private void initialize() {
         initialConfig(clientApiService, sessionManager, username, topProfileImage, topProfileIcon);
@@ -113,6 +133,19 @@ public class GameController {
         selectedGameBannerImage.fitHeightProperty().bind(bannerWrapper.heightProperty());
     }
 
+    private void configureBannerClip() {
+        Rectangle clip = new Rectangle();
+
+        clip.widthProperty().bind(bannerWrapper.widthProperty());
+        clip.heightProperty().bind(bannerWrapper.heightProperty());
+
+        bannerWrapper.setClip(clip);
+    }
+
+    // ============================================================
+    // SELECTED GAME
+    // ============================================================
+
     public void setSelectedGameId(Integer selectedGameId) {
         this.selectedGameId = selectedGameId;
         loadSelectedGame();
@@ -125,35 +158,43 @@ public class GameController {
 
         try {
             ResponseEntity<GameResponseDTO> response =
-                    gameApiService.getById(sessionManager.getAuthorizationHeader(), selectedGameId);
+                    gameApiService.getById(buildHeader(), selectedGameId);
 
             if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
                 return;
             }
 
-            GameResponseDTO game = response.getBody();
-
-            String title = game.getTitle() != null ? game.getTitle() : "Untitled";
-            String developer = game.getDevUsername() != null ? game.getDevUsername() : "Unknown";
-            String description = game.getDescription() != null ? game.getDescription() : "No description available.";
-
-            selectedGameTitle.setText(title);
-            selectedGameTitle2.setText("Title: " + title);
-            selectedGameDeveloper.setText("Developer: " + developer);
-
-            selectedGameDescription1.setText(description);
-            selectedGameDescription2.setText("");
-            selectedGameDescription3.setText("");
-
-            selectedGameMainQuote.setText(title);
-
-            renderTags(game.getTags());
+            renderSelectedGame(response.getBody());
             loadHorizontalTwoIntoBanner(selectedGameId);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private void renderSelectedGame(GameResponseDTO game) {
+        String title = game.getTitle() != null ? game.getTitle() : "Untitled";
+        String developer = game.getDevUsername() != null ? game.getDevUsername() : "Unknown";
+        String description = game.getDescription() != null
+                ? game.getDescription()
+                : "No description available.";
+
+        selectedGameTitle.setText(title);
+        selectedGameTitle2.setText("Title: " + title);
+        selectedGameDeveloper.setText("Developer: " + developer);
+
+        selectedGameDescription1.setText(description);
+        selectedGameDescription2.setText("");
+        selectedGameDescription3.setText("");
+
+        selectedGameMainQuote.setText(title);
+
+        renderTags(game.getTags());
+    }
+
+    // ============================================================
+    // TAGS
+    // ============================================================
 
     private void renderTags(List<String> tags) {
         tagContainerFather.getChildren().clear();
@@ -162,19 +203,15 @@ public class GameController {
             return;
         }
 
-        HBox firstRow = new HBox(10.0);
-        HBox secondRow = new HBox(10.0);
-
-        firstRow.setAlignment(Pos.CENTER_LEFT);
-        secondRow.setAlignment(Pos.CENTER_LEFT);
+        HBox firstRow = createTagRow();
+        HBox secondRow = createTagRow();
 
         List<String> visibleTags = tags.stream()
                 .limit(6)
                 .toList();
 
         for (int i = 0; i < visibleTags.size(); i++) {
-            Label tagLabel = new Label(visibleTags.get(i));
-            tagLabel.getStyleClass().add("tag");
+            Label tagLabel = createTagLabel(visibleTags.get(i));
 
             if (i < 3) {
                 firstRow.getChildren().add(tagLabel);
@@ -190,6 +227,22 @@ public class GameController {
         }
     }
 
+    private HBox createTagRow() {
+        HBox row = new HBox(10.0);
+        row.setAlignment(Pos.CENTER_LEFT);
+        return row;
+    }
+
+    private Label createTagLabel(String text) {
+        Label tagLabel = new Label(text);
+        tagLabel.getStyleClass().add("tag");
+        return tagLabel;
+    }
+
+    // ============================================================
+    // BANNER
+    // ============================================================
+
     private void loadHorizontalTwoIntoBanner(Integer gameId) {
         if (gameId == null || selectedGameBannerImage == null) {
             return;
@@ -197,32 +250,42 @@ public class GameController {
 
         try {
             ResponseEntity<byte[]> response = gameApiService.getHorizontal2(
-                    sessionManager.getAuthorizationHeader(),
+                    buildHeader(),
                     gameId
             );
 
-            if (!response.getStatusCode().is2xxSuccessful()
-                    || response.getBody() == null
-                    || response.getBody().length == 0) {
+            if (!hasValidImageBody(response)) {
                 return;
             }
 
             Image image = new Image(new ByteArrayInputStream(response.getBody()));
 
-            Platform.runLater(() -> {
-                selectedGameBannerImage.setViewport(null);
-                selectedGameBannerImage.setPreserveRatio(false);
-                selectedGameBannerImage.setImage(image);
-                selectedGameBannerImage.setVisible(true);
-                selectedGameBannerImage.setManaged(true);
-                selectedGameBannerImage.setOpacity(1.0);
-                selectedGameBannerImage.toFront();
-            });
+            Platform.runLater(() -> showBannerImage(image));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private boolean hasValidImageBody(ResponseEntity<byte[]> response) {
+        return response.getStatusCode().is2xxSuccessful()
+                && response.getBody() != null
+                && response.getBody().length > 0;
+    }
+
+    private void showBannerImage(Image image) {
+        selectedGameBannerImage.setViewport(null);
+        selectedGameBannerImage.setPreserveRatio(false);
+        selectedGameBannerImage.setImage(image);
+        selectedGameBannerImage.setVisible(true);
+        selectedGameBannerImage.setManaged(true);
+        selectedGameBannerImage.setOpacity(1.0);
+        selectedGameBannerImage.toFront();
+    }
+
+    // ============================================================
+    // DOWNLOAD
+    // ============================================================
 
     @FXML
     private void onDownload() {
@@ -232,115 +295,150 @@ public class GameController {
                 return;
             }
 
-            boolean purchased = hasPurchased(selectedGameId);
-
-            if (!purchased) {
-                boolean confirmed = showPurchaseConfirmation();
-
-                if (!confirmed) {
-                    return;
-                }
-
-                boolean success = performPurchase(selectedGameId);
-
-                if (!success) {
-                    return;
-                }
-            }
-
-            BaseLayoutController base = stageManager.getBaseLayoutController();
-            base.showProgress();
-
-            ResponseEntity<Resource> response = restClient.get()
-                    .uri("/api/games/download/" + selectedGameId)
-                    .header("Authorization", sessionManager.getAuthorizationHeader())
-                    .retrieve()
-                    .toEntity(Resource.class);
-
-            if (!response.getStatusCode().is2xxSuccessful()) {
-                base.hideProgress();
-                showError("Download failed", "The server returned an error.");
+            if (!canDownloadSelectedGame()) {
                 return;
             }
 
-            Resource resource = response.getBody();
+            Resource resource = requestGameResource();
 
             if (resource == null) {
-                base.hideProgress();
-                showError("Download failed", "Empty file received.");
                 return;
             }
 
-            String filename = resource.getFilename();
-
-            if (filename == null || filename.isBlank()) {
-                filename = "game_" + selectedGameId;
-            }
-
-            FileChooser chooser = new FileChooser();
-            chooser.setInitialFileName(filename);
-
-            File target = chooser.showSaveDialog(stageManager.getPrimaryStage());
+            File target = chooseDownloadTarget(resource);
 
             if (target == null) {
-                base.hideProgress();
+                hideProgress();
                 return;
             }
 
-            Task<Void> downloadTask = new Task<>() {
-                @Override
-                protected Void call() throws Exception {
-                    long fileSize = resource.contentLength();
-
-                    try (InputStream in = resource.getInputStream();
-                         OutputStream out = new FileOutputStream(target)) {
-
-                        byte[] buffer = new byte[8192];
-                        long totalRead = 0;
-                        int read;
-
-                        while ((read = in.read(buffer)) != -1) {
-                            out.write(buffer, 0, read);
-                            totalRead += read;
-
-                            updateProgress(totalRead, fileSize);
-                        }
-                    }
-
-                    return null;
-                }
-            };
-
-            base.getGlobalProgressBar()
-                    .progressProperty()
-                    .bind(downloadTask.progressProperty());
-
-            downloadTask.setOnSucceeded(e -> {
-                base.getGlobalProgressBar().progressProperty().unbind();
-                base.hideProgress();
-            });
-
-            downloadTask.setOnFailed(e -> {
-                base.getGlobalProgressBar().progressProperty().unbind();
-                base.hideProgress();
-            });
-
-            downloadTask.setOnCancelled(e -> {
-                base.getGlobalProgressBar().progressProperty().unbind();
-                base.hideProgress();
-            });
-
-            new Thread(downloadTask).start();
+            startDownload(resource, target);
 
         } catch (HttpClientErrorException e) {
-            String serverMessage = e.getResponseBodyAsString();
-            stageManager.getBaseLayoutController().hideProgress();
-            showError("Server error", serverMessage);
+            hideProgress();
+            showError("Server error", e.getResponseBodyAsString());
+
         } catch (Exception e) {
-            stageManager.getBaseLayoutController().hideProgress();
+            hideProgress();
             showError("Download failed", "Unexpected error");
         }
     }
+
+    private boolean canDownloadSelectedGame() {
+        boolean purchased = hasPurchased(selectedGameId);
+
+        if (purchased) {
+            return true;
+        }
+
+        boolean confirmed = showPurchaseConfirmation();
+
+        if (!confirmed) {
+            return false;
+        }
+
+        return performPurchase(selectedGameId);
+    }
+
+    private Resource requestGameResource() {
+        BaseLayoutController base = stageManager.getBaseLayoutController();
+        base.showProgress();
+
+        ResponseEntity<Resource> response = restClient.get()
+                .uri("/api/games/download/" + selectedGameId)
+                .header("Authorization", buildHeader())
+                .retrieve()
+                .toEntity(Resource.class);
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            base.hideProgress();
+            showError("Download failed", "The server returned an error.");
+            return null;
+        }
+
+        Resource resource = response.getBody();
+
+        if (resource == null) {
+            base.hideProgress();
+            showError("Download failed", "Empty file received.");
+            return null;
+        }
+
+        return resource;
+    }
+
+    private File chooseDownloadTarget(Resource resource) {
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialFileName(getDownloadFileName(resource));
+
+        return chooser.showSaveDialog(stageManager.getPrimaryStage());
+    }
+
+    private String getDownloadFileName(Resource resource) {
+        String filename = resource.getFilename();
+
+        if (filename == null || filename.isBlank()) {
+            return "game_" + selectedGameId;
+        }
+
+        return filename;
+    }
+
+    private void startDownload(Resource resource, File target) {
+        BaseLayoutController base = stageManager.getBaseLayoutController();
+        Task<Void> downloadTask = createDownloadTask(resource, target);
+
+        base.getGlobalProgressBar()
+                .progressProperty()
+                .bind(downloadTask.progressProperty());
+
+        downloadTask.setOnSucceeded(event -> finishDownload());
+        downloadTask.setOnFailed(event -> finishDownload());
+        downloadTask.setOnCancelled(event -> finishDownload());
+
+        new Thread(downloadTask).start();
+    }
+
+    private Task<Void> createDownloadTask(Resource resource, File target) {
+        return new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                long fileSize = resource.contentLength();
+
+                try (InputStream in = resource.getInputStream();
+                     OutputStream out = new FileOutputStream(target)) {
+
+                    byte[] buffer = new byte[8192];
+                    long totalRead = 0;
+                    int read;
+
+                    while ((read = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, read);
+                        totalRead += read;
+
+                        updateProgress(totalRead, fileSize);
+                    }
+                }
+
+                return null;
+            }
+        };
+    }
+
+    private void finishDownload() {
+        BaseLayoutController base = stageManager.getBaseLayoutController();
+
+        base.getGlobalProgressBar().progressProperty().unbind();
+        base.hideProgress();
+    }
+
+    private void hideProgress() {
+        stageManager.getBaseLayoutController().hideProgress();
+    }
+
+    // ============================================================
+    // PURCHASE
+    // ============================================================
 
     private boolean hasPurchased(Integer gameId) {
         Integer clientId = sessionManager.getClientId();
@@ -348,7 +446,7 @@ public class GameController {
         try {
             ResponseEntity<Boolean> response =
                     purchaseApiService.hasPurchased(
-                            sessionManager.getAuthorizationHeader(),
+                            buildHeader(),
                             clientId,
                             gameId
                     );
@@ -385,7 +483,7 @@ public class GameController {
 
             ResponseEntity<?> response =
                     purchaseApiService.createPurchase(
-                            sessionManager.getAuthorizationHeader(),
+                            buildHeader(),
                             dto
                     );
 
@@ -397,22 +495,9 @@ public class GameController {
         }
     }
 
-    private void showError(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-
-    private void configureBannerClip() {
-        Rectangle clip = new Rectangle();
-
-        clip.widthProperty().bind(bannerWrapper.widthProperty());
-        clip.heightProperty().bind(bannerWrapper.heightProperty());
-
-        bannerWrapper.setClip(clip);
-    }
+    // ============================================================
+    // NAVIGATION
+    // ============================================================
 
     @FXML
     void switchProfileScene() {
@@ -437,5 +522,21 @@ public class GameController {
     @FXML
     public void reloadView() {
         stageManager.reloadCurrentScene();
+    }
+
+    // ============================================================
+    // HELPERS
+    // ============================================================
+
+    private String buildHeader() {
+        return sessionManager.getAuthorizationHeader();
+    }
+
+    private void showError(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }
