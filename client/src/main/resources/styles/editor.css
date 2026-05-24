@@ -129,3 +129,14 @@
 .workspace {
     -fx-padding: 20;
 }
+
+.parent-shape {
+    -fx-fill: yellow; /* o el color que quieras */
+    -fx-stroke: black;
+    -fx-stroke-width: 2px;
+}
+
+
+.slot-area {
+    -fx-background-color: transparent;
+}

@@ -32,7 +32,7 @@ public class DialogBlockView extends BaseBlockView {
         previewCombo.getStyleClass().add("block-combo");
 
         // Cambiamos TextArea → TextField
-        TextField previewText = new TextField("Character dialog...");
+        TextField previewText = new TextField("");
         previewText.setDisable(true);
         previewText.getStyleClass().add("block-textfield");
 
