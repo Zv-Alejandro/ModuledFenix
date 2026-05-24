@@ -1,11 +1,9 @@
 package org.ies.fenix.client.gui.view.blocks;
 
 import javafx.scene.control.Label;
-import java.io.File;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Priority;
-import javafx.stage.FileChooser;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.HBox;
 import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.model.script.CharacterBlockModel;
@@ -52,6 +50,7 @@ public class CharacterBlockView extends BaseBlockView {
 
         Label title = new Label("SET CHARACTER");
         title.getStyleClass().add("block-label");
+        title.setMinWidth(Region.USE_PREF_SIZE);
 
         selector = new FileSelectorField();
 
@@ -72,6 +71,7 @@ public class CharacterBlockView extends BaseBlockView {
 
         getChildren().add(row);
     }
+
     @Override
     public BaseBlockModel createModel() {
         return new CharacterBlockModel();
