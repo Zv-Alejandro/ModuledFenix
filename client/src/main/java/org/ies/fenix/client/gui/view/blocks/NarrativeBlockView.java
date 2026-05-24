@@ -5,8 +5,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.model.script.NarrativeBlockModel;
+import org.ies.fenix.client.utils.ExpandableTextArea;
 
 public class NarrativeBlockView extends BaseBlockView {
 
@@ -15,16 +17,23 @@ public class NarrativeBlockView extends BaseBlockView {
     //  MODO EDITOR (bloque real con modelo)
     // ============================================================
     public NarrativeBlockView(NarrativeBlockModel model) {
+
         super.model = model;
+
         getStyleClass().add("block-editor");
 
         Label title = new Label("TEXT");
         title.getStyleClass().add("block-label");
+        title.setMinWidth(Region.USE_PREF_SIZE);
 
-        textArea = new TextArea();
+        textArea = new ExpandableTextArea();
         textArea.setPromptText("Describe the scene...");
         textArea.setPrefHeight(80);
+        textArea.setMaxWidth(Double.MAX_VALUE);
         textArea.getStyleClass().add("block-textarea");
+
+        HBox.setHgrow(title, Priority.NEVER);
+        HBox.setHgrow(textArea, Priority.ALWAYS);
 
         textArea.setText(model.getNarration());
 
@@ -32,7 +41,12 @@ public class NarrativeBlockView extends BaseBlockView {
             model.setNarration(newValue);
         });
 
-        getChildren().addAll(title, textArea);
+        HBox row = new HBox(10, title, textArea);
+        row.getStyleClass().add("block-row");
+        row.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(row, Priority.ALWAYS);
+
+        getChildren().add(row);
     }
 
     // ============================================================

@@ -5,9 +5,11 @@ import javafx.scene.layout.Region;
 
 public class ExpandableTextArea extends TextArea {
 
-    private final int collapsedRows = 1;   // apariencia de TextField
-    private final int expandedMaxRows = 100;
-    private final int collapsedMaxVisibleRows = 3;
+    private static final double DEFAULT_WIDTH = 300;
+
+    private final int collapsedRows = 1;
+    private final int expandedMaxRows = 5;
+    private final int collapsedMaxVisibleRows = 2;
 
     public ExpandableTextArea() {
         super();
@@ -15,24 +17,28 @@ public class ExpandableTextArea extends TextArea {
     }
 
     private void init() {
+
         setWrapText(true);
 
-        // Apariencia inicial tipo TextField
+        // ===== UNIFIED WIDTH =====
+        setPrefWidth(DEFAULT_WIDTH);
+        setMinWidth(DEFAULT_WIDTH);
+        setMaxWidth(DEFAULT_WIDTH);
+
+        // ===== HEIGHT BEHAVIOR =====
         setPrefRowCount(collapsedRows);
         setMinHeight(Region.USE_PREF_SIZE);
         setMaxHeight(Region.USE_PREF_SIZE);
 
-        // Auto-resize según contenido
+        // ===== AUTO RESIZE =====
         textProperty().addListener((obs, oldText, newText) -> autoResize());
 
-        // Expandir al enfocar
         focusedProperty().addListener((obs, oldVal, hasFocus) -> {
+
             if (hasFocus) {
                 setPrefRowCount(expandedMaxRows);
                 autoResize();
             } else {
-                // Si el texto es corto → 1 línea (TextField)
-                // Si es largo → máximo 3 líneas visibles
                 int lines = Math.min(countLines(getText()), collapsedMaxVisibleRows);
                 setPrefRowCount(lines == 0 ? 1 : lines);
                 autoResize();

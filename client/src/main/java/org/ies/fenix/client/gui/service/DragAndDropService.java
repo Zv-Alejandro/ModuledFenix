@@ -12,13 +12,19 @@ public class DragAndDropService {
 
     private DragContext context = new DragContext();
 
+    // ============================================================
+    // START DRAG (FIX: root resolution)
+    // ============================================================
+
     public void startDrag(BaseBlockView view, MouseEvent event) {
 
-        Dragboard db = view.startDragAndDrop(TransferMode.MOVE);
+        BaseBlockView root = resolveRoot(view);
+
+        Dragboard db = root.startDragAndDrop(TransferMode.MOVE);
 
         ClipboardContent content = new ClipboardContent();
 
-        String type = view.getType();
+        String type = root.getType();
 
         System.out.println("Drag: " + type);
 
@@ -27,9 +33,9 @@ public class DragAndDropService {
         db.setContent(content);
 
         DragContext ctx = new DragContext();
-        ctx.setDraggedView(view);
+        ctx.setDraggedView(root);
 
-        if (view.getParent() instanceof VBox vBox) {
+        if (root.getParent() instanceof VBox vBox) {
             ctx.setSourceContainer(vBox);
         }
 
@@ -38,14 +44,38 @@ public class DragAndDropService {
         event.consume();
     }
 
+    // ============================================================
+    // DRAG OVER (FIX: validation hook ready)
+    // ============================================================
+
     public void handleDragOver(DragEvent event) {
-        if (event.getDragboard().hasContent(BLOCK_FORMAT)) {
-            event.acceptTransferModes(TransferMode.MOVE);
+
+        if (!event.getDragboard().hasContent(BLOCK_FORMAT)) {
+            return;
         }
+
+        event.acceptTransferModes(TransferMode.MOVE);
         event.consume();
     }
 
+    // ============================================================
+    // CONTEXT
+    // ============================================================
+
     public DragContext getContext() {
         return context;
+    }
+
+    // ============================================================
+    // FIX: ROOT RESOLUTION (CRÍTICO)
+    // ============================================================
+
+    private BaseBlockView resolveRoot(BaseBlockView view) {
+
+        while (view.getParent() instanceof BaseBlockView parent) {
+            view = parent;
+        }
+
+        return view;
     }
 }

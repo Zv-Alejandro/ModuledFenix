@@ -11,6 +11,7 @@ import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.util.EditorRegistry;
 import org.ies.fenix.client.gui.model.script.OptionBlockModel;
 import org.ies.fenix.client.gui.model.script.SceneBlockModel;
+import org.ies.fenix.client.utils.ExpandableTextArea;
 
 public class OptionBlockView extends BaseBlockView {
 
@@ -21,30 +22,38 @@ public class OptionBlockView extends BaseBlockView {
     //  MODO EDITOR
     // ============================================================
     public OptionBlockView(OptionBlockModel model) {
+
         super.model = model;
+
         getStyleClass().add("block-editor");
+
+        // ===== OPTION =====
 
         Label instruction1 = new Label("OPTION");
         instruction1.getStyleClass().add("block-label");
+        instruction1.setMinWidth(Region.USE_PREF_SIZE);
 
-        optionSentenceArea = new TextArea();
-        optionSentenceArea.setPrefWidth(250);
-        optionSentenceArea.setPrefHeight(60);
+        optionSentenceArea = new ExpandableTextArea();
+        optionSentenceArea.setPromptText("Option sentence...");
         optionSentenceArea.getStyleClass().add("block-textarea");
+
+        // ===== JUMP SCENE =====
 
         Label instruction2 = new Label("JUMP SCENE");
         instruction2.getStyleClass().add("block-label");
+        instruction2.setMinWidth(Region.USE_PREF_SIZE);
 
         jumpSceneCombo = new ComboBox<>();
-        jumpSceneCombo.setPrefWidth(250);
         jumpSceneCombo.setItems(EditorRegistry.getScenes());
         jumpSceneCombo.getStyleClass().add("block-combo");
 
-        // Cargar valores iniciales
+        // ===== INITIAL VALUES =====
+
         optionSentenceArea.setText(model.getOptionSentence());
         jumpSceneCombo.setValue(model.getSceneBlockModel());
 
-        // Listeners
+        // ===== LISTENERS =====
+
         optionSentenceArea.textProperty().addListener((obs, oldV, newV) -> {
             model.setOptionSentence(newV);
         });
@@ -53,6 +62,8 @@ public class OptionBlockView extends BaseBlockView {
             model.setSceneBlockModel(newV);
         });
 
+        // ===== LAYOUT =====
+
         HBox row1 = new HBox(10, instruction1, optionSentenceArea);
         row1.getStyleClass().add("block-row");
 
@@ -60,6 +71,12 @@ public class OptionBlockView extends BaseBlockView {
         row2.getStyleClass().add("block-row");
 
         getChildren().addAll(row1, row2);
+
+        // ===== BLOCK SIZE =====
+
+        setMinWidth(Region.USE_PREF_SIZE);
+        setPrefWidth(Region.USE_COMPUTED_SIZE);
+        setMaxWidth(Region.USE_PREF_SIZE);
     }
 
     // ============================================================

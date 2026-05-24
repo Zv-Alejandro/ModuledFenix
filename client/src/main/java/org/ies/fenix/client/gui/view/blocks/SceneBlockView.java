@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.model.script.CharacterCreateBlockModel;
@@ -19,8 +20,9 @@ public class SceneBlockView extends ContainerBlockView {
 
     private TextField sceneNameField;
     private final List<BaseBlockModel> structure = new ArrayList<>();
+
     // ============================================================
-    //  MODO EDITOR
+    // MODO EDITOR
     // ============================================================
     public SceneBlockView(
             SceneBlockModel model,
@@ -28,65 +30,84 @@ public class SceneBlockView extends ContainerBlockView {
     ) {
 
         super.model = model;
+
         getStyleClass().add("block-scene");
+
+        // ============================================================
+        // HEADER
+        // ============================================================
 
         Label title = new Label("SCENE");
         title.getStyleClass().add("block-label");
+        title.setMinWidth(Region.USE_PREF_SIZE);
 
         sceneNameField = new TextField();
-
         sceneNameField.setPromptText("Scene name");
-
         sceneNameField.setText(model.getName());
+        sceneNameField.getStyleClass().add("block-textfield");
 
-        sceneNameField.getStyleClass()
-                .add("block-textfield");
+        sceneNameField.setPrefWidth(300);
+        sceneNameField.setMinWidth(300);
 
-        sceneNameField.textProperty().addListener(
-                (obs, oldV, newV) -> {
+        sceneNameField.textProperty().addListener((obs, oldV, newV) -> {
+            model.setName(newV);
+        });
 
-                    model.setName(newV);
-                }
-        );
-
-        HBox row = new HBox(
-                10,
-                title,
-                sceneNameField
-        );
-
+        HBox row = new HBox(10, title, sceneNameField);
         row.getStyleClass().add("block-row");
 
-        childrenContainer = new VBox(5);
+        // IMPORTANTE: layout estable
+        row.setMaxWidth(Region.USE_PREF_SIZE);
+        HBox.setHgrow(title, Priority.NEVER);
+        HBox.setHgrow(sceneNameField, Priority.NEVER);
 
-        childrenContainer.setPadding(
-                new Insets(0,0,0,10)
-        );
+        // ============================================================
+        // CHILDREN
+        // ============================================================
+
+        childrenContainer = new VBox(5);
+        childrenContainer.setPadding(new Insets(0, 0, 0, 20));
+        childrenContainer.getStyleClass().add("block-children-container");
+
+        // 🔥 CRÍTICO: no bloquear eventos de drag
+        childrenContainer.setPickOnBounds(false);
 
         for (BaseBlockModel child : model.getChildren()) {
 
             BaseBlockView childView =
                     BlockFactory.createView(
-                            child,child.getType(),
+                            child,
+                            child.getType(),
                             dragService
                     );
 
-            childrenContainer
-                    .getChildren()
-                    .add(childView);
+            childrenContainer.getChildren().add(childView);
         }
+
+        // ============================================================
+        // DRAG & DROP (TODO EL BLOQUE)
+        // ============================================================
 
         setupContainerDragAndDrop(dragService);
 
-        VBox content = new VBox(5);
+        // ============================================================
+        // LAYOUT FINAL
+        // ============================================================
 
-        content.getChildren().addAll(
-                row,
-                childrenContainer
-        );
+        VBox content = new VBox(5, row, childrenContainer);
+        content.getStyleClass().add("block-content");
 
         getChildren().add(content);
+
+        // ============================================================
+        // SIZE BEHAVIOR (consistente con editor de nodos)
+        // ============================================================
+
+        setMinWidth(Region.USE_PREF_SIZE);
+        setPrefWidth(Region.USE_COMPUTED_SIZE);
+        setMaxWidth(Region.USE_PREF_SIZE);
     }
+
 
     // ============================================================
     //  MODO CATÁLOGO

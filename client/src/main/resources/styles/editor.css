@@ -72,6 +72,7 @@
 .block-combo {
     -fx-border-color: black;
     -fx-border-width: 1;
+    -fx-pref-width: 100px;
 }
 
 /* ============================================================

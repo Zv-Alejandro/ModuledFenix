@@ -20,12 +20,31 @@ public abstract class ContainerBlockView extends BaseBlockView {
 
         this.dragService = dragService;
 
-        childrenContainer.setOnDragOver(event -> {
+        // ============================================================
+        // DROP OVER (TODO EL BLOQUE, no solo childrenContainer)
+        // ============================================================
+
+        this.setOnDragOver(event -> {
+
             dragService.handleDragOver(event);
-            event.acceptTransferModes(TransferMode.MOVE);
+
+            BaseBlockView dragged = dragService.getContext().getDraggedView();
+
+            if (dragged != null &&
+                    dragged.getModel() != null &&
+                    canContain(dragged.getModel())) {
+
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+
+            event.consume();
         });
 
-        childrenContainer.setOnDragDropped(event -> {
+        // ============================================================
+        // DROP
+        // ============================================================
+
+        this.setOnDragDropped(event -> {
 
             DragContext context = dragService.getContext();
             BaseBlockView draggedView = context.getDraggedView();
@@ -40,57 +59,37 @@ public abstract class ContainerBlockView extends BaseBlockView {
             // =========================
             // NEW FROM PALETTE
             // =========================
+
             if (draggedView.isPaletteBlock()) {
 
                 BaseBlockModel model = draggedView.createModel();
 
-            BaseBlockView view = switch (model.getType()) {
+                blockToInsert = switch (model.getType()) {
 
-                case "text" -> (model == null)
-                        ? new NarrativeBlockView()
-                        : new NarrativeBlockView((NarrativeBlockModel) model);
+                    case "text" -> new NarrativeBlockView((NarrativeBlockModel) model);
+                    case "dialog" -> new DialogBlockView((DialogBlockModel) model);
+                    case "background" -> new BackgroundBlockView((BackgroundBlockModel) model);
+                    case "character_create" -> new CharacterCreateBlockView((CharacterCreateBlockModel) model);
 
-                case "dialog" -> (model == null)
-                        ? new DialogBlockView()
-                        : new DialogBlockView((DialogBlockModel) model);
+                    case "decision" -> new DecisionBlockView((DecisionBlockModel) model, dragService);
+                    case "option" -> new OptionBlockView((OptionBlockModel) model);
 
-                case "background" -> (model == null)
-                        ? new BackgroundBlockView()
-                        : new BackgroundBlockView((BackgroundBlockModel) model);
+                    case "scene" -> new SceneBlockView((SceneBlockModel) model, dragService);
+                    case "character" -> new CharacterBlockView((CharacterBlockModel) model);
 
-                case "character_create" -> (model == null)
-                        ? new CharacterCreateBlockView()
-                        : new CharacterCreateBlockView((CharacterCreateBlockModel) model);
-
-                case "decision" -> (model == null)
-                        ? new DecisionBlockView()
-                        : new DecisionBlockView((DecisionBlockModel) model, dragService);
-
-                case "option" -> (model == null)
-                        ? new OptionBlockView()
-                        : new OptionBlockView((OptionBlockModel) model);
-
-                case "scene" -> (model == null)
-                        ? new SceneBlockView()
-                        : new SceneBlockView((SceneBlockModel) model, dragService);
-
-                case "character" -> (model == null)
-                        ? new CharacterBlockView()
-                        : new CharacterBlockView((CharacterBlockModel) model);
-
-                default -> throw new IllegalArgumentException("Unknown type: " + model.getType());
-            };
-
-                blockToInsert = view;
+                    default -> throw new IllegalArgumentException("Unknown type: " + model.getType());
+                };
 
                 blockToInsert.setOnDragDetected(e ->
                         dragService.startDrag(blockToInsert, e)
                 );
 
             } else {
+
                 // =========================
                 // REORDER EXISTING
                 // =========================
+
                 blockToInsert = draggedView;
             }
 
@@ -107,19 +106,27 @@ public abstract class ContainerBlockView extends BaseBlockView {
             event.setDropCompleted(true);
             event.consume();
         });
+
+        // ============================================================
+        // IMPORTANT: el container no debe bloquear eventos
+        // ============================================================
+
+        this.setPickOnBounds(true);
     }
+
+    // ============================================================
+    // INSERT LOGIC (sin cambios grandes, solo más estable)
+    // ============================================================
 
     private void insertBlockAt(DragEvent event, BaseBlockView block) {
 
         VBox target = childrenContainer;
-        VBox source = block.getParent() instanceof VBox vBox
-                ? vBox
-                : null;
+        VBox source = block.getParent() instanceof VBox vBox ? vBox : null;
 
         int index = calculateInsertionIndex(event.getY());
 
-        // 🔥 FIX reorder same container
         if (source == target) {
+
             int oldIndex = target.getChildren().indexOf(block);
 
             if (oldIndex == index || oldIndex + 1 == index) {
@@ -135,10 +142,7 @@ public abstract class ContainerBlockView extends BaseBlockView {
             source.getChildren().remove(block);
         }
 
-        if (index < 0) {
-            index = 0;
-        }
-
+        if (index < 0) index = 0;
         if (index > target.getChildren().size()) {
             index = target.getChildren().size();
         }
@@ -146,8 +150,9 @@ public abstract class ContainerBlockView extends BaseBlockView {
         target.getChildren().add(index, block);
 
         // =========================
-        // MODEL SYNC CLEAN
+        // MODEL SYNC
         // =========================
+
         BaseBlockModel parent = getModel();
 
         if (parent instanceof SceneBlockModel scene) {
