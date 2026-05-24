@@ -21,12 +21,21 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import static org.ies.fenix.client.utils.ImageUtils.setCoverImage;
 
 public class MarketplaceController implements Initializable {
+
+    private static final int LATEST_RELEASED_LIMIT = 10;
+    private static final int MAX_VISIBLE_TAGS = 6;
+    private static final int RECOMMENDATION_ROWS = 3;
+
+    // ============================================================
+    // FXML FIELDS
+    // ============================================================
 
     @FXML
     private TextField searchField;
@@ -36,6 +45,10 @@ public class MarketplaceController implements Initializable {
 
     @FXML
     private GridPane recommendationsContainer;
+
+    // ============================================================
+    // DEPENDENCIES
+    // ============================================================
 
     private final StageManager stageManager;
     private final IClientController clientApiService;
@@ -54,16 +67,24 @@ public class MarketplaceController implements Initializable {
         this.sessionManager = sessionManager;
     }
 
+    // ============================================================
+    // INITIALIZATION
+    // ============================================================
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadMarketplaceGames();
         configureSearch();
     }
 
+    // ============================================================
+    // MARKETPLACE DATA
+    // ============================================================
+
     private void loadMarketplaceGames() {
         try {
             ResponseEntity<List<GameResponseDTO>> response =
-                    gameApiService.getAllGames(sessionManager.getAuthorizationHeader());
+                    gameApiService.getAllGames(buildHeader());
 
             if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
                 clearCarousels();
@@ -81,43 +102,69 @@ public class MarketplaceController implements Initializable {
         }
     }
 
+    private void clearCarousels() {
+        if (latestReleasedContainer != null) {
+            latestReleasedContainer.getChildren().clear();
+        }
+
+        if (recommendationsContainer != null) {
+            recommendationsContainer.getChildren().clear();
+        }
+    }
+
+    // ============================================================
+    // SEARCH
+    // ============================================================
+
     private void configureSearch() {
         if (searchField == null) {
             return;
         }
 
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            String searchText = newValue == null ? "" : newValue.trim().toLowerCase();
-
-            if (searchText.isBlank()) {
-                renderLatestReleased(loadedGames);
-                renderRecommendations(loadedGames);
-                return;
-            }
-
-            List<GameResponseDTO> filteredGames = loadedGames.stream()
-                    .filter(game -> game.getTitle() != null
-                            && game.getTitle().toLowerCase().contains(searchText))
-                    .toList();
+            List<GameResponseDTO> filteredGames = filterGamesByTitle(newValue);
 
             renderLatestReleased(filteredGames);
             renderRecommendations(filteredGames);
         });
     }
 
+    private List<GameResponseDTO> filterGamesByTitle(String searchText) {
+        String normalizedSearchText = searchText == null ? "" : searchText.trim().toLowerCase();
+
+        if (normalizedSearchText.isBlank()) {
+            return loadedGames;
+        }
+
+        return loadedGames.stream()
+                .filter(game -> game.getTitle() != null
+                        && game.getTitle().toLowerCase().contains(normalizedSearchText))
+                .toList();
+    }
+
+    // ============================================================
+    // LATEST RELEASED
+    // ============================================================
+
     private void renderLatestReleased(List<GameResponseDTO> games) {
         latestReleasedContainer.getChildren().clear();
 
         if (games == null || games.isEmpty()) {
-            latestReleasedContainer.getChildren().add(createEmptyGamesMessage("There are no games yet."));
+            latestReleasedContainer.getChildren().add(
+                    createEmptyGamesMessage("There are no games yet.")
+            );
             return;
         }
 
         games.stream()
-                .sorted((g1, g2) -> Integer.compare(g2.getId(), g1.getId()))
-                .limit(10)
+                .sorted((game1, game2) -> Integer.compare(game2.getId(), game1.getId()))
+                .limit(LATEST_RELEASED_LIMIT)
                 .forEach(game -> latestReleasedContainer.getChildren().add(createGameCard(game)));
     }
+
+    // ============================================================
+    // RECOMMENDATIONS
+    // ============================================================
 
     private void renderRecommendations(List<GameResponseDTO> games) {
         recommendationsContainer.getChildren().clear();
@@ -132,13 +179,13 @@ public class MarketplaceController implements Initializable {
         }
 
         List<GameResponseDTO> shuffledGames = new ArrayList<>(games);
-        java.util.Collections.shuffle(shuffledGames);
+        Collections.shuffle(shuffledGames);
 
         int index = 0;
 
         for (GameResponseDTO game : shuffledGames) {
-            int row = index % 3;
-            int col = index / 3;
+            int row = index % RECOMMENDATION_ROWS;
+            int col = index / RECOMMENDATION_ROWS;
 
             recommendationsContainer.add(createGameCard(game), col, row);
 
@@ -146,16 +193,9 @@ public class MarketplaceController implements Initializable {
         }
     }
 
-    private Label createEmptyGamesMessage(String text) {
-        Label emptyLabel = new Label(text);
-        emptyLabel.setStyle("""
-                -fx-font-size: 18px;
-                -fx-text-fill: #777777;
-                -fx-font-weight: bold;
-                -fx-padding: 20 0 20 0;
-                """);
-        return emptyLabel;
-    }
+    // ============================================================
+    // GAME CARD
+    // ============================================================
 
     private StackPane createGameCard(GameResponseDTO game) {
         StackPane wrapper = new StackPane();
@@ -164,6 +204,19 @@ public class MarketplaceController implements Initializable {
         VBox card = new VBox();
         card.getStyleClass().add("card");
 
+        HBox imageWrapper = createImageWrapper(game);
+        VBox infoBox = createInfoRow(game);
+
+        card.getChildren().addAll(imageWrapper, infoBox);
+
+        wrapper.getChildren().add(card);
+        wrapper.setOnMouseClicked(event -> openGame(game));
+        wrapper.setStyle("-fx-cursor: hand;");
+
+        return wrapper;
+    }
+
+    private HBox createImageWrapper(GameResponseDTO game) {
         HBox imageWrapper = new HBox();
         imageWrapper.setAlignment(Pos.CENTER);
         imageWrapper.setPrefHeight(170.0);
@@ -180,33 +233,31 @@ public class MarketplaceController implements Initializable {
 
         imageWrapper.getChildren().add(imageView);
 
+        return imageWrapper;
+    }
+
+    private VBox createInfoRow(GameResponseDTO game) {
         Label titleLabel = new Label(getSafeText(game.getTitle(), "Untitled"));
         titleLabel.getStyleClass().add("card-title");
         titleLabel.setWrapText(true);
-        titleLabel.setMaxWidth(110.0);
-
-        System.out.println("Marketplace game: " + game.getTitle() + " tags: " + game.getTags());
+        titleLabel.setMaxWidth(280.0);
 
         GridPane tagsGrid = createMarketplaceTagsGrid(game.getTags());
+        tagsGrid.setAlignment(Pos.CENTER_LEFT);
 
-        HBox infoRow = new HBox(10.0);
-        infoRow.setAlignment(Pos.TOP_LEFT);
-        infoRow.setPrefWidth(280.0);
-        infoRow.setMaxWidth(280.0);
+        VBox infoBox = new VBox(8.0);
+        infoBox.setAlignment(Pos.TOP_LEFT);
+        infoBox.setPrefWidth(280.0);
+        infoBox.setMaxWidth(280.0);
 
-        HBox.setHgrow(titleLabel, Priority.ALWAYS);
+        infoBox.getChildren().addAll(titleLabel, tagsGrid);
 
-        infoRow.getChildren().addAll(titleLabel, tagsGrid);
-
-        card.getChildren().addAll(imageWrapper, infoRow);
-
-        wrapper.getChildren().add(card);
-
-        wrapper.setOnMouseClicked(event -> openGame(game));
-        wrapper.setStyle("-fx-cursor: hand;");
-
-        return wrapper;
+        return infoBox;
     }
+
+    // ============================================================
+    // TAGS
+    // ============================================================
 
     private GridPane createMarketplaceTagsGrid(List<String> tags) {
         GridPane tagsGrid = new GridPane();
@@ -219,18 +270,11 @@ public class MarketplaceController implements Initializable {
         }
 
         List<String> visibleTags = tags.stream()
-                .limit(6)
+                .limit(MAX_VISIBLE_TAGS)
                 .toList();
 
         for (int i = 0; i < visibleTags.size(); i++) {
-            Label tagLabel = new Label(visibleTags.get(i));
-            tagLabel.getStyleClass().add("tag");
-
-            tagLabel.setStyle("""
-                    -fx-font-size: 9px;
-                    -fx-padding: 2 6 2 6;
-                    -fx-background-radius: 5px;
-                    """);
+            Label tagLabel = createTagLabel(visibleTags.get(i));
 
             int col = i % 3;
             int row = i / 3;
@@ -241,30 +285,35 @@ public class MarketplaceController implements Initializable {
         return tagsGrid;
     }
 
+    private Label createTagLabel(String text) {
+        Label tagLabel = new Label(text);
+        tagLabel.getStyleClass().add("tag");
+
+        tagLabel.setStyle("""
+                -fx-font-size: 9px;
+                -fx-padding: 2 6 2 6;
+                -fx-background-radius: 5px;
+                """);
+
+        return tagLabel;
+    }
+
+    // ============================================================
+    // IMAGES
+    // ============================================================
+
     private void loadHorizontalOneIntoImageView(GameResponseDTO game, ImageView imageView) {
         if (game == null || game.getId() == null) {
             return;
         }
 
         try {
-            System.out.println("Loading horizontal 1 for game id: " + game.getId());
-
             ResponseEntity<byte[]> response = gameApiService.getHorizontal1(
-                    sessionManager.getAuthorizationHeader(),
+                    buildHeader(),
                     game.getId()
             );
 
-            System.out.println("Horizontal 1 status: " + response.getStatusCode());
-
-            if (response.getBody() == null) {
-                System.out.println("Horizontal 1 body is null");
-                return;
-            }
-
-            System.out.println("Horizontal 1 bytes: " + response.getBody().length);
-
-            if (!response.getStatusCode().is2xxSuccessful()
-                    || response.getBody().length == 0) {
+            if (!hasValidImageBody(response)) {
                 return;
             }
 
@@ -275,32 +324,37 @@ public class MarketplaceController implements Initializable {
         }
     }
 
+    private boolean hasValidImageBody(ResponseEntity<byte[]> response) {
+        return response.getStatusCode().is2xxSuccessful()
+                && response.getBody() != null
+                && response.getBody().length > 0;
+    }
+
+    // ============================================================
+    // EMPTY STATE
+    // ============================================================
+
+    private Label createEmptyGamesMessage(String text) {
+        Label emptyLabel = new Label(text);
+        emptyLabel.setStyle("""
+                -fx-font-size: 18px;
+                -fx-text-fill: #777777;
+                -fx-font-weight: bold;
+                -fx-padding: 20 0 20 0;
+                """);
+        return emptyLabel;
+    }
+
+    // ============================================================
+    // NAVIGATION
+    // ============================================================
+
     private void openGame(GameResponseDTO game) {
         if (game == null || game.getId() == null) {
             return;
         }
 
-        System.out.println("Opening game with id: " + game.getId());
-
         stageManager.openGame(game.getId());
-    }
-
-    private void clearCarousels() {
-        if (latestReleasedContainer != null) {
-            latestReleasedContainer.getChildren().clear();
-        }
-
-        if (recommendationsContainer != null) {
-            recommendationsContainer.getChildren().clear();
-        }
-    }
-
-    private String getSafeText(String text, String fallback) {
-        if (text == null || text.isBlank()) {
-            return fallback;
-        }
-
-        return text;
     }
 
     @FXML
@@ -321,5 +375,21 @@ public class MarketplaceController implements Initializable {
     @FXML
     public void reloadView() {
         stageManager.reloadCurrentScene();
+    }
+
+    // ============================================================
+    // HELPERS
+    // ============================================================
+
+    private String buildHeader() {
+        return sessionManager.getAuthorizationHeader();
+    }
+
+    private String getSafeText(String text, String fallback) {
+        if (text == null || text.isBlank()) {
+            return fallback;
+        }
+
+        return text;
     }
 }
