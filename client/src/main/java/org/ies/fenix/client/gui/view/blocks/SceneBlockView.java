@@ -3,6 +3,7 @@ package org.ies.fenix.client.gui.view.blocks;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.model.script.SceneBlockModel;
@@ -51,27 +52,28 @@ public class SceneBlockView extends BaseBlockView {
     // ============================================================
     public SceneBlockView() {
 
-        getStyleClass().add("block-catalog");
-
-        HBox topBar = new HBox(10);
-        topBar.getStyleClass().add("block-row");
-
+        getStyleClass().add("block");
         Label sceneLabel = new Label("SCENE");
         sceneLabel.getStyleClass().add("block-label");
 
         TextField emptyField = new TextField();
         emptyField.setDisable(true);
-        emptyField.setPrefWidth(200);
         emptyField.getStyleClass().add("block-textfield");
 
-        topBar.getChildren().addAll(sceneLabel, emptyField);
+        emptyField.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(emptyField, Priority.ALWAYS);
 
-        HBox bottomBar = new HBox();
-        bottomBar.setPrefHeight(20);
-        bottomBar.getStyleClass().add("block-row");
+        HBox topBar = new HBox(10, sceneLabel, emptyField);
+        topBar.getStyleClass().add("block-row");
 
-        getChildren().addAll(topBar, bottomBar);
+        // ESTA ES LA LÍNEA QUE FALTABA
+        HBox.setHgrow(topBar, Priority.ALWAYS);
+
+        getChildren().addAll(topBar);
     }
+
+
+
 
     public VBox getChildrenContainer() {
         return childrenContainer;

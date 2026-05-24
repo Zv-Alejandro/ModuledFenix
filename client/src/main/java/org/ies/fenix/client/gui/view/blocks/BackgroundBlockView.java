@@ -1,34 +1,34 @@
 package org.ies.fenix.client.gui.view.blocks;
 
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.FileChooser;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import org.ies.fenix.client.gui.model.script.BackgroundBlockModel;
-
-import java.io.File;
+import org.ies.fenix.client.utils.FileSelectorField;
 
 public class BackgroundBlockView extends BaseBlockView {
 
     private BackgroundBlockModel model;
-    private TextField selectedFileField;
+    private FileSelectorField selector;
 
     // ============================================================
-    //  MODO CATÁLOGO (solo imagen, sin modelo, sin listeners)
+    //  CONSTRUCTOR SIN PARÁMETROS → MODO CATÁLOGO / NO INTERACTIVO
     // ============================================================
     public BackgroundBlockView() {
 
-        getStyleClass().add("block");
-        getStyleClass().add("block-catalog");
-
-        Label title = new Label("SET BACKGROUND");
+        Label title = new Label("BACKGROUND");
         title.getStyleClass().add("block-label");
 
-        TextField preview = new TextField("Select file...");
+        TextField preview = new TextField();
+        preview.setEditable(false);
         preview.setDisable(true);
-        preview.setPrefWidth(200);
         preview.getStyleClass().add("block-textfield");
+
+        preview.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(preview, Priority.ALWAYS);
+
+        HBox.setHgrow(title, Priority.NEVER);
 
         HBox row = new HBox(10, title, preview);
         row.getStyleClass().add("block-row");
@@ -36,8 +36,9 @@ public class BackgroundBlockView extends BaseBlockView {
         getChildren().add(row);
     }
 
+
     // ============================================================
-    //  MODO EDITOR (bloque real con modelo)
+    //  CONSTRUCTOR CON PARÁMETROS → MODO EDITOR / INTERACTIVO
     // ============================================================
     public BackgroundBlockView(BackgroundBlockModel model) {
         this.model = model;
@@ -48,40 +49,23 @@ public class BackgroundBlockView extends BaseBlockView {
         Label title = new Label("SET BACKGROUND");
         title.getStyleClass().add("block-label");
 
-        selectedFileField = new TextField();
-        selectedFileField.setPrefWidth(200);
-        selectedFileField.setEditable(false);
-        selectedFileField.getStyleClass().add("block-textfield");
+        selector = new FileSelectorField();
 
+        // Si ya había imagen en el modelo, mostrarla
         if (model.getImage() != null) {
-            selectedFileField.setText(model.getImage().getName());
+            selector.setSelectedFile(model.getImage());
         }
 
-        Button chooseBtn = new Button("Choose...");
-        chooseBtn.getStyleClass().add("block-button");
-        chooseBtn.setOnAction(e -> openFileChooser());
+        // Callback cuando el usuario selecciona archivo
+        selector.setOnFileSelected(file -> {
+            if (file != null) {
+                model.setImage(file);
+            }
+        });
 
-        HBox row = new HBox(10, title, selectedFileField, chooseBtn);
+        HBox row = new HBox(10, title, selector);
         row.getStyleClass().add("block-row");
 
         getChildren().add(row);
-    }
-
-    // ============================================================
-    //  FileChooser
-    // ============================================================
-    private void openFileChooser() {
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle("Select Background Image");
-        chooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
-        );
-
-        File file = chooser.showOpenDialog(getScene().getWindow());
-
-        if (file != null) {
-            selectedFileField.setText(file.getName());
-            model.setImage(file);
-        }
     }
 }

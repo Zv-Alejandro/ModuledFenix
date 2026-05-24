@@ -7,15 +7,12 @@ import javafx.scene.layout.VBox;
 import org.ies.fenix.client.gui.model.script.DecisionBlockModel;
 import org.ies.fenix.client.gui.model.script.OptionBlockModel;
 
-public class DecisionBlockView extends BaseBlockView {
+public class DecisionBlockView extends ParentBlockView {
 
     private DecisionBlockModel model;
     private TextArea sentenceArea;
     private VBox optionsContainer;
 
-    // ============================================================
-    //  MODO EDITOR
-    // ============================================================
     public DecisionBlockView(DecisionBlockModel model) {
         this.model = model;
 
@@ -35,7 +32,6 @@ public class DecisionBlockView extends BaseBlockView {
         });
 
         optionsContainer = new VBox(10);
-
         for (OptionBlockModel opt : model.getOptions()) {
             optionsContainer.getChildren().add(new OptionBlockView(opt));
         }
@@ -44,8 +40,15 @@ public class DecisionBlockView extends BaseBlockView {
         addOptionBtn.getStyleClass().add("block-button");
         addOptionBtn.setOnAction(e -> addNewOption());
 
-        getChildren().addAll(decisionLabel, sentenceArea, optionsContainer, addOptionBtn);
+        // Añadir todo al contentWrapper vertical
+        contentWrapper.getChildren().addAll(
+                decisionLabel,
+                sentenceArea,
+                optionsContainer,
+                addOptionBtn
+        );
     }
+
 
     // ============================================================
     //  MODO CATÁLOGO

@@ -10,34 +10,18 @@ public class BlockFactory {
     // ============================================================
     public static BaseBlockView createView(BaseBlockModel model) {
 
-        switch (model.getType()) {
+        return switch (model.getType()) {
+            case "text" -> new NarrativeBlockView((NarrativeBlockModel) model);
+            case "dialog" -> new DialogBlockView((DialogBlockModel) model);
+            case "background" -> new BackgroundBlockView((BackgroundBlockModel) model);
+            case "character_create" -> new CharacterCreateBlockView((CharacterCreateBlockModel) model);
+            case "decision" -> new DecisionBlockView((DecisionBlockModel) model);
+            case "option" -> new OptionBlockView((OptionBlockModel) model);
+            case "scene" -> new SceneBlockView((SceneBlockModel) model);
+            case "character" -> new CharacterBlockView((CharacterBlockModel) model);
+            default -> throw new IllegalArgumentException("Unknown block type: " + model.getType());
+        };
 
-            case "text":
-                return new NarrativeBlockView((NarrativeBlockModel) model);
-
-            case "dialog":
-                return new DialogBlockView((DialogBlockModel) model);
-
-            case "background":
-                return new BackgroundBlockView((BackgroundBlockModel) model);
-
-            case "character_create":
-                return new CharacterCreateBlockView((CharacterCreateBlockModel) model);
-
-            case "decision":
-                return new DecisionBlockView((DecisionBlockModel) model);
-
-            case "option":
-                return new OptionBlockView((OptionBlockModel) model);
-
-            case "scene":
-                return new SceneBlockView((SceneBlockModel) model);
-
-            case "character":
-                return new CharacterBlockView((CharacterBlockModel) model);
-        }
-
-        throw new IllegalArgumentException("Unknown block type: " + model.getType());
     }
 
     // ============================================================
@@ -63,9 +47,7 @@ public class BlockFactory {
         return new DecisionBlockView();
     }
 
-    public static BackgroundBlockView createBackgroundBlock() {
-        return new BackgroundBlockView();
-    }
+    public static BackgroundBlockView createBackgroundBlock() { return new BackgroundBlockView();}
 
     public static CharacterCreateBlockView createCharacterCreateBlock() {
         return new CharacterCreateBlockView();

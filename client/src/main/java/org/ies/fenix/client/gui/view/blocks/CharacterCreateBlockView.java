@@ -4,6 +4,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import org.ies.fenix.client.gui.model.script.CharacterCreateBlockModel;
 
@@ -20,21 +21,29 @@ public class CharacterCreateBlockView extends BaseBlockView {
 
         getStyleClass().add("block-catalog");
 
-        Label chr = new Label("CHR");
-        Label col = new Label("COL");
+        Label chr = new Label("NAME");
+        Label col = new Label("COLOR");
 
         chr.getStyleClass().add("block-label");
         col.getStyleClass().add("block-label");
 
         TextField nameMock = new TextField();
         nameMock.setDisable(true);
-        nameMock.setPrefWidth(120);
+        nameMock.setPrefWidth(40); // ancho mínimo
+        nameMock.setMaxWidth(Double.MAX_VALUE); // puede crecer
+        HBox.setHgrow(nameMock, Priority.ALWAYS); // ocupa espacio sobrante
         nameMock.getStyleClass().add("block-textfield");
 
         TextField colorMock = new TextField();
         colorMock.setDisable(true);
         colorMock.setPrefWidth(80);
+        colorMock.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(colorMock, Priority.ALWAYS);
         colorMock.getStyleClass().add("block-textfield");
+
+        HBox.setHgrow(chr, Priority.NEVER);
+        HBox.setHgrow(col, Priority.NEVER);
+
 
         HBox row = new HBox(10, chr, nameMock, col, colorMock);
         row.getStyleClass().add("block-row");

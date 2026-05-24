@@ -2,6 +2,9 @@ package org.ies.fenix.client.gui.view.blocks;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import org.ies.fenix.client.gui.model.script.NarrativeBlockModel;
 
 public class NarrativeBlockView extends BaseBlockView {
@@ -39,18 +42,27 @@ public class NarrativeBlockView extends BaseBlockView {
     // ============================================================
     public NarrativeBlockView() {
 
-        getStyleClass().add("block-catalog");
-
         Label title = new Label("TEXT");
         title.getStyleClass().add("block-label");
 
-        TextArea preview = new TextArea("Scene description...");
+        TextField preview = new TextField();
         preview.setDisable(true);
-        preview.setPrefHeight(80);
-        preview.getStyleClass().add("block-textarea");
+        preview.getStyleClass().add("block-textfield");
 
-        getChildren().addAll(title, preview);
+        // El label mantiene su tamaño natural
+        HBox.setHgrow(title, Priority.NEVER);
+
+        // El campo ocupa el espacio sobrante
+        preview.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(preview, Priority.ALWAYS);
+
+        HBox row = new HBox(10, title, preview);
+        row.getStyleClass().add("block-row");
+
+        getChildren().add(row);
     }
+
+
 
     // ============================================================
     //  Cargar datos existentes (si se reabre un script)
