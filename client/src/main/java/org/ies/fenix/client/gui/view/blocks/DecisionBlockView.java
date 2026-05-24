@@ -1,10 +1,13 @@
 package org.ies.fenix.client.gui.view.blocks;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.model.script.DecisionBlockModel;
 
-public class DecisionBlockView extends BaseBlockView {
+public class DecisionBlockView extends ContainerBlockView {
 
     private DecisionBlockModel model;
     private TextField sentenceField;
@@ -31,6 +34,12 @@ public class DecisionBlockView extends BaseBlockView {
 
         // BLOQUE HORIZONTAL
         getChildren().addAll(label, sentenceField);
+
+        childrenContainer = new VBox(5);
+
+        childrenContainer.setPadding(
+                new Insets(0,0,0,10)
+        );
     }
 
 
@@ -50,5 +59,14 @@ public class DecisionBlockView extends BaseBlockView {
 
         // BLOQUE HORIZONTAL
         getChildren().addAll(label, preview);
+    }
+    @Override
+    public BaseBlockModel createModel() {
+        return new DecisionBlockModel();
+    }
+
+    @Override
+    public boolean canContain(BaseBlockModel child) {
+        return child.getType().equals("option");
     }
 }

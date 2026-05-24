@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
 import javafx.scene.layout.HBox;
+import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.model.script.CharacterBlockModel;
 import org.ies.fenix.client.utils.FileSelectorField;
 
@@ -72,5 +73,9 @@ public class CharacterBlockView extends BaseBlockView {
         row.getStyleClass().add("block-row");
 
         getChildren().add(row);
+    }
+    @Override
+    public BaseBlockModel createModel() {
+        return new CharacterBlockModel();
     }
 }

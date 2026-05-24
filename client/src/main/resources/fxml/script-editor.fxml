@@ -22,7 +22,11 @@
     <center>
         <ScrollPane fitToWidth="true">
             <content>
-                <VBox fx:id="workspace" spacing="15" styleClass="workspace" />
+                <VBox fx:id="workspace"
+                      spacing="15"
+                      styleClass="workspace"
+                      fillWidth="true"
+                      prefHeight="2000"/>
             </content>
         </ScrollPane>
     </center>

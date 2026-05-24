@@ -6,6 +6,9 @@ import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.ies.fenix.client.gui.model.script.BaseBlockModel;
+
+import java.util.List;
 
 public abstract class BaseBlockView extends HBox {
 
@@ -32,4 +35,6 @@ public abstract class BaseBlockView extends HBox {
             }
         });
     }
+    public abstract BaseBlockModel createModel();
+
 }

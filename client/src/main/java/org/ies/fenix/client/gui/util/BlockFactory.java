@@ -1,5 +1,6 @@
 package org.ies.fenix.client.gui.util;
 
+import javafx.scene.Node;
 import org.ies.fenix.client.gui.model.script.*;
 import org.ies.fenix.client.gui.view.blocks.*;
 

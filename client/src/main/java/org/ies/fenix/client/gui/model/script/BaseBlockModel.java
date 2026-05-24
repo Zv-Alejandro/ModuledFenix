@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public abstract class BaseBlockModel {
 
+    protected BaseBlockModel parent;
     private final String id;
     private final String type;
 

@@ -1,15 +1,17 @@
 package org.ies.fenix.client.gui.view.blocks;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.ies.fenix.client.gui.model.script.BaseBlockModel;
+import org.ies.fenix.client.gui.model.script.CharacterCreateBlockModel;
 import org.ies.fenix.client.gui.model.script.SceneBlockModel;
 import org.ies.fenix.client.gui.util.BlockFactory;
 
-public class SceneBlockView extends BaseBlockView {
+public class SceneBlockView extends ContainerBlockView {
 
     private SceneBlockModel model;
     private TextField sceneNameField;
@@ -35,7 +37,11 @@ public class SceneBlockView extends BaseBlockView {
             model.setName(newV);
         });
 
-        childrenContainer = new VBox(10);
+        childrenContainer = new VBox(5);
+
+        childrenContainer.setPadding(
+                new Insets(0,0,0,10)
+        );
 
         for (BaseBlockModel child : model.getChildren()) {
             childrenContainer.getChildren().add(BlockFactory.createView(child));
@@ -72,11 +78,28 @@ public class SceneBlockView extends BaseBlockView {
         getChildren().addAll(topBar);
     }
 
-
+    @Override
+    public BaseBlockModel createModel() {
+        return new SceneBlockModel();
+    }
 
 
     public VBox getChildrenContainer() {
         return childrenContainer;
+    }
+
+    @Override
+    public boolean canContain(BaseBlockModel child) {
+        return switch (child.getType()) {
+
+            case "character_create",
+                 "text",
+                 "dialog",
+                 "decision",
+                 "character"-> true;
+
+            default -> false;
+        };
     }
 
     public SceneBlockModel getModel() {

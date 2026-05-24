@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.util.EditorRegistry;
 import org.ies.fenix.client.gui.model.script.OptionBlockModel;
 import org.ies.fenix.client.gui.model.script.SceneBlockModel;
@@ -109,6 +110,10 @@ public class OptionBlockView extends BaseBlockView {
         getChildren().addAll(row1, row2);
     }
 
+    @Override
+    public BaseBlockModel createModel() {
+        return new OptionBlockModel();
+    }
 
 
 }

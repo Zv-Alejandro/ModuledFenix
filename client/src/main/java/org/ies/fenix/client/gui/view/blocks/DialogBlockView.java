@@ -6,6 +6,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.util.EditorRegistry;
 import org.ies.fenix.client.gui.model.script.DialogBlockModel;
 import org.ies.fenix.client.gui.model.script.FenixCharacterModel;
@@ -51,6 +52,11 @@ public class DialogBlockView extends BaseBlockView {
         row1.getStyleClass().add("block-row");
 
         getChildren().addAll(row1, previewText);
+    }
+
+    @Override
+    public BaseBlockModel createModel() {
+        return new DialogBlockModel();
     }
 
 

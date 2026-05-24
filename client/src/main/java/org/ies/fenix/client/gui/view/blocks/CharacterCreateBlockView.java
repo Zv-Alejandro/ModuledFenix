@@ -6,6 +6,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
+import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.model.script.CharacterCreateBlockModel;
 
 public class CharacterCreateBlockView extends BaseBlockView {
@@ -99,5 +100,9 @@ public class CharacterCreateBlockView extends BaseBlockView {
                 (int) (c.getRed() * 255),
                 (int) (c.getGreen() * 255),
                 (int) (c.getBlue() * 255));
+    }
+    @Override
+    public BaseBlockModel createModel() {
+        return new CharacterCreateBlockModel();
     }
 }

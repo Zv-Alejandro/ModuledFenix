@@ -5,6 +5,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.model.script.NarrativeBlockModel;
 
 public class NarrativeBlockView extends BaseBlockView {
@@ -62,6 +63,10 @@ public class NarrativeBlockView extends BaseBlockView {
         getChildren().add(row);
     }
 
+    @Override
+    public BaseBlockModel createModel() {
+        return new NarrativeBlockModel();
+    }
 
 
     // ============================================================
