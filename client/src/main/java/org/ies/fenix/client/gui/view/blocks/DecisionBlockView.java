@@ -68,8 +68,10 @@ public class DecisionBlockView extends ContainerBlockView {
         childrenContainer.setPadding(new Insets(0, 0, 0, 20));
         childrenContainer.getStyleClass().add("block-children-container");
 
-        // CRÍTICO: el container NO debe bloquear eventos de drag
-        childrenContainer.setPickOnBounds(false);
+        // IMPORTANTE: debe recibir eventos de drag aunque esté vacío
+        childrenContainer.setPickOnBounds(true);
+        childrenContainer.setMinHeight(40);
+        childrenContainer.setFillWidth(true);
 
         for (OptionBlockModel option : model.getOptions()) {
 

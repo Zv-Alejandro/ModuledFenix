@@ -18,120 +18,96 @@ public abstract class ContainerBlockView extends BaseBlockView {
 
     public void setupContainerDragAndDrop(DragAndDropService dragService) {
 
-        this.dragService = dragService;
+    this.dragService = dragService;
 
-        // ============================================================
-        // DROP OVER (TODO EL BLOQUE, no solo childrenContainer)
-        // ============================================================
+    childrenContainer.setPickOnBounds(true);
 
-        this.setOnDragOver(event -> {
+    childrenContainer.setOnDragOver(event -> {
 
-            dragService.handleDragOver(event);
+        if (event.getDragboard().hasContent(DragAndDropService.BLOCK_FORMAT)) {
+            event.acceptTransferModes(TransferMode.MOVE);
+        }
 
-            BaseBlockView dragged = dragService.getContext().getDraggedView();
+        event.consume();
+    });
 
-            if (dragged != null &&
-                    dragged.getModel() != null &&
-                    canContain(dragged.getModel())) {
+    childrenContainer.setOnDragDropped(event -> {
 
-                event.acceptTransferModes(TransferMode.MOVE);
-            }
+        DragContext context = dragService.getContext();
+        BaseBlockView draggedView = context.getDraggedView();
 
+        if (draggedView == null) {
+            event.setDropCompleted(false);
             event.consume();
-        });
+            return;
+        }
 
-        // ============================================================
-        // DROP
-        // ============================================================
+        BaseBlockView blockToInsert;
 
-        this.setOnDragDropped(event -> {
+        // =========================
+        // NEW FROM PALETTE
+        // =========================
+        if (draggedView.isPaletteBlock()) {
 
-            DragContext context = dragService.getContext();
-            BaseBlockView draggedView = context.getDraggedView();
+            BaseBlockModel model = draggedView.createModel();
 
-            if (draggedView == null) {
-                event.setDropCompleted(false);
-                return;
-            }
+            blockToInsert =
+                    BlockFactory.createView(
+                            model,
+                            model.getType(),
+                            dragService
+                    );
 
-            BaseBlockView blockToInsert;
-
+        } else {
             // =========================
-            // NEW FROM PALETTE
+            // REORDER EXISTING
             // =========================
+            blockToInsert = draggedView;
+        }
 
-            if (draggedView.isPaletteBlock()) {
+        BaseBlockModel model = blockToInsert.getModel();
 
-                BaseBlockModel model = draggedView.createModel();
-
-                blockToInsert = switch (model.getType()) {
-
-                    case "text" -> new NarrativeBlockView((NarrativeBlockModel) model);
-                    case "dialog" -> new DialogBlockView((DialogBlockModel) model);
-                    case "background" -> new BackgroundBlockView((BackgroundBlockModel) model);
-                    case "character_create" -> new CharacterCreateBlockView((CharacterCreateBlockModel) model);
-
-                    case "decision" -> new DecisionBlockView((DecisionBlockModel) model, dragService);
-                    case "option" -> new OptionBlockView((OptionBlockModel) model);
-
-                    case "scene" -> new SceneBlockView((SceneBlockModel) model, dragService);
-                    case "character" -> new CharacterBlockView((CharacterBlockModel) model);
-
-                    default -> throw new IllegalArgumentException("Unknown type: " + model.getType());
-                };
-
-                blockToInsert.setOnDragDetected(e ->
-                        dragService.startDrag(blockToInsert, e)
-                );
-
-            } else {
-
-                // =========================
-                // REORDER EXISTING
-                // =========================
-
-                blockToInsert = draggedView;
-            }
-
-            BaseBlockModel model = blockToInsert.getModel();
-
-            if (model == null || !canContain(model)) {
-                event.setDropCompleted(false);
-                event.consume();
-                return;
-            }
-
-            insertBlockAt(event, blockToInsert);
-
-            event.setDropCompleted(true);
+        if (model == null || !canContain(model)) {
+            event.setDropCompleted(false);
             event.consume();
-        });
+            return;
+        }
 
-        // ============================================================
-        // IMPORTANT: el container no debe bloquear eventos
-        // ============================================================
+        insertBlockAt(event, blockToInsert);
 
-        this.setPickOnBounds(true);
-    }
+        event.setDropCompleted(true);
+        event.consume();
+    });
+}
 
     // ============================================================
     // INSERT LOGIC (sin cambios grandes, solo más estable)
     // ============================================================
 
+    protected int normalizeInsertionIndex(
+            BaseBlockView block,
+            int index,
+            VBox target
+    ) {
+        return index;
+    }
+
     private void insertBlockAt(DragEvent event, BaseBlockView block) {
 
         VBox target = childrenContainer;
-        VBox source = block.getParent() instanceof VBox vBox ? vBox : null;
+        VBox source = block.getParent() instanceof VBox vBox
+            ? vBox
+            : null;
 
         int index = calculateInsertionIndex(event.getY());
 
+        // Reordenar dentro del mismo contenedor
         if (source == target) {
+        int oldIndex = target.getChildren().indexOf(block);
 
-            int oldIndex = target.getChildren().indexOf(block);
-
-            if (oldIndex == index || oldIndex + 1 == index) {
-                return;
-            }
+        if (oldIndex == index || oldIndex + 1 == index) {
+            return;
+        }
 
             if (oldIndex < index) {
                 index--;
@@ -147,6 +123,16 @@ public abstract class ContainerBlockView extends BaseBlockView {
             index = target.getChildren().size();
         }
 
+        index = normalizeInsertionIndex(block, index, target);
+
+        if (index < 0) {
+            index = 0;
+        }
+
+        if (index > target.getChildren().size()) {
+            index = target.getChildren().size();
+        }
+
         target.getChildren().add(index, block);
 
         // =========================
@@ -155,20 +141,24 @@ public abstract class ContainerBlockView extends BaseBlockView {
 
         BaseBlockModel parent = getModel();
 
-        if (parent instanceof SceneBlockModel scene) {
-
-            scene.getChildren().remove(block.getModel());
-            scene.getChildren().add(index, block.getModel());
-            block.getModel().setParent(scene);
-        }
-
-        else if (parent instanceof DecisionBlockModel decision) {
-
-            decision.getOptions().remove(block.getModel());
-            decision.getOptions().add(index, (OptionBlockModel) block.getModel());
-            block.getModel().setParent(decision);
-        }
+    if (parent == null) {
+        return;
     }
+
+    if (parent instanceof SceneBlockModel scene) {
+
+        scene.getChildren().remove(block.getModel());
+        scene.getChildren().add(index, block.getModel());
+        block.getModel().setParent(scene);
+    }
+
+    else if (parent instanceof DecisionBlockModel decision) {
+
+        decision.getOptions().remove(block.getModel());
+        decision.getOptions().add(index, (OptionBlockModel) block.getModel());
+        block.getModel().setParent(decision);
+    }
+}
 
     private int calculateInsertionIndex(double mouseY) {
 

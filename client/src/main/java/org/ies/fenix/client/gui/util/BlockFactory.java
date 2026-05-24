@@ -30,27 +30,17 @@ public class BlockFactory {
                     ? new CharacterCreateBlockView()
                     : new CharacterCreateBlockView((CharacterCreateBlockModel) model);
 
-            case "decision" -> {
-                DecisionBlockView v = (model == null)
-                        ? new DecisionBlockView()
-                        : new DecisionBlockView((DecisionBlockModel) model, dragService);
-
-                v.setupContainerDragAndDrop(dragService);
-                yield v;
-            }
+            case "decision" -> (model == null)
+                    ? new DecisionBlockView()
+                    : new DecisionBlockView((DecisionBlockModel) model, dragService);
 
             case "option" -> (model == null)
                     ? new OptionBlockView()
                     : new OptionBlockView((OptionBlockModel) model);
 
-            case "scene" -> {
-                SceneBlockView v = (model == null)
-                        ? new SceneBlockView()
-                        : new SceneBlockView((SceneBlockModel) model, dragService);
-
-                v.setupContainerDragAndDrop(dragService);
-                yield v;
-            }
+            case "scene" -> (model == null)
+                    ? new SceneBlockView()
+                    : new SceneBlockView((SceneBlockModel) model, dragService);
 
             case "character" -> (model == null)
                     ? new CharacterBlockView()
@@ -61,6 +51,8 @@ public class BlockFactory {
 
         // SOLO editor blocks tienen drag
         if (model != null) {
+            view.setPaletteBlock(false);
+
             view.setOnDragDetected(event -> {
                 dragService.startDrag(view, event);
                 event.consume();
@@ -91,9 +83,7 @@ public class BlockFactory {
     }
 
     public static DecisionBlockView createDecision(DecisionBlockModel model, DragAndDropService service) {
-        DecisionBlockView v = new DecisionBlockView(model, service);
-        v.setupContainerDragAndDrop(service);
-        return v;
+        return new DecisionBlockView(model, service);
     }
 
     public static OptionBlockView createOption(OptionBlockModel model) {
@@ -101,9 +91,7 @@ public class BlockFactory {
     }
 
     public static SceneBlockView createScene(SceneBlockModel model, DragAndDropService service) {
-        SceneBlockView v = new SceneBlockView(model, service);
-        v.setupContainerDragAndDrop(service);
-        return v;
+        return new SceneBlockView(model, service);
     }
 
     public static CharacterBlockView createCharacter(CharacterBlockModel model) {

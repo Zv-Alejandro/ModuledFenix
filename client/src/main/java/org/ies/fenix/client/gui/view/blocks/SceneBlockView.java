@@ -1,6 +1,7 @@
 package org.ies.fenix.client.gui.view.blocks;
 
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -8,7 +9,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.ies.fenix.client.gui.model.script.BaseBlockModel;
-import org.ies.fenix.client.gui.model.script.CharacterCreateBlockModel;
 import org.ies.fenix.client.gui.model.script.SceneBlockModel;
 import org.ies.fenix.client.gui.service.DragAndDropService;
 import org.ies.fenix.client.gui.util.BlockFactory;
@@ -69,8 +69,10 @@ public class SceneBlockView extends ContainerBlockView {
         childrenContainer.setPadding(new Insets(0, 0, 0, 20));
         childrenContainer.getStyleClass().add("block-children-container");
 
-        // 🔥 CRÍTICO: no bloquear eventos de drag
-        childrenContainer.setPickOnBounds(false);
+        // IMPORTANTE: el VBox debe recibir eventos de drag aunque esté vacío
+        childrenContainer.setPickOnBounds(true);
+        childrenContainer.setMinHeight(40);
+        childrenContainer.setFillWidth(true);
 
         for (BaseBlockModel child : model.getChildren()) {
 
@@ -152,9 +154,47 @@ public class SceneBlockView extends ContainerBlockView {
                  "text",
                  "dialog",
                  "decision",
-                 "character"-> true;
+                 "background",
+                 "character" -> true;
 
             default -> false;
         };
+    }
+
+    @Override
+    protected int normalizeInsertionIndex(
+            BaseBlockView block,
+            int index,
+            VBox target
+    ) {
+
+        BaseBlockModel insertedModel = block.getModel();
+
+        if (insertedModel == null) {
+            return index;
+        }
+
+        int size = target.getChildren().size();
+
+        if ("decision".equals(insertedModel.getType())) {
+            return size;
+        }
+
+        if (size == 0) {
+            return index;
+        }
+
+        Node lastNode = target.getChildren().get(size - 1);
+
+        if (lastNode instanceof BaseBlockView lastBlock) {
+
+            BaseBlockModel lastModel = lastBlock.getModel();
+
+            if (lastModel != null && "decision".equals(lastModel.getType())) {
+                return Math.min(index, size - 1);
+            }
+        }
+
+        return index;
     }
 }
