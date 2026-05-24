@@ -10,7 +10,6 @@ import org.ies.fenix.client.utils.FileSelectorField;
 
 public class BackgroundBlockView extends BaseBlockView {
 
-    private BackgroundBlockModel model;
     private FileSelectorField selector;
 
     // ============================================================
@@ -47,7 +46,7 @@ public class BackgroundBlockView extends BaseBlockView {
     //  CONSTRUCTOR CON PARÁMETROS → MODO EDITOR / INTERACTIVO
     // ============================================================
     public BackgroundBlockView(BackgroundBlockModel model) {
-        this.model = model;
+        super.model = model;
 
         getStyleClass().add("block");
         getStyleClass().add("block-editor");

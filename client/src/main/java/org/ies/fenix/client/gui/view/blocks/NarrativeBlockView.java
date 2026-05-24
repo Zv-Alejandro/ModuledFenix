@@ -11,14 +11,11 @@ import org.ies.fenix.client.gui.model.script.NarrativeBlockModel;
 public class NarrativeBlockView extends BaseBlockView {
 
     private TextArea textArea;
-    private NarrativeBlockModel model;
-
     // ============================================================
     //  MODO EDITOR (bloque real con modelo)
     // ============================================================
     public NarrativeBlockView(NarrativeBlockModel model) {
-        this.model = model;
-
+        super.model = model;
         getStyleClass().add("block-editor");
 
         Label title = new Label("TEXT");
@@ -66,15 +63,5 @@ public class NarrativeBlockView extends BaseBlockView {
     @Override
     public BaseBlockModel createModel() {
         return new NarrativeBlockModel();
-    }
-
-
-    // ============================================================
-    //  Cargar datos existentes (si se reabre un script)
-    // ============================================================
-    public void loadFromModel() {
-        if (model != null) {
-            textArea.setText(model.getNarration());
-        }
     }
 }

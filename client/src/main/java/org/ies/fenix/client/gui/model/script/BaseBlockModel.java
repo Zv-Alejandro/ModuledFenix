@@ -20,6 +20,14 @@ public abstract class BaseBlockModel {
     public String getType() {
         return type;
     }
+
+    public BaseBlockModel getParent() {
+        return parent;
+    }
+
+    public void setParent(BaseBlockModel parent) {
+        this.parent = parent;
+    }
 }
 
 

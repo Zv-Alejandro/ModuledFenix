@@ -16,14 +16,12 @@ public class OptionBlockView extends BaseBlockView {
 
     private TextArea optionSentenceArea;
     private ComboBox<SceneBlockModel> jumpSceneCombo;
-    private OptionBlockModel model;
 
     // ============================================================
     //  MODO EDITOR
     // ============================================================
     public OptionBlockView(OptionBlockModel model) {
-        this.model = model;
-
+        super.model = model;
         getStyleClass().add("block-editor");
 
         Label instruction1 = new Label("OPTION");

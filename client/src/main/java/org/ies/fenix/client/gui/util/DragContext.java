@@ -1,10 +1,12 @@
 package org.ies.fenix.client.gui.util;
 
+import javafx.scene.layout.VBox;
 import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.view.blocks.BaseBlockView;
 
 public class DragContext {
 
+    private VBox sourceContainer;
     private BaseBlockView draggedView;
     private BaseBlockModel draggedModel;
 
@@ -22,5 +24,13 @@ public class DragContext {
 
     public void setDraggedModel(BaseBlockModel draggedModel) {
         this.draggedModel = draggedModel;
+    }
+
+    public VBox getSourceContainer() {
+        return sourceContainer;
+    }
+
+    public void setSourceContainer(VBox sourceContainer) {
+        this.sourceContainer = sourceContainer;
     }
 }

@@ -5,25 +5,20 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import org.ies.fenix.client.gui.model.script.BaseBlockModel;
-
-import java.util.List;
 
 public abstract class BaseBlockView extends HBox {
 
+    private boolean paletteBlock = false;
+    protected BaseBlockModel model;
+
     public BaseBlockView() {
 
-        // Espaciado vertical entre elementos internos
         setSpacing(10);
-
-        // Padding interno del bloque
         setPadding(new Insets(15));
-
-        // Clase CSS base para todos los bloques
         getStyleClass().add("block");
+        setPickOnBounds(true);
 
-        // Cada vez que se añada un hijo, se le aplica el crecimiento automático
         getChildren().addListener((ListChangeListener<Node>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
@@ -35,6 +30,24 @@ public abstract class BaseBlockView extends HBox {
             }
         });
     }
+
     public abstract BaseBlockModel createModel();
 
+
+    public boolean isPaletteBlock() {
+        return paletteBlock;
+    }
+
+    public void setPaletteBlock(boolean paletteBlock) {
+        this.paletteBlock = paletteBlock;
+    }
+
+    public String getType() {
+        BaseBlockModel m = getModel();
+        return (m != null) ? m.getType() : createModel().getType();
+    }
+
+    protected BaseBlockModel getModel() {
+        return model;
+    }
 }

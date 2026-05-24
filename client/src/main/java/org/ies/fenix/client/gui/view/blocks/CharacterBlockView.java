@@ -13,7 +13,6 @@ import org.ies.fenix.client.utils.FileSelectorField;
 
 public class CharacterBlockView extends BaseBlockView {
 
-    private CharacterBlockModel model;
     private FileSelectorField selector;
 
     // ============================================================
@@ -47,8 +46,7 @@ public class CharacterBlockView extends BaseBlockView {
     //  CONSTRUCTOR CON MODELO → MODO EDITOR / INTERACTIVO
     // ============================================================
     public CharacterBlockView(CharacterBlockModel model) {
-        this.model = model;
-
+        super.model = model;
         getStyleClass().add("block");
         getStyleClass().add("block-editor");
 

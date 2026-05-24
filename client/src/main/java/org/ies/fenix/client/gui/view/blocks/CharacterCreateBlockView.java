@@ -13,7 +13,6 @@ public class CharacterCreateBlockView extends BaseBlockView {
 
     private TextField nameField;
     private ColorPicker colorPicker;
-    private CharacterCreateBlockModel model;
 
     // ============================================================
     //  MODO CATÁLOGO (solo imagen, sin modelo, sin listeners)
@@ -56,8 +55,7 @@ public class CharacterCreateBlockView extends BaseBlockView {
     //  MODO EDITOR (bloque real con modelo)
     // ============================================================
     public CharacterCreateBlockView(CharacterCreateBlockModel model) {
-        this.model = model;
-
+        super.model = model;
         getStyleClass().add("block-editor");
 
         Label chr = new Label("CHR");

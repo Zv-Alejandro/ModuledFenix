@@ -15,7 +15,6 @@ public class DialogBlockView extends BaseBlockView {
 
     private ComboBox<FenixCharacterModel> characterCombo;
     private TextArea textArea;
-    private DialogBlockModel model;
 
     // ============================================================
     //  MODO CATÁLOGO (solo imagen, sin modelo, sin listeners)
@@ -64,8 +63,7 @@ public class DialogBlockView extends BaseBlockView {
     //  MODO EDITOR (bloque real con modelo)
     // ============================================================
     public DialogBlockView(DialogBlockModel model) {
-        this.model = model;
-
+        super.model = model;
         getStyleClass().add("block-editor");
 
         Label instruction1 = new Label("SHOW");
@@ -95,11 +93,5 @@ public class DialogBlockView extends BaseBlockView {
 
         getChildren().addAll(row1, textArea);
     }
-
-    // ============================================================
-    //  MÉTODOS AUXILIARES
-    // ============================================================
-    public DialogBlockModel getModel() {
-        return model;
-    }
 }
+

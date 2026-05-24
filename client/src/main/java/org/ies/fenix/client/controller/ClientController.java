@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 
 public class ClientController implements Initializable {
 
+    @FXML public ImageView logoName;
     @FXML private Text title;
     @FXML private Text subtitle;
     @FXML private VBox center;

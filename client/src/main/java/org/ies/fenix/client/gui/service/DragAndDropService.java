@@ -1,6 +1,8 @@
 package org.ies.fenix.client.gui.service;
 
 import javafx.scene.input.*;
+import javafx.scene.layout.VBox;
+import org.ies.fenix.client.gui.util.DragContext;
 import org.ies.fenix.client.gui.view.blocks.BaseBlockView;
 
 public class DragAndDropService {
@@ -8,40 +10,42 @@ public class DragAndDropService {
     public static final DataFormat BLOCK_FORMAT =
             new DataFormat("fenix/block");
 
-    private BaseBlockView draggedBlock;
+    private DragContext context = new DragContext();
 
-    public void startDrag(BaseBlockView source, MouseEvent event) {
+    public void startDrag(BaseBlockView view, MouseEvent event) {
 
-        draggedBlock = source;
+        Dragboard db = view.startDragAndDrop(TransferMode.MOVE);
 
-        Dragboard db =
-                source.startDragAndDrop(TransferMode.COPY);
+        ClipboardContent content = new ClipboardContent();
 
-        ClipboardContent content =
-                new ClipboardContent();
+        String type = view.getType();
 
-        // ESTO ES OBLIGATORIO
-        content.put(BLOCK_FORMAT, "block");
+        System.out.println("Drag: " + type);
+
+        content.put(BLOCK_FORMAT, type);
 
         db.setContent(content);
+
+        DragContext ctx = new DragContext();
+        ctx.setDraggedView(view);
+
+        if (view.getParent() instanceof VBox vBox) {
+            ctx.setSourceContainer(vBox);
+        }
+
+        this.context = ctx;
 
         event.consume();
     }
 
     public void handleDragOver(DragEvent event) {
-
-        Dragboard db = event.getDragboard();
-
-        // SI NO TIENE EL FORMAT → BLOQUEADO
-        if (db.hasContent(BLOCK_FORMAT)) {
-
-            event.acceptTransferModes(TransferMode.COPY);
+        if (event.getDragboard().hasContent(BLOCK_FORMAT)) {
+            event.acceptTransferModes(TransferMode.MOVE);
         }
-
         event.consume();
     }
 
-    public BaseBlockView getDraggedBlock() {
-        return draggedBlock;
+    public DragContext getContext() {
+        return context;
     }
 }

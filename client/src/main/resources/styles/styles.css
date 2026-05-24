@@ -229,6 +229,10 @@
     -fx-image: url("../graphics/fenixLogo.png");
 }
 
+#logoName {
+    -fx-image: url("../graphics/fenixName.png");
+}
+
 #clientErrorLabel {
     -fx-text-fill: #B3261E;
     -fx-font-size: 12px;
