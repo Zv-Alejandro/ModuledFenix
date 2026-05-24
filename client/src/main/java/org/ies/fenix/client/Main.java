@@ -108,6 +108,6 @@ public class Main extends Application {
     }
 
     private void initialScene() {
-        stageManager.switchScene(FxmlView.GUI);
+        stageManager.switchScene(FxmlView.LOGIN);
     }
 }
