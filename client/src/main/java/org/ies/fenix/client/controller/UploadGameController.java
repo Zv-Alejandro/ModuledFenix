@@ -5,8 +5,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
 import javafx.stage.FileChooser;
 import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlView;
@@ -21,10 +23,37 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 
 import java.io.File;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class UploadGameController {
 
     private static final String DEFAULT_PRICE = "0";
+
+    private static final List<String> AVAILABLE_TAGS = List.of(
+            "Romance",
+            "Mystery",
+            "Horror",
+            "Drama",
+            "Fantasy",
+            "Sci-fi",
+            "Comedy",
+            "Adventure",
+            "Psychological",
+            "Thriller",
+            "Slice of Life",
+            "Supernatural",
+            "Detective",
+            "School",
+            "Music",
+            "Post-apocalyptic",
+            "Cyberpunk",
+            "Historical",
+            "Action",
+            "Puzzle",
+            "Emotional"
+    );
 
     // ============================================================
     // FXML FIELDS
@@ -34,10 +63,13 @@ public class UploadGameController {
     private TextField titleField;
 
     @FXML
-    private TextField tagsField;
+    private TextArea descriptionArea;
 
     @FXML
-    private TextArea descriptionArea;
+    private FlowPane tagsContainer;
+
+    @FXML
+    private Label selectedTagsLabel;
 
     @FXML
     private Label gameFileNameLabel;
@@ -76,8 +108,10 @@ public class UploadGameController {
     private final RestClient restClient;
 
     // ============================================================
-    // SELECTED FILES
+    // SELECTED DATA
     // ============================================================
+
+    private final Set<String> selectedTags = new LinkedHashSet<>();
 
     private File selectedGameFile;
     private File selectedLogoImage;
@@ -93,6 +127,46 @@ public class UploadGameController {
         this.gameApiService = gameApiService;
         this.sessionManager = sessionManager;
         this.restClient = restClient;
+    }
+
+    // ============================================================
+    // INITIALIZE
+    // ============================================================
+
+    @FXML
+    private void initialize() {
+        loadAvailableTags();
+        updateSelectedTagsLabel();
+    }
+
+    private void loadAvailableTags() {
+        tagsContainer.getChildren().clear();
+
+        for (String tag : AVAILABLE_TAGS) {
+            ToggleButton tagButton = new ToggleButton(tag);
+            tagButton.getStyleClass().add("tag-chip");
+
+            tagButton.setOnAction(event -> {
+                if (tagButton.isSelected()) {
+                    selectedTags.add(tag);
+                } else {
+                    selectedTags.remove(tag);
+                }
+
+                updateSelectedTagsLabel();
+            });
+
+            tagsContainer.getChildren().add(tagButton);
+        }
+    }
+
+    private void updateSelectedTagsLabel() {
+        if (selectedTags.isEmpty()) {
+            selectedTagsLabel.setText("No tags selected");
+            return;
+        }
+
+        selectedTagsLabel.setText("Selected: " + String.join(", ", selectedTags));
     }
 
     // ============================================================
@@ -312,10 +386,6 @@ public class UploadGameController {
     }
 
     private String getTagsText() {
-        if (tagsField.getText() == null) {
-            return "";
-        }
-
-        return tagsField.getText().trim();
+        return String.join(", ", selectedTags);
     }
 }

@@ -5,6 +5,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
@@ -20,6 +21,7 @@ import javafx.stage.FileChooser;
 import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
+import org.ies.fenix.client.utils.GameInstallUtils;
 import org.ies.fenix.controller.IClientController;
 import org.ies.fenix.controller.IGameController;
 import org.ies.fenix.controller.IPurchaseController;
@@ -30,7 +32,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
-import org.ies.fenix.client.utils.GameInstallUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -91,6 +92,9 @@ public class GameController {
     @FXML
     private Hyperlink username;
 
+    @FXML
+    private Button playButton;
+
     // ============================================================
     // DEPENDENCIES
     // ============================================================
@@ -128,6 +132,7 @@ public class GameController {
 
         configureBannerImage();
         configureBannerClip();
+        updatePlayButtonState();
     }
 
     private void configureBannerImage() {
@@ -156,6 +161,7 @@ public class GameController {
     public void setSelectedGameId(Integer selectedGameId) {
         this.selectedGameId = selectedGameId;
         loadSelectedGame();
+        updatePlayButtonState();
     }
 
     private void loadSelectedGame() {
@@ -404,14 +410,21 @@ public class GameController {
                 .progressProperty()
                 .bind(downloadTask.progressProperty());
 
-        downloadTask.setOnSucceeded(event -> finishDownload());
+        downloadTask.setOnSucceeded(event -> {
+            finishDownload();
+            updatePlayButtonState();
+        });
 
         downloadTask.setOnFailed(event -> {
             finishDownload();
+            updatePlayButtonState();
             showError("Download failed", "The game could not be downloaded or extracted.");
         });
 
-        downloadTask.setOnCancelled(event -> finishDownload());
+        downloadTask.setOnCancelled(event -> {
+            finishDownload();
+            updatePlayButtonState();
+        });
 
         new Thread(downloadTask).start();
     }
@@ -513,10 +526,24 @@ public class GameController {
         stageManager.getBaseLayoutController().hideProgress();
     }
 
+    // ============================================================
+    // PLAY
+    // ============================================================
+
     @FXML
     private void onPlay() {
         if (selectedGameId == null) {
             showError("No game selected", "Please select a game to play.");
+            updatePlayButtonState();
+            return;
+        }
+
+        if (!GameInstallUtils.canLaunchGame(selectedGameId)) {
+            updatePlayButtonState();
+            showError(
+                    "Game not installed",
+                    "Download this game before trying to play it."
+            );
             return;
         }
 
@@ -524,11 +551,21 @@ public class GameController {
             GameInstallUtils.launchGame(selectedGameId);
 
         } catch (Exception e) {
+            updatePlayButtonState();
             showError(
                     "Game not installed",
-                    "Download this game before trying to play it."
+                    "The game executable could not be found. Try downloading it again."
             );
         }
+    }
+
+    private void updatePlayButtonState() {
+        if (playButton == null) {
+            return;
+        }
+
+        boolean canPlay = GameInstallUtils.canLaunchGame(selectedGameId);
+        playButton.setDisable(!canPlay);
     }
 
     // ============================================================

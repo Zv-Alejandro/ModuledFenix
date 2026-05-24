@@ -249,16 +249,28 @@ public class LibraryController {
 
     private Button createPlayButton(LibraryGameDTO game) {
         Button playButton = new Button("  PLAY");
+        boolean canPlay = GameInstallUtils.canLaunchGame(game.getGameId());
+
         playButton.setGraphic(new FontIcon(MaterialDesignP.PLAY));
-        playButton.setStyle(getPlayButtonStyle());
+        playButton.setStyle(canPlay ? getPlayButtonStyle() : getDisabledPlayButtonStyle());
+        playButton.setDisable(!canPlay);
         playButton.setPrefWidth(160);
         playButton.setPrefHeight(40);
         playButton.setVisible(false);
 
         StackPane.setAlignment(playButton, Pos.CENTER);
 
-        playButton.setOnMousePressed(event -> playButton.setStyle(getPressedPlayButtonStyle()));
-        playButton.setOnMouseReleased(event -> playButton.setStyle(getPlayButtonStyle()));
+        playButton.setOnMousePressed(event -> {
+            if (!playButton.isDisabled()) {
+                playButton.setStyle(getPressedPlayButtonStyle());
+            }
+        });
+
+        playButton.setOnMouseReleased(event -> {
+            if (!playButton.isDisabled()) {
+                playButton.setStyle(getPlayButtonStyle());
+            }
+        });
 
         playButton.setOnAction(event -> launchGame(game.getGameId()));
 
@@ -282,6 +294,17 @@ public class LibraryController {
                 -fx-font-size: 18px;
                 -fx-background-radius: 8;
                 -fx-cursor: hand;
+                """;
+    }
+
+    private String getDisabledPlayButtonStyle() {
+        return """
+                -fx-background-color: #6F6A67;
+                -fx-text-fill: #CFC7C0;
+                -fx-font-size: 18px;
+                -fx-background-radius: 8;
+                -fx-cursor: default;
+                -fx-opacity: 1.0;
                 """;
     }
 
@@ -367,13 +390,21 @@ public class LibraryController {
             return;
         }
 
+        if (!GameInstallUtils.canLaunchGame(gameId)) {
+            showError(
+                    "Game not installed",
+                    "Download this game from its game page before trying to play it."
+            );
+            return;
+        }
+
         try {
             GameInstallUtils.launchGame(gameId);
 
         } catch (Exception e) {
             showError(
                     "Game not installed",
-                    "Download this game from its game page before trying to play it."
+                    "The game executable could not be found. Try downloading it again."
             );
         }
     }

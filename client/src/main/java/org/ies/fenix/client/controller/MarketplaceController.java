@@ -32,6 +32,7 @@ public class MarketplaceController implements Initializable {
     private static final int LATEST_RELEASED_LIMIT = 10;
     private static final int MAX_VISIBLE_TAGS = 6;
     private static final int RECOMMENDATION_ROWS = 3;
+    private static final int DISCOVER_GAMES_LIMIT = 21;
 
     // ============================================================
     // FXML FIELDS
@@ -171,7 +172,7 @@ public class MarketplaceController implements Initializable {
 
         if (games == null || games.isEmpty()) {
             recommendationsContainer.add(
-                    createEmptyGamesMessage("There are no games to recommend yet."),
+                    createEmptyGamesMessage("There are no games to discover yet."),
                     0,
                     0
             );
@@ -181,9 +182,13 @@ public class MarketplaceController implements Initializable {
         List<GameResponseDTO> shuffledGames = new ArrayList<>(games);
         Collections.shuffle(shuffledGames);
 
+        List<GameResponseDTO> visibleGames = shuffledGames.stream()
+                .limit(DISCOVER_GAMES_LIMIT)
+                .toList();
+
         int index = 0;
 
-        for (GameResponseDTO game : shuffledGames) {
+        for (GameResponseDTO game : visibleGames) {
             int row = index % RECOMMENDATION_ROWS;
             int col = index / RECOMMENDATION_ROWS;
 
