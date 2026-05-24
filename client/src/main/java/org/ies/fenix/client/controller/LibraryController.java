@@ -20,12 +20,21 @@ import org.ies.fenix.client.utils.ImageUtils;
 import org.ies.fenix.controller.IClientController;
 import org.ies.fenix.controller.IGameController;
 import org.ies.fenix.controller.IPurchaseController;
+import org.ies.fenix.controller.dto.purchase.LibraryGameDTO;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignP;
+import org.springframework.http.ResponseEntity;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 
 public class LibraryController {
+
+    private static final int MAX_COLUMNS = 4;
+
+    // ============================================================
+    // FXML FIELDS
+    // ============================================================
 
     @FXML
     private TextField searchField;
@@ -35,6 +44,10 @@ public class LibraryController {
 
     @FXML
     private GridPane libraryGrid;
+
+    // ============================================================
+    // DEPENDENCIES
+    // ============================================================
 
     private final StageManager stageManager;
     private final IClientController clientApiService;
@@ -54,182 +67,245 @@ public class LibraryController {
         this.sessionManager = sessionManager;
     }
 
+    // ============================================================
+    // INITIALIZATION
+    // ============================================================
+
     @FXML
     private void initialize() {
         loadLibrary();
     }
 
+    // ============================================================
+    // LIBRARY DATA
+    // ============================================================
+
     private void loadLibrary() {
         try {
-            Integer clientId = sessionManager.getClientId();
+            List<LibraryGameDTO> games = requestLibraryGames();
 
-            var response = purchaseApiService.getLibraryByClientId(
-                    sessionManager.getAuthorizationHeader(),
-                    clientId
-            );
-
-            var games = response.getBody();
-
-            leftGamesList.getChildren().clear();
-            libraryGrid.getChildren().clear();
+            clearLibraryViews();
 
             if (games == null || games.isEmpty()) {
                 showEmptyLibraryMessage();
                 return;
             }
 
-            int col = 0;
-            int row = 0;
-
-            for (var game : games) {
-
-                // ============================
-                // PANEL IZQUIERDO
-                // ============================
-                HBox rowBox = new HBox(16);
-                rowBox.setAlignment(Pos.CENTER_LEFT);
-                rowBox.getStyleClass().add("library-left-game-row");
-
-                ImageView icon = new ImageView();
-                icon.setFitWidth(36);
-                icon.setFitHeight(36);
-                icon.setPreserveRatio(true);
-
-                try {
-                    try {
-                        byte[] bytes = gameApiService.getLogo(
-                                sessionManager.getAuthorizationHeader(),
-                                game.getGameId()
-                        ).getBody();
-
-                        ImageUtils.setAvatar(
-                                bytes,
-                                icon,          // ImageView
-                                36             // tamaño del avatar
-                        );
-
-                    } catch (Exception ignored) {
-                    }
-
-
-                } catch (Exception ignored) {
-                }
-
-                Hyperlink title = new Hyperlink(game.getTitle());
-                title.getStyleClass().add("library-left-game-title");
-                title.setOnAction(e -> openGame(game.getGameId()));
-
-                HBox iconWrapper = new HBox(icon);
-                iconWrapper.setAlignment(Pos.CENTER);
-                iconWrapper.getStyleClass().add("library-left-game-icon-wrapper");
-
-                rowBox.getChildren().addAll(iconWrapper, title);
-                leftGamesList.getChildren().add(rowBox);
-
-                // ============================
-                // PANEL DERECHO
-                // ============================
-                StackPane cardWrapper = new StackPane();
-                cardWrapper.getStyleClass().add("library-card-click-wrapper");
-
-                VBox card = new VBox();
-                card.getStyleClass().add("library-card");
-
-                HBox coverWrapper = new HBox();
-                coverWrapper.setAlignment(Pos.CENTER);
-                coverWrapper.getStyleClass().add("library-cover-wrapper");
-
-                ImageView cover = new ImageView();
-                cover.setFitWidth(170);
-                cover.setFitHeight(245);
-                cover.setPreserveRatio(false);
-
-                try {
-                    byte[] bytes = gameApiService.getVertical(
-                            sessionManager.getAuthorizationHeader(),
-                            game.getGameId()
-                    ).getBody();
-
-                    if (bytes != null && bytes.length > 0) {
-                        cover.setImage(new Image(new ByteArrayInputStream(bytes)));
-                    }
-
-                } catch (Exception ignored) {
-                }
-
-                coverWrapper.getChildren().add(cover);
-                card.getChildren().add(coverWrapper);
-
-                // ============================
-                // BOTÓN PLAY
-                // ============================
-                Button playButton = new Button("  PLAY");
-                playButton.setGraphic(new FontIcon(MaterialDesignP.PLAY));
-                playButton.setStyle("""
-                        -fx-background-color: #2ecc71;
-                        -fx-text-fill: white;
-                        -fx-font-size: 18px;
-                        -fx-background-radius: 8;
-                        -fx-cursor: hand;
-                        """);
-                playButton.setPrefWidth(160);
-                playButton.setPrefHeight(40);
-                playButton.setVisible(false);
-                StackPane.setAlignment(playButton, Pos.CENTER);
-
-                playButton.setOnMousePressed(ev -> playButton.setStyle("""
-                        -fx-background-color: #27ae60;
-                        -fx-text-fill: white;
-                        -fx-font-size: 18px;
-                        -fx-background-radius: 8;
-                        -fx-cursor: hand;
-                        """));
-
-                playButton.setOnMouseReleased(ev -> playButton.setStyle("""
-                        -fx-background-color: #2ecc71;
-                        -fx-text-fill: white;
-                        -fx-font-size: 18px;
-                        -fx-background-radius: 8;
-                        -fx-cursor: hand;
-                        """));
-
-                playButton.setOnAction(ev -> {
-                    System.out.println("Launching game " + game.getGameId());
-                    // TODO ejecutar .exe
-                });
-
-                GaussianBlur blur = new GaussianBlur(0);
-
-                cardWrapper.setOnMouseEntered(ev -> {
-                    blur.setRadius(12);
-                    cover.setEffect(blur);
-                    playButton.setVisible(true);
-                });
-
-                cardWrapper.setOnMouseExited(ev -> {
-                    blur.setRadius(0);
-                    cover.setEffect(blur);
-                    playButton.setVisible(false);
-                });
-
-                cardWrapper.getChildren().addAll(card, playButton);
-
-                libraryGrid.add(cardWrapper, col, row);
-
-                col++;
-                if (col == 4) {
-                    col = 0;
-                    row++;
-                }
-            }
+            renderLibraryGames(games);
 
         } catch (Exception e) {
             e.printStackTrace();
-            leftGamesList.getChildren().clear();
-            libraryGrid.getChildren().clear();
+            clearLibraryViews();
             showEmptyLibraryMessage();
         }
     }
+
+    private List<LibraryGameDTO> requestLibraryGames() {
+        Integer clientId = sessionManager.getClientId();
+
+        ResponseEntity<List<LibraryGameDTO>> response =
+                purchaseApiService.getLibraryByClientId(
+                        buildHeader(),
+                        clientId
+                );
+
+        return response.getBody();
+    }
+
+    private void clearLibraryViews() {
+        leftGamesList.getChildren().clear();
+        libraryGrid.getChildren().clear();
+    }
+
+    private void renderLibraryGames(List<LibraryGameDTO> games) {
+        int col = 0;
+        int row = 0;
+
+        for (LibraryGameDTO game : games) {
+            leftGamesList.getChildren().add(createLeftGameRow(game));
+            libraryGrid.add(createLibraryCard(game), col, row);
+
+            col++;
+
+            if (col == MAX_COLUMNS) {
+                col = 0;
+                row++;
+            }
+        }
+    }
+
+    // ============================================================
+    // LEFT PANEL
+    // ============================================================
+
+    private HBox createLeftGameRow(LibraryGameDTO game) {
+        HBox rowBox = new HBox(16);
+        rowBox.setAlignment(Pos.CENTER_LEFT);
+        rowBox.getStyleClass().add("library-left-game-row");
+
+        ImageView icon = createLogoImageView(game);
+
+        Hyperlink title = new Hyperlink(game.getTitle());
+        title.getStyleClass().add("library-left-game-title");
+        title.setOnAction(event -> openGame(game.getGameId()));
+
+        HBox iconWrapper = new HBox(icon);
+        iconWrapper.setAlignment(Pos.CENTER);
+        iconWrapper.getStyleClass().add("library-left-game-icon-wrapper");
+
+        rowBox.getChildren().addAll(iconWrapper, title);
+
+        return rowBox;
+    }
+
+    private ImageView createLogoImageView(LibraryGameDTO game) {
+        ImageView icon = new ImageView();
+        icon.setFitWidth(36);
+        icon.setFitHeight(36);
+        icon.setPreserveRatio(true);
+
+        loadLogoIntoImageView(game, icon);
+
+        return icon;
+    }
+
+    private void loadLogoIntoImageView(LibraryGameDTO game, ImageView icon) {
+        try {
+            byte[] bytes = gameApiService.getLogo(
+                    buildHeader(),
+                    game.getGameId()
+            ).getBody();
+
+            ImageUtils.setAvatar(
+                    bytes,
+                    icon,
+                    36
+            );
+
+        } catch (Exception ignored) {
+        }
+    }
+
+    // ============================================================
+    // GRID CARDS
+    // ============================================================
+
+    private StackPane createLibraryCard(LibraryGameDTO game) {
+        StackPane cardWrapper = new StackPane();
+        cardWrapper.getStyleClass().add("library-card-click-wrapper");
+
+        VBox card = new VBox();
+        card.getStyleClass().add("library-card");
+
+        ImageView cover = createCoverImageView(game);
+
+        HBox coverWrapper = new HBox();
+        coverWrapper.setAlignment(Pos.CENTER);
+        coverWrapper.getStyleClass().add("library-cover-wrapper");
+        coverWrapper.getChildren().add(cover);
+
+        card.getChildren().add(coverWrapper);
+
+        Button playButton = createPlayButton(game);
+
+        configureCardHover(cardWrapper, cover, playButton);
+
+        cardWrapper.getChildren().addAll(card, playButton);
+
+        return cardWrapper;
+    }
+
+    private ImageView createCoverImageView(LibraryGameDTO game) {
+        ImageView cover = new ImageView();
+        cover.setFitWidth(170);
+        cover.setFitHeight(245);
+        cover.setPreserveRatio(false);
+
+        loadVerticalCoverIntoImageView(game, cover);
+
+        return cover;
+    }
+
+    private void loadVerticalCoverIntoImageView(LibraryGameDTO game, ImageView cover) {
+        try {
+            byte[] bytes = gameApiService.getVertical(
+                    buildHeader(),
+                    game.getGameId()
+            ).getBody();
+
+            if (bytes != null && bytes.length > 0) {
+                cover.setImage(new Image(new ByteArrayInputStream(bytes)));
+            }
+
+        } catch (Exception ignored) {
+        }
+    }
+
+    // ============================================================
+    // PLAY BUTTON
+    // ============================================================
+
+    private Button createPlayButton(LibraryGameDTO game) {
+        Button playButton = new Button("  PLAY");
+        playButton.setGraphic(new FontIcon(MaterialDesignP.PLAY));
+        playButton.setStyle(getPlayButtonStyle());
+        playButton.setPrefWidth(160);
+        playButton.setPrefHeight(40);
+        playButton.setVisible(false);
+
+        StackPane.setAlignment(playButton, Pos.CENTER);
+
+        playButton.setOnMousePressed(event -> playButton.setStyle(getPressedPlayButtonStyle()));
+        playButton.setOnMouseReleased(event -> playButton.setStyle(getPlayButtonStyle()));
+
+        playButton.setOnAction(event -> {
+            System.out.println("Launching game " + game.getGameId());
+        });
+
+        return playButton;
+    }
+
+    private String getPlayButtonStyle() {
+        return """
+                -fx-background-color: #2ecc71;
+                -fx-text-fill: white;
+                -fx-font-size: 18px;
+                -fx-background-radius: 8;
+                -fx-cursor: hand;
+                """;
+    }
+
+    private String getPressedPlayButtonStyle() {
+        return """
+                -fx-background-color: #27ae60;
+                -fx-text-fill: white;
+                -fx-font-size: 18px;
+                -fx-background-radius: 8;
+                -fx-cursor: hand;
+                """;
+    }
+
+    private void configureCardHover(StackPane cardWrapper,
+                                    ImageView cover,
+                                    Button playButton) {
+        GaussianBlur blur = new GaussianBlur(0);
+
+        cardWrapper.setOnMouseEntered(event -> {
+            blur.setRadius(12);
+            cover.setEffect(blur);
+            playButton.setVisible(true);
+        });
+
+        cardWrapper.setOnMouseExited(event -> {
+            blur.setRadius(0);
+            cover.setEffect(blur);
+            playButton.setVisible(false);
+        });
+    }
+
+    // ============================================================
+    // EMPTY STATE
+    // ============================================================
 
     private void showEmptyLibraryMessage() {
         Label leftMessage = new Label("You don't have any games yet.");
@@ -253,6 +329,10 @@ public class LibraryController {
         libraryGrid.add(gridMessage, 0, 0);
     }
 
+    // ============================================================
+    // NAVIGATION
+    // ============================================================
+
     @FXML
     void switchProfileScene() {
         stageManager.switchScene(FxmlView.PROFILE);
@@ -275,5 +355,13 @@ public class LibraryController {
 
     private void openGame(Integer gameId) {
         stageManager.openGame(gameId);
+    }
+
+    // ============================================================
+    // HELPERS
+    // ============================================================
+
+    private String buildHeader() {
+        return sessionManager.getAuthorizationHeader();
     }
 }

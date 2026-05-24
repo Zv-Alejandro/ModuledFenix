@@ -15,13 +15,16 @@ import javafx.scene.text.Text;
 import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
 
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import static org.ies.fenix.client.utils.EmailValidator.isValidEmail;
 
 public class EmailFormController implements Initializable {
+
+    // ============================================================
+    // FXML FIELDS
+    // ============================================================
 
     @FXML
     private Text title;
@@ -51,50 +54,92 @@ public class EmailFormController implements Initializable {
     private Button backButton;
 
     @FXML
-    public TextField emailTextField;
+    private TextField emailTextField;
 
     @FXML
     private Label clientErrorLabel;
 
-    private final StringProperty errorProperty = new SimpleStringProperty();
+    // ============================================================
+    // DEPENDENCIES
+    // ============================================================
 
     private final StageManager stageManager;
+    private final StringProperty errorProperty = new SimpleStringProperty();
 
     public EmailFormController(StageManager stageManager) {
         this.stageManager = stageManager;
     }
 
+    // ============================================================
+    // INITIALIZATION
+    // ============================================================
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        configureErrorLabel();
+        configureErrorResetListener();
+        configureImages();
+    }
+
+    private void configureErrorLabel() {
         clientErrorLabel.textProperty().bind(errorProperty);
-        clientErrorLabel.visibleProperty().bind(
-                errorProperty.isNotNull().and(errorProperty.isNotEmpty())
-        );
+        clientErrorLabel.visibleProperty().bind(errorProperty.isNotEmpty());
         clientErrorLabel.managedProperty().bind(clientErrorLabel.visibleProperty());
-        emailTextField.textProperty().addListener((observable, oldText, newText) -> {
-            errorProperty.setValue("");
-        });
+    }
+
+    private void configureErrorResetListener() {
+        emailTextField.textProperty().addListener((observable, oldText, newText) -> clearError());
+    }
+
+    private void configureImages() {
         logoImage.setFitWidth(294.0);
         logoImage.setSmooth(true);
+
         settingsImage.setFitWidth(15.0);
         settingsImage.setSmooth(true);
     }
 
+    // ============================================================
+    // NAVIGATION
+    // ============================================================
+
     @FXML
-    void switchToUserCreateView(){
-        String email = emailTextField.getText();
-        if(!isValidEmail(email)){
-            errorProperty.set("Please enter a valid email address");
+    void switchToUserCreateView() {
+        String email = getEmailText();
+
+        if (!isValidEmail(email)) {
+            showError("Please enter a valid email address");
             return;
         }
+
         ClientController controller =
                 stageManager.switchSceneAndGetController(FxmlView.USER_CREATE);
+
         controller.setEmail(email);
     }
 
     @FXML
-    void switchLogInView(){ stageManager.switchScene(FxmlView.LOGIN);}
+    void switchLogInView() {
+        stageManager.switchScene(FxmlView.LOGIN);
+    }
 
+    // ============================================================
+    // HELPERS
+    // ============================================================
 
+    private String getEmailText() {
+        if (emailTextField.getText() == null) {
+            return "";
+        }
 
+        return emailTextField.getText().trim();
+    }
+
+    private void showError(String message) {
+        errorProperty.set(message);
+    }
+
+    private void clearError() {
+        errorProperty.set("");
+    }
 }
