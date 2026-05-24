@@ -449,6 +449,13 @@
     -fx-background-color: #98B6FA;
 }
 
+.game-play-button:disabled {
+    -fx-background-color: #6F6A67;
+    -fx-text-fill: #CFC7C0;
+    -fx-opacity: 1.0;
+    -fx-cursor: default;
+}
+
 .game-download-button {
     -fx-background-color: #243B54;
     -fx-text-fill: #FAF7F2;
@@ -862,4 +869,77 @@
     -fx-min-height: 180;
     -fx-max-width: 180;
     -fx-max-height: 180;
+}
+
+/* TAG SELECTOR - UploadGame */
+
+.tags-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.tags-scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.tags-scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.tags-scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #D9C5A1;
+    -fx-background-radius: 8px;
+}
+
+.tags-scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #8C6A52;
+}
+
+.tags-container {
+    -fx-background-color: #FAF7F2;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 14px;
+    -fx-border-color: #D9C5A1;
+    -fx-border-width: 1px;
+    -fx-padding: 14px;
+}
+
+.tag-chip {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-border-color: #D9C5A1;
+    -fx-border-width: 1px;
+
+    -fx-text-fill: #243B54;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+
+    -fx-padding: 7px 14px;
+    -fx-cursor: hand;
+}
+
+.tag-chip:hover {
+    -fx-background-color: #F3EBDC;
+    -fx-border-color: #8C6A52;
+}
+
+.tag-chip:selected {
+    -fx-background-color: #98B6FA;
+    -fx-border-color: #243B54;
+    -fx-text-fill: #243B54;
+}
+
+.tag-chip:selected:hover {
+    -fx-background-color: #D9C5A1;
+    -fx-border-color: #243B54;
+    -fx-text-fill: #243B54;
+}
+
+.selected-tags-label {
+    -fx-text-fill: #8C6A52;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
 }

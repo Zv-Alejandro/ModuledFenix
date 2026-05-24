@@ -124,8 +124,10 @@
 
                             <!-- BUTTONS -->
                             <HBox spacing="18.0">
-                                <Button text="Play"
-                                        styleClass="game-play-button"/>
+                                <Button fx:id="playButton"
+                                        text="Play"
+                                        styleClass="game-play-button"
+                                        onAction="#onPlay"/>
 
                                 <Button text="Download"
                                         styleClass="game-download-button"

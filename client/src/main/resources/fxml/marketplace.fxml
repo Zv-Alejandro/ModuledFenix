@@ -73,10 +73,10 @@
                     <VBox spacing="18.0">
 
                         <VBox spacing="5.0">
-                            <Label text="Recommendations"
+                            <Label text="Explore games"
                                    styleClass="section-title"/>
 
-                            <Label text="Based on you like to play"
+                            <Label text="Discover more stories to play"
                                    styleClass="section-subtitle"/>
                         </VBox>
 

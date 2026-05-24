@@ -5,6 +5,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
@@ -20,6 +21,7 @@ import javafx.stage.FileChooser;
 import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
+import org.ies.fenix.client.utils.GameInstallUtils;
 import org.ies.fenix.controller.IClientController;
 import org.ies.fenix.controller.IGameController;
 import org.ies.fenix.controller.IPurchaseController;
@@ -90,6 +92,9 @@ public class GameController {
     @FXML
     private Hyperlink username;
 
+    @FXML
+    private Button playButton;
+
     // ============================================================
     // DEPENDENCIES
     // ============================================================
@@ -127,6 +132,7 @@ public class GameController {
 
         configureBannerImage();
         configureBannerClip();
+        updatePlayButtonState();
     }
 
     private void configureBannerImage() {
@@ -155,6 +161,7 @@ public class GameController {
     public void setSelectedGameId(Integer selectedGameId) {
         this.selectedGameId = selectedGameId;
         loadSelectedGame();
+        updatePlayButtonState();
     }
 
     private void loadSelectedGame() {
@@ -392,25 +399,37 @@ public class GameController {
 
     private void startDownload(Resource resource, File target) {
         BaseLayoutController base = stageManager.getBaseLayoutController();
-        Task<Void> downloadTask = createDownloadTask(resource, target);
+
+        Task<Void> downloadTask = createDownloadTask(
+                resource,
+                target,
+                selectedGameId
+        );
 
         base.getGlobalProgressBar()
                 .progressProperty()
                 .bind(downloadTask.progressProperty());
 
-        downloadTask.setOnSucceeded(event -> finishDownload());
+        downloadTask.setOnSucceeded(event -> {
+            finishDownload();
+            updatePlayButtonState();
+        });
 
         downloadTask.setOnFailed(event -> {
             finishDownload();
+            updatePlayButtonState();
             showError("Download failed", "The game could not be downloaded or extracted.");
         });
 
-        downloadTask.setOnCancelled(event -> finishDownload());
+        downloadTask.setOnCancelled(event -> {
+            finishDownload();
+            updatePlayButtonState();
+        });
 
         new Thread(downloadTask).start();
     }
 
-    private Task<Void> createDownloadTask(Resource resource, File target) {
+    private Task<Void> createDownloadTask(Resource resource, File target, Integer gameId) {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
@@ -433,7 +452,9 @@ public class GameController {
 
                 if (isZipFile(target)) {
                     updateProgress(ProgressBar.INDETERMINATE_PROGRESS, 1);
-                    unzipFile(target);
+
+                    Path extractionDirectory = unzipFile(target);
+                    GameInstallUtils.saveInstallPath(gameId, extractionDirectory);
                 }
 
                 return null;
@@ -447,7 +468,7 @@ public class GameController {
                 && file.getName().toLowerCase().endsWith(".zip");
     }
 
-    private void unzipFile(File zipFile) throws Exception {
+    private Path unzipFile(File zipFile) throws Exception {
         Path outputDirectory = getExtractionDirectory(zipFile);
 
         Files.createDirectories(outputDirectory);
@@ -474,6 +495,8 @@ public class GameController {
                 zipInputStream.closeEntry();
             }
         }
+
+        return outputDirectory;
     }
 
     private Path getExtractionDirectory(File zipFile) {
@@ -501,6 +524,48 @@ public class GameController {
 
     private void hideProgress() {
         stageManager.getBaseLayoutController().hideProgress();
+    }
+
+    // ============================================================
+    // PLAY
+    // ============================================================
+
+    @FXML
+    private void onPlay() {
+        if (selectedGameId == null) {
+            showError("No game selected", "Please select a game to play.");
+            updatePlayButtonState();
+            return;
+        }
+
+        if (!GameInstallUtils.canLaunchGame(selectedGameId)) {
+            updatePlayButtonState();
+            showError(
+                    "Game not installed",
+                    "Download this game before trying to play it."
+            );
+            return;
+        }
+
+        try {
+            GameInstallUtils.launchGame(selectedGameId);
+
+        } catch (Exception e) {
+            updatePlayButtonState();
+            showError(
+                    "Game not installed",
+                    "The game executable could not be found. Try downloading it again."
+            );
+        }
+    }
+
+    private void updatePlayButtonState() {
+        if (playButton == null) {
+            return;
+        }
+
+        boolean canPlay = GameInstallUtils.canLaunchGame(selectedGameId);
+        playButton.setDisable(!canPlay);
     }
 
     // ============================================================

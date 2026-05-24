@@ -9,6 +9,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -88,17 +89,37 @@
                                            styleClass="game-info"/>
 
                                     <TextField fx:id="titleField"
-                                               promptText="Example: Stain;Gate"
+                                               promptText="Example: Slash Dream"
                                                styleClass="upload-text-field"/>
                                 </VBox>
 
-                                <VBox spacing="6.0">
+                                <VBox spacing="8.0">
                                     <Label text="Tags"
                                            styleClass="game-info"/>
 
-                                    <TextField fx:id="tagsField"
-                                               promptText="Sci-fi, Romance, Mystery..."
-                                               styleClass="upload-text-field"/>
+                                    <Label text="Choose the tags that best describe your game."
+                                           wrapText="true"
+                                           styleClass="section-subtitle"/>
+
+                                    <ScrollPane fitToWidth="true"
+                                                hbarPolicy="NEVER"
+                                                vbarPolicy="AS_NEEDED"
+                                                maxHeight="165.0"
+                                                styleClass="tags-scroll-pane">
+
+                                        <content>
+                                            <FlowPane fx:id="tagsContainer"
+                                                      hgap="8.0"
+                                                      vgap="8.0"
+                                                      prefWrapLength="360.0"
+                                                      styleClass="tags-container"/>
+                                        </content>
+                                    </ScrollPane>
+
+                                    <Label fx:id="selectedTagsLabel"
+                                           text="No tags selected"
+                                           wrapText="true"
+                                           styleClass="selected-tags-label"/>
                                 </VBox>
 
                                 <VBox spacing="6.0">
