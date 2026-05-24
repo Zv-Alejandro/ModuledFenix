@@ -13,12 +13,12 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
     List<Game> findAllByOrderByIdDesc();
 
     @Query("""
-    SELECT DISTINCT g
-    FROM Game g
-    LEFT JOIN FETCH g.dev
-    LEFT JOIN FETCH g.tags
-    ORDER BY g.id DESC
-""")
+        SELECT DISTINCT g
+        FROM Game g
+        LEFT JOIN FETCH g.dev
+        LEFT JOIN FETCH g.tags
+        ORDER BY g.id DESC
+    """)
     List<Game> findAllWithDevAndTagsOrderByIdDesc();
 
     boolean existsByTitleIgnoreCase(String title);
@@ -45,11 +45,21 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
                                  @Param("size") long size);
 
     @Query("""
-    SELECT DISTINCT g
-    FROM Game g
-    LEFT JOIN FETCH g.dev
-    LEFT JOIN FETCH g.tags
-    WHERE g.id = :id
-""")
+        SELECT DISTINCT g
+        FROM Game g
+        LEFT JOIN FETCH g.dev
+        LEFT JOIN FETCH g.tags
+        WHERE g.id = :id
+    """)
     Optional<Game> findByIdWithDevAndTags(@Param("id") Integer id);
+
+    @Query("""
+        SELECT DISTINCT g
+        FROM Game g
+        LEFT JOIN FETCH g.tags
+        LEFT JOIN FETCH g.dev
+        WHERE g.dev.id = :devId
+        ORDER BY g.id DESC
+    """)
+    List<Game> findCreatedGamesByDevIdWithTags(@Param("devId") Integer devId);
 }

@@ -20,6 +20,11 @@ public interface IGameController {
             @RequestHeader("Authorization") String authorization
     );
 
+    @GetExchange("/created/by-me")
+    ResponseEntity<List<GameResponseDTO>> getCreatedGamesByMe(
+            @RequestHeader("Authorization") String authorization
+    );
+
     @PostExchange("/search")
     ResponseEntity<?> getManyGames(
             @RequestBody GameSearchDTO dto

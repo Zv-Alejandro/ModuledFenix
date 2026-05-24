@@ -38,6 +38,21 @@ public class GameController implements IGameController {
         }
     }
 
+    @Override
+    @GetMapping("/created/by-me")
+    public ResponseEntity<List<GameResponseDTO>> getCreatedGamesByMe(
+            @RequestHeader("Authorization") String authorization
+    ) {
+        try {
+            return ResponseEntity.ok(gameService.getCreatedGamesByMe(authorization));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     // ============================================================
     //                      SEARCH GAMES
     // ============================================================

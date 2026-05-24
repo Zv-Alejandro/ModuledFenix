@@ -1,6 +1,8 @@
 package org.ies.fenix.client.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.image.ImageView;
 import org.ies.fenix.client.api.SessionManager;
@@ -9,6 +11,7 @@ import org.ies.fenix.client.config.StageManager;
 import org.ies.fenix.client.utils.ImageUtils;
 import org.ies.fenix.controller.IClientController;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.springframework.http.ResponseEntity;
 
 public class NavbarController {
 
@@ -18,6 +21,12 @@ public class NavbarController {
     // ============================================================
     // FXML FIELDS
     // ============================================================
+
+    @FXML
+    private Button backButton;
+
+    @FXML
+    private Button forwardButton;
 
     @FXML
     private FontIcon topProfileIcon;
@@ -63,6 +72,32 @@ public class NavbarController {
                 topProfileImage,
                 topProfileIcon
         );
+
+        updateHistoryButtons();
+    }
+
+    // ============================================================
+    // NAVIGATION HISTORY
+    // ============================================================
+
+    @FXML
+    public void goBackFromNavbar() {
+        stageManager.goBackFromNavbar();
+    }
+
+    @FXML
+    public void goForwardFromNavbar() {
+        stageManager.goForwardFromNavbar();
+    }
+
+    private void updateHistoryButtons() {
+        if (backButton != null) {
+            backButton.setDisable(!stageManager.canGoBackFromNavbar());
+        }
+
+        if (forwardButton != null) {
+            forwardButton.setDisable(!stageManager.canGoForwardFromNavbar());
+        }
     }
 
     // ============================================================
@@ -90,6 +125,38 @@ public class NavbarController {
     }
 
     // ============================================================
+    // LOGOUT
+    // ============================================================
+
+    @FXML
+    public void logout() {
+        try {
+            String authorization = sessionManager.getAuthorizationHeader();
+
+            if (authorization != null) {
+                ResponseEntity<Void> response = clientApiService.logout(authorization);
+
+                if (!response.getStatusCode().is2xxSuccessful()) {
+                    showError("Logout failed", "The server could not close your session.");
+                    return;
+                }
+            }
+
+            closeLocalSession();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Logout failed", "There was an error closing your session.");
+        }
+    }
+
+    private void closeLocalSession() {
+        sessionManager.clearSession();
+        stageManager.clearNavbarHistory();
+        stageManager.switchScene(FxmlView.LOGIN);
+    }
+
+    // ============================================================
     // ACTIVE TAB
     // ============================================================
 
@@ -105,6 +172,8 @@ public class NavbarController {
         setInactiveIfNeeded(marketplace);
         setInactiveIfNeeded(library);
         setInactiveIfNeeded(username);
+
+        updateHistoryButtons();
     }
 
     private void clearTabStyles() {
@@ -125,6 +194,18 @@ public class NavbarController {
         if (!tab.getStyleClass().contains(TAB_ACTIVE)) {
             tab.getStyleClass().add(TAB_INACTIVE);
         }
+    }
+
+    // ============================================================
+    // ALERTS
+    // ============================================================
+
+    private void showError(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     // ============================================================
