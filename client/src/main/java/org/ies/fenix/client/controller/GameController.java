@@ -30,6 +30,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
+import org.ies.fenix.client.utils.GameInstallUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -392,7 +393,12 @@ public class GameController {
 
     private void startDownload(Resource resource, File target) {
         BaseLayoutController base = stageManager.getBaseLayoutController();
-        Task<Void> downloadTask = createDownloadTask(resource, target);
+
+        Task<Void> downloadTask = createDownloadTask(
+                resource,
+                target,
+                selectedGameId
+        );
 
         base.getGlobalProgressBar()
                 .progressProperty()
@@ -410,7 +416,7 @@ public class GameController {
         new Thread(downloadTask).start();
     }
 
-    private Task<Void> createDownloadTask(Resource resource, File target) {
+    private Task<Void> createDownloadTask(Resource resource, File target, Integer gameId) {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
@@ -433,7 +439,9 @@ public class GameController {
 
                 if (isZipFile(target)) {
                     updateProgress(ProgressBar.INDETERMINATE_PROGRESS, 1);
-                    unzipFile(target);
+
+                    Path extractionDirectory = unzipFile(target);
+                    GameInstallUtils.saveInstallPath(gameId, extractionDirectory);
                 }
 
                 return null;
@@ -447,7 +455,7 @@ public class GameController {
                 && file.getName().toLowerCase().endsWith(".zip");
     }
 
-    private void unzipFile(File zipFile) throws Exception {
+    private Path unzipFile(File zipFile) throws Exception {
         Path outputDirectory = getExtractionDirectory(zipFile);
 
         Files.createDirectories(outputDirectory);
@@ -474,6 +482,8 @@ public class GameController {
                 zipInputStream.closeEntry();
             }
         }
+
+        return outputDirectory;
     }
 
     private Path getExtractionDirectory(File zipFile) {
@@ -501,6 +511,24 @@ public class GameController {
 
     private void hideProgress() {
         stageManager.getBaseLayoutController().hideProgress();
+    }
+
+    @FXML
+    private void onPlay() {
+        if (selectedGameId == null) {
+            showError("No game selected", "Please select a game to play.");
+            return;
+        }
+
+        try {
+            GameInstallUtils.launchGame(selectedGameId);
+
+        } catch (Exception e) {
+            showError(
+                    "Game not installed",
+                    "Download this game before trying to play it."
+            );
+        }
     }
 
     // ============================================================

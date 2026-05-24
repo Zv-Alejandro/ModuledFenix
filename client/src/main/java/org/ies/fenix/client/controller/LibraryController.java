@@ -2,6 +2,7 @@ package org.ies.fenix.client.controller;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -16,6 +17,7 @@ import javafx.scene.layout.VBox;
 import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
+import org.ies.fenix.client.utils.GameInstallUtils;
 import org.ies.fenix.client.utils.ImageUtils;
 import org.ies.fenix.controller.IClientController;
 import org.ies.fenix.controller.IGameController;
@@ -258,9 +260,7 @@ public class LibraryController {
         playButton.setOnMousePressed(event -> playButton.setStyle(getPressedPlayButtonStyle()));
         playButton.setOnMouseReleased(event -> playButton.setStyle(getPlayButtonStyle()));
 
-        playButton.setOnAction(event -> {
-            System.out.println("Launching game " + game.getGameId());
-        });
+        playButton.setOnAction(event -> launchGame(game.getGameId()));
 
         return playButton;
     }
@@ -358,10 +358,39 @@ public class LibraryController {
     }
 
     // ============================================================
+    // GAME LAUNCH
+    // ============================================================
+
+    private void launchGame(Integer gameId) {
+        if (gameId == null) {
+            showError("No game selected", "Please select a game to play.");
+            return;
+        }
+
+        try {
+            GameInstallUtils.launchGame(gameId);
+
+        } catch (Exception e) {
+            showError(
+                    "Game not installed",
+                    "Download this game from its game page before trying to play it."
+            );
+        }
+    }
+
+    // ============================================================
     // HELPERS
     // ============================================================
 
     private String buildHeader() {
         return sessionManager.getAuthorizationHeader();
+    }
+
+    private void showError(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }
