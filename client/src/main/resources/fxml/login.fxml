@@ -24,8 +24,7 @@
         </padding>
         <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="31.0" textAlignment="RIGHT" >
             <graphic>
-                <ImageView fx:id="settingsImage" fitHeight="18.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-                </ImageView>
+                <ImageView fx:id="settingsImage" fitHeight="18.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">                </ImageView>
             </graphic>
         </Button>
     </HBox>
@@ -35,7 +34,8 @@
         <opaqueInsets>
             <Insets />
         </opaqueInsets>
-        <ImageView fx:id="logoImage" fitHeight="154.0" fitWidth="294.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fx:id="logoImage" fitHeight="154.0" fitWidth="294.0" pickOnBounds="true" preserveRatio="true">        </ImageView>
+        <ImageView fx:id="logoName" fitHeight="154.0" fitWidth="294.0" pickOnBounds="true" preserveRatio="true">
         </ImageView>
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Iniciar sesión">
             <font>

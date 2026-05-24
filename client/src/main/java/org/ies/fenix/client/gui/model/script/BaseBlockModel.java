@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public abstract class BaseBlockModel {
 
+    protected BaseBlockModel parent;
     private final String id;
     private final String type;
 
@@ -18,6 +19,14 @@ public abstract class BaseBlockModel {
 
     public String getType() {
         return type;
+    }
+
+    public BaseBlockModel getParent() {
+        return parent;
+    }
+
+    public void setParent(BaseBlockModel parent) {
+        this.parent = parent;
     }
 }
 

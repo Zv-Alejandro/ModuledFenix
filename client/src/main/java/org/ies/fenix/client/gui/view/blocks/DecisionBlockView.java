@@ -1,80 +1,124 @@
 package org.ies.fenix.client.gui.view.blocks;
 
-import javafx.scene.control.Button;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.model.script.DecisionBlockModel;
 import org.ies.fenix.client.gui.model.script.OptionBlockModel;
+import org.ies.fenix.client.gui.service.DragAndDropService;
+import org.ies.fenix.client.gui.util.BlockFactory;
 
-public class DecisionBlockView extends BaseBlockView {
+import java.util.ArrayList;
+import java.util.List;
 
-    private DecisionBlockModel model;
-    private TextArea sentenceArea;
-    private VBox optionsContainer;
+public class DecisionBlockView extends ContainerBlockView {
+
+    private TextField sentenceField;
+    private final List<BaseBlockModel> options = new ArrayList<>();
 
     // ============================================================
-    //  MODO EDITOR
+    //  MODO EDITOR (bloque horizontal simple)
     // ============================================================
-    public DecisionBlockView(DecisionBlockModel model) {
-        this.model = model;
+    public DecisionBlockView(
+            DecisionBlockModel model,
+            DragAndDropService dragService
+    ) {
 
+        super.model = model;
         getStyleClass().add("block-editor");
 
-        Label decisionLabel = new Label("DECISION");
-        decisionLabel.getStyleClass().add("block-label");
+        Label label = new Label("DECISION");
 
-        sentenceArea = new TextArea();
-        sentenceArea.setPromptText("What is the decision question?");
-        sentenceArea.setPrefHeight(60);
-        sentenceArea.setText(model.getSentence());
-        sentenceArea.getStyleClass().add("block-textarea");
+        label.getStyleClass().add("block-label");
 
-        sentenceArea.textProperty().addListener((obs, oldV, newV) -> {
-            model.setSentence(newV);
-        });
+        sentenceField = new TextField();
 
-        optionsContainer = new VBox(10);
+        sentenceField.setPromptText(
+                "Decision question..."
+        );
 
-        for (OptionBlockModel opt : model.getOptions()) {
-            optionsContainer.getChildren().add(new OptionBlockView(opt));
+        sentenceField.setText(model.getSentence());
+
+        sentenceField.getStyleClass()
+                .add("block-textfield");
+
+        sentenceField.textProperty().addListener(
+                (obs, oldV, newV) -> {
+
+                    model.setSentence(newV);
+                }
+        );
+
+        HBox row = new HBox(
+                10,
+                label,
+                sentenceField
+        );
+
+        row.getStyleClass().add("block-row");
+
+        childrenContainer = new VBox(5);
+
+        childrenContainer.setPadding(
+                new Insets(0,0,0,10)
+        );
+
+        for (OptionBlockModel option
+                : model.getOptions()) {
+
+            BaseBlockView optionView =
+                    BlockFactory.createView(
+                            option,
+                            option.getType(),
+                            dragService
+                    );
+
+            childrenContainer
+                    .getChildren()
+                    .add(optionView);
         }
 
-        Button addOptionBtn = new Button("+ Add Option");
-        addOptionBtn.getStyleClass().add("block-button");
-        addOptionBtn.setOnAction(e -> addNewOption());
+        setupContainerDragAndDrop(dragService);
 
-        getChildren().addAll(decisionLabel, sentenceArea, optionsContainer, addOptionBtn);
+        VBox content = new VBox(5);
+
+        content.getChildren().addAll(
+                row,
+                childrenContainer
+        );
+
+        getChildren().add(content);
     }
 
+
     // ============================================================
-    //  MODO CATÁLOGO
+    //  MODO CATÁLOGO (bloque horizontal simple)
     // ============================================================
     public DecisionBlockView() {
 
         getStyleClass().add("block-catalog");
 
-        Label title = new Label("DECISION");
-        title.getStyleClass().add("block-label");
+        Label label = new Label("DECISION");
+        label.getStyleClass().add("block-label");
 
-        TextArea previewSentence = new TextArea("Decision text...");
-        previewSentence.setDisable(true);
-        previewSentence.setPrefHeight(50);
-        previewSentence.getStyleClass().add("block-textarea");
+        TextField preview = new TextField();
+        preview.setDisable(true);
+        preview.getStyleClass().add("block-textfield");
 
-        VBox previewOptions = new VBox(5);
-        previewOptions.getChildren().add(new OptionBlockView());
-        previewOptions.getChildren().add(new OptionBlockView());
-
-        getChildren().addAll(title, previewSentence, previewOptions);
+        // BLOQUE HORIZONTAL
+        getChildren().addAll(label, preview);
+    }
+    @Override
+    public BaseBlockModel createModel() {
+        return new DecisionBlockModel();
     }
 
-    // ============================================================
-    //  Añadir nueva opción
-    // ============================================================
-    private void addNewOption() {
-        OptionBlockModel newOption = new OptionBlockModel();
-        model.getOptions().add(newOption);
-        optionsContainer.getChildren().add(new OptionBlockView(newOption));
+    @Override
+    public boolean canContain(BaseBlockModel child) {
+        return child.getType().equals("option");
     }
+
 }

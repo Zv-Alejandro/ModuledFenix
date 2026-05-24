@@ -97,7 +97,7 @@ public class Main extends Application {
             }
         });
 
-        showLoginScene();
+        initialScene();
     }
 
     @Override
@@ -107,7 +107,7 @@ public class Main extends Application {
         }
     }
 
-    private void showLoginScene() {
-        stageManager.switchScene(FxmlView.LOGIN);
+    private void initialScene() {
+        stageManager.switchScene(FxmlView.GUI);
     }
 }

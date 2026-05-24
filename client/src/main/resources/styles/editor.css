@@ -16,8 +16,7 @@
    ============================================================ */
 
 .block {
-    -fx-padding: 12;
-    -fx-spacing: 10;
+    -fx-max-width: 310;
     -fx-background-radius: 4;
     -fx-border-radius: 4;
     -fx-border-width: 2;
@@ -45,10 +44,7 @@
    ============================================================ */
 
 .block-label {
-    -fx-background-color: #d7b4ff;
     -fx-padding: 5 8;
-    -fx-border-color: black;
-    -fx-border-width: 1;
     -fx-font-weight: bold;
 }
 
@@ -132,4 +128,15 @@
 
 .workspace {
     -fx-padding: 20;
+}
+
+.parent-shape {
+    -fx-fill: yellow; /* o el color que quieras */
+    -fx-stroke: black;
+    -fx-stroke-width: 2px;
+}
+
+
+.slot-area {
+    -fx-background-color: transparent;
 }

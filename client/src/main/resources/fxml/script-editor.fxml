@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.ies.fenix.client.controller.ScriptEditorController"
-            stylesheets="@../styles/editor.css"
->
+<BorderPane stylesheets="@../styles/editor.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ies.fenix.client.controller.ScriptEditorController">
 
     <!-- LEFT PANEL -->
     <left>
         <ScrollPane fitToWidth="true">
             <content>
-                <VBox fx:id="palette"
-                      spacing="10"
-                      prefWidth="350"
-                      styleClass="palette"/>
+                <VBox fx:id="palette" prefWidth="350" spacing="10" styleClass="palette" />
             </content>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
         </ScrollPane>
     </left>
 
@@ -27,7 +24,9 @@
             <content>
                 <VBox fx:id="workspace"
                       spacing="15"
-                      styleClass="workspace"/>
+                      styleClass="workspace"
+                      fillWidth="true"
+                      prefHeight="2000"/>
             </content>
         </ScrollPane>
     </center>

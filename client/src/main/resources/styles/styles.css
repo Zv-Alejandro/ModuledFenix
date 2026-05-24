@@ -222,11 +222,15 @@
 }
 
 #settingsImage {
-    -fx-image: url("../graphics/Setting.png");
+    -fx-image: url("../graphics/setting.png");
 }
 
 #logoImage {
-    -fx-image: url("../graphics/FenixLogo.png");
+    -fx-image: url("../graphics/fenixLogo.png");
+}
+
+#logoName {
+    -fx-image: url("../graphics/fenixName.png");
 }
 
 #clientErrorLabel {
