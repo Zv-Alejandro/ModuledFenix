@@ -4,29 +4,36 @@ import javafx.scene.control.Label;
 import java.io.File;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
 import javafx.scene.layout.HBox;
+import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.model.script.CharacterBlockModel;
+import org.ies.fenix.client.utils.FileSelectorField;
 
 public class CharacterBlockView extends BaseBlockView {
 
-    private CharacterBlockModel model;
-    private TextField selectedFileField;
+    private FileSelectorField selector;
 
     // ============================================================
-    //  MODO CATÁLOGO (solo imagen, sin modelo, sin listeners)
+    //  CONSTRUCTOR SIN PARÁMETROS → MODO CATÁLOGO / NO INTERACTIVO
     // ============================================================
     public CharacterBlockView() {
 
-        getStyleClass().add("block-catalog");
-
-        Label title = new Label("SET CHARACTER");
+        Label title = new Label("CHARACTER");
         title.getStyleClass().add("block-label");
 
-        TextField preview = new TextField("Select file...");
+        // El preview ocupa el espacio sobrante
+        TextField preview = new TextField();
+        preview.setEditable(false);
         preview.setDisable(true);
-        preview.setPrefWidth(200);
         preview.getStyleClass().add("block-textfield");
+
+        preview.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(preview, Priority.ALWAYS);
+
+        // El label mantiene su tamaño natural
+        HBox.setHgrow(title, Priority.NEVER);
 
         HBox row = new HBox(10, title, preview);
         row.getStyleClass().add("block-row");
@@ -34,52 +41,39 @@ public class CharacterBlockView extends BaseBlockView {
         getChildren().add(row);
     }
 
+
     // ============================================================
-    //  MODO EDITOR (bloque real con modelo)
+    //  CONSTRUCTOR CON MODELO → MODO EDITOR / INTERACTIVO
     // ============================================================
     public CharacterBlockView(CharacterBlockModel model) {
-        this.model = model;
-
+        super.model = model;
+        getStyleClass().add("block");
         getStyleClass().add("block-editor");
 
         Label title = new Label("SET CHARACTER");
         title.getStyleClass().add("block-label");
 
-        selectedFileField = new TextField();
-        selectedFileField.setPrefWidth(200);
-        selectedFileField.setEditable(false);
-        selectedFileField.getStyleClass().add("block-textfield");
+        selector = new FileSelectorField();
 
-        // Mostrar archivo actual si existe
+        // Si ya había imagen en el modelo, mostrarla
         if (model.getImage() != null) {
-            selectedFileField.setText(model.getImage().getName());
+            selector.setSelectedFile(model.getImage());
         }
 
-        Button chooseBtn = new Button("Choose...");
-        chooseBtn.getStyleClass().add("block-button");
-        chooseBtn.setOnAction(e -> openFileChooser());
+        // Callback cuando el usuario selecciona archivo
+        selector.setOnFileSelected(file -> {
+            if (file != null) {
+                model.setImage(file);
+            }
+        });
 
-        HBox row = new HBox(10, title, selectedFileField, chooseBtn);
+        HBox row = new HBox(10, title, selector);
         row.getStyleClass().add("block-row");
 
         getChildren().add(row);
     }
-
-    // ============================================================
-    //  FileChooser
-    // ============================================================
-    private void openFileChooser() {
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle("Select Character Image");
-        chooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
-        );
-
-        File file = chooser.showOpenDialog(getScene().getWindow());
-
-        if (file != null) {
-            selectedFileField.setText(file.getName());
-            model.setImage(file);
-        }
+    @Override
+    public BaseBlockModel createModel() {
+        return new CharacterBlockModel();
     }
 }

@@ -3,7 +3,10 @@ package org.ies.fenix.client.gui.view.blocks;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.util.EditorRegistry;
 import org.ies.fenix.client.gui.model.script.DialogBlockModel;
 import org.ies.fenix.client.gui.model.script.FenixCharacterModel;
@@ -12,13 +15,13 @@ public class DialogBlockView extends BaseBlockView {
 
     private ComboBox<FenixCharacterModel> characterCombo;
     private TextArea textArea;
-    private DialogBlockModel model;
 
     // ============================================================
     //  MODO CATÁLOGO (solo imagen, sin modelo, sin listeners)
     // ============================================================
     public DialogBlockView() {
 
+        // Modo catálogo (amarillo)
         getStyleClass().add("block-catalog");
 
         Label instruction1 = new Label("SHOW");
@@ -28,10 +31,21 @@ public class DialogBlockView extends BaseBlockView {
         previewCombo.setDisable(true);
         previewCombo.getStyleClass().add("block-combo");
 
-        TextArea previewText = new TextArea("Character dialog...");
+        // Cambiamos TextArea → TextField
+        TextField previewText = new TextField("");
         previewText.setDisable(true);
-        previewText.setPrefHeight(60);
-        previewText.getStyleClass().add("block-textarea");
+        previewText.getStyleClass().add("block-textfield");
+
+        // El label no crece
+        HBox.setHgrow(instruction1, Priority.NEVER);
+
+        // El combo ocupa el espacio sobrante
+        previewCombo.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(previewCombo, Priority.ALWAYS);
+
+        // El textfield también ocupa el espacio sobrante
+        previewText.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(previewText, Priority.ALWAYS);
 
         HBox row1 = new HBox(10, instruction1, previewCombo);
         row1.getStyleClass().add("block-row");
@@ -39,12 +53,17 @@ public class DialogBlockView extends BaseBlockView {
         getChildren().addAll(row1, previewText);
     }
 
+    @Override
+    public BaseBlockModel createModel() {
+        return new DialogBlockModel();
+    }
+
+
     // ============================================================
     //  MODO EDITOR (bloque real con modelo)
     // ============================================================
     public DialogBlockView(DialogBlockModel model) {
-        this.model = model;
-
+        super.model = model;
         getStyleClass().add("block-editor");
 
         Label instruction1 = new Label("SHOW");
@@ -74,11 +93,5 @@ public class DialogBlockView extends BaseBlockView {
 
         getChildren().addAll(row1, textArea);
     }
-
-    // ============================================================
-    //  MÉTODOS AUXILIARES
-    // ============================================================
-    public DialogBlockModel getModel() {
-        return model;
-    }
 }
+

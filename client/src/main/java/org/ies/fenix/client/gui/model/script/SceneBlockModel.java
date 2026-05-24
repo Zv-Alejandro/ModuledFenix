@@ -7,9 +7,8 @@ public class SceneBlockModel extends BaseBlockModel {
     private String name;
     private final LinkedList<BaseBlockModel> children = new LinkedList<>();
 
-    public SceneBlockModel(String name) {
+    public SceneBlockModel() {
         super("scene");
-        this.name = name;
     }
 
     public String getName() { return name; }
