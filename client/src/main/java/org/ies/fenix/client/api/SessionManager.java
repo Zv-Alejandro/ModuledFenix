@@ -35,6 +35,10 @@ public class SessionManager {
     }
 
     public String getAuthorizationHeader() {
+        if (!isLoggedIn()) {
+            return null;
+        }
+
         return "Bearer " + token;
     }
 }

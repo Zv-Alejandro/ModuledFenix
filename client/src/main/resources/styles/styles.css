@@ -943,3 +943,142 @@
     -fx-font-size: 12px;
     -fx-font-style: italic;
 }
+
+.nav-button:disabled {
+    -fx-opacity: 0.25;
+    -fx-cursor: default;
+}
+
+/* PROFILE DROPDOWN MENU - NAVBAR */
+
+.profile-menu-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 4px 6px;
+    -fx-cursor: hand;
+}
+
+.profile-menu-button:hover {
+    -fx-background-color: rgba(250, 247, 242, 0.10);
+    -fx-background-radius: 8px;
+}
+
+.profile-menu-button .arrow {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.profile-menu-button .label {
+    -fx-padding: 0;
+}
+
+.profile-menu-button .context-menu {
+    -fx-background-color: #FAF7F2;
+    -fx-background-radius: 10px;
+    -fx-border-color: #D9C5A1;
+    -fx-border-radius: 10px;
+    -fx-padding: 6px;
+}
+
+.profile-menu-button .menu-item {
+    -fx-background-color: transparent;
+    -fx-padding: 8px 18px;
+    -fx-cursor: hand;
+}
+
+.profile-menu-button .menu-item .label {
+    -fx-text-fill: #243B54;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.profile-menu-button .menu-item:focused,
+.profile-menu-button .menu-item:hover {
+    -fx-background-color: #D9C5A1;
+    -fx-background-radius: 8px;
+}
+
+.profile-menu-button .menu-item:focused .label,
+.profile-menu-button .menu-item:hover .label {
+    -fx-text-fill: #243B54;
+}
+
+/* PROFILE CREATED GAMES */
+
+.profile-created-games-card {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D9C5A1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(36,59,84,0.10), 8, 0, 0, 2);
+}
+
+.profile-created-game-card {
+    -fx-background-color: #FAF7F2;
+    -fx-border-color: #D9C5A1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-padding: 22px 18px 20px 18px;
+
+    -fx-min-width: 360px;
+    -fx-pref-width: 360px;
+    -fx-max-width: 360px;
+
+    -fx-min-height: 190px;
+    -fx-pref-height: 190px;
+}
+
+.profile-created-game-card:hover {
+    -fx-border-color: #98B6FA;
+    -fx-background-color: #F3EBDC;
+}
+
+.profile-created-game-logo-wrapper {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D9C5A1;
+    -fx-border-width: 2px;
+    -fx-border-radius: 999px;
+    -fx-background-radius: 999px;
+    -fx-min-width: 78px;
+    -fx-min-height: 78px;
+    -fx-pref-width: 78px;
+    -fx-pref-height: 78px;
+    -fx-max-width: 78px;
+    -fx-max-height: 78px;
+}
+
+.profile-created-game-title {
+    -fx-text-fill: #243B54;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.profile-created-game-tag {
+    -fx-background-color: #D9C5A1;
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-padding: 5px 12px;
+    -fx-text-fill: #243B54;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.profile-created-game-tag-empty {
+    -fx-text-fill: #8C6A52;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+}
+
+.profile-created-games-empty {
+    -fx-background-color: #FAF7F2;
+    -fx-border-color: #D9C5A1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 18px;
+    -fx-text-fill: #8C6A52;
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
+}

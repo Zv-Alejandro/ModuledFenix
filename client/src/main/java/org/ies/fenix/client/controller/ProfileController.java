@@ -8,25 +8,35 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
 import org.ies.fenix.controller.IClientController;
+import org.ies.fenix.controller.IGameController;
 import org.ies.fenix.controller.IPurchaseController;
 import org.ies.fenix.controller.dto.ServerResponseDTO;
 import org.ies.fenix.controller.dto.client.ClientInfoDTO;
 import org.ies.fenix.controller.dto.client.FileUploadDTO;
+import org.ies.fenix.controller.dto.game.GameResponseDTO;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static org.ies.fenix.client.utils.ImageUtils.setAvatar;
@@ -62,21 +72,27 @@ public class ProfileController implements Initializable {
     @FXML
     private Label gamesAcquiredValue;
 
+    @FXML
+    private TilePane createdGamesContainer;
+
     // ============================================================
     // DEPENDENCIES
     // ============================================================
 
     private final StageManager stageManager;
     private final IClientController clientApiService;
+    private final IGameController gameApiService;
     private final SessionManager sessionManager;
     private final IPurchaseController purchaseApiService;
 
     public ProfileController(StageManager stageManager,
                              IClientController clientApiService,
+                             IGameController gameApiService,
                              SessionManager sessionManager,
                              IPurchaseController purchaseApiService) {
         this.stageManager = stageManager;
         this.clientApiService = clientApiService;
+        this.gameApiService = gameApiService;
         this.sessionManager = sessionManager;
         this.purchaseApiService = purchaseApiService;
     }
@@ -91,6 +107,7 @@ public class ProfileController implements Initializable {
         loadBio();
         loadProfileImage();
         loadGamesAcquiredCount();
+        loadCreatedGames();
     }
 
     // ============================================================
@@ -165,6 +182,127 @@ public class ProfileController implements Initializable {
             e.printStackTrace();
             gamesAcquiredValue.setText("0");
         }
+    }
+
+    private void loadCreatedGames() {
+        createdGamesContainer.getChildren().clear();
+
+        try {
+            ResponseEntity<List<GameResponseDTO>> response =
+                    gameApiService.getCreatedGamesByMe(buildHeader());
+
+            if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+                showEmptyCreatedGamesMessage();
+                return;
+            }
+
+            List<GameResponseDTO> games = response.getBody();
+
+            gamesCreatedValue.setText(String.valueOf(games.size()));
+
+            if (games.isEmpty()) {
+                showEmptyCreatedGamesMessage();
+                return;
+            }
+
+            for (GameResponseDTO game : games) {
+                createdGamesContainer.getChildren().add(createCreatedGameCard(game));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showEmptyCreatedGamesMessage();
+        }
+    }
+
+    private void showEmptyCreatedGamesMessage() {
+        Label emptyLabel = new Label("You have not published any games yet.");
+        emptyLabel.setWrapText(true);
+        emptyLabel.setMaxWidth(Double.MAX_VALUE);
+        emptyLabel.setAlignment(Pos.CENTER);
+        emptyLabel.getStyleClass().add("profile-created-games-empty");
+
+        createdGamesContainer.getChildren().add(emptyLabel);
+    }
+
+    private VBox createCreatedGameCard(GameResponseDTO game) {
+        VBox card = new VBox(12);
+        card.setAlignment(Pos.CENTER);
+        card.getStyleClass().add("profile-created-game-card");
+
+        StackPane logoWrapper = createCreatedGameLogoWrapper(game);
+
+        Label title = new Label(game.getTitle());
+        title.setWrapText(true);
+        title.setAlignment(Pos.CENTER);
+        title.setMaxWidth(Double.MAX_VALUE);
+        title.getStyleClass().add("profile-created-game-title");
+
+        FlowPane tagsBox = createCreatedGameTagsBox(game);
+
+        card.getChildren().addAll(logoWrapper, title, tagsBox);
+
+        return card;
+    }
+
+    private StackPane createCreatedGameLogoWrapper(GameResponseDTO game) {
+        StackPane wrapper = new StackPane();
+        wrapper.getStyleClass().add("profile-created-game-logo-wrapper");
+
+        ImageView logo = new ImageView();
+        logo.setFitWidth(72);
+        logo.setFitHeight(72);
+        logo.setPreserveRatio(false);
+        logo.setSmooth(true);
+
+        Circle clip = new Circle(36, 36, 36);
+        logo.setClip(clip);
+
+        try {
+            ResponseEntity<byte[]> response = gameApiService.getLogo(buildHeader(), game.getId());
+
+            if (response.getStatusCode().is2xxSuccessful()
+                    && response.getBody() != null
+                    && response.getBody().length > 0) {
+
+                logo.setImage(new Image(new ByteArrayInputStream(response.getBody())));
+                wrapper.getChildren().add(logo);
+                return wrapper;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FontIcon fallbackIcon = new FontIcon("mdi2g-gamepad-variant-outline");
+        fallbackIcon.setIconSize(34);
+        fallbackIcon.setIconColor(Color.web("#8C6A52"));
+
+        wrapper.getChildren().add(fallbackIcon);
+        return wrapper;
+    }
+
+    private FlowPane createCreatedGameTagsBox(GameResponseDTO game) {
+        FlowPane tagsBox = new FlowPane();
+        tagsBox.setHgap(7);
+        tagsBox.setVgap(7);
+        tagsBox.setAlignment(Pos.CENTER);
+        tagsBox.setPrefWrapLength(230);
+
+        if (game.getTags() == null || game.getTags().isEmpty()) {
+            Label noTags = new Label("No tags");
+            noTags.getStyleClass().add("profile-created-game-tag-empty");
+            tagsBox.getChildren().add(noTags);
+            return tagsBox;
+        }
+
+        for (String tag : game.getTags()) {
+            Label tagLabel = new Label(tag);
+            tagLabel.getStyleClass().add("profile-created-game-tag");
+            tagsBox.getChildren().add(tagLabel);
+        }
+
+        return tagsBox;
     }
 
     // ============================================================

@@ -111,6 +111,7 @@ public class ClientService {
         tokenService.revoke(cleanToken);
         return true;
     }
+
     public Client getClient(String token) {
         if (token == null || token.isBlank()) {
             return null;

@@ -306,9 +306,34 @@ public class GameService {
         return games.stream().map(this::toResponseDTO).toList();
     }
 
+    public List<GameResponseDTO> getCreatedGamesByMe(String authorization) {
+        Client client = validateAndGetClient(authorization);
+
+        return gameRepository.findCreatedGamesByDevIdWithTags(client.getId())
+                .stream()
+                .map(this::toProfileCreatedGameResponseDTO)
+                .toList();
+    }
+
     // ============================================================
     //                      DTO MAPPING
     // ============================================================
+
+    private GameResponseDTO toProfileCreatedGameResponseDTO(Game game) {
+        GameResponseDTO dto = new GameResponseDTO();
+
+        dto.setId(game.getId());
+        dto.setTitle(game.getTitle());
+        dto.setGameLogoKey(game.getGameLogoKey());
+
+        if (game.getTags() != null) {
+            dto.setTags(game.getTags().stream().map(Tag::getName).toList());
+        } else {
+            dto.setTags(List.of());
+        }
+
+        return dto;
+    }
 
     private GameResponseDTO toGameDetailResponseDTO(Game game) {
         GameResponseDTO dto = new GameResponseDTO();

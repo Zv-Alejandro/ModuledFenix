@@ -26,17 +26,19 @@ public interface IClientController {
     ResponseEntity<ClientInfoDTO> getClientInfo(@RequestHeader("Authorization") String authorization);
 
     @PostExchange("/bio")
-    ResponseEntity<ServerResponseDTO> updateBio(@RequestHeader("Authorization") String authorization, @RequestBody String bio);
+    ResponseEntity<ServerResponseDTO> updateBio(@RequestHeader("Authorization") String authorization,
+                                                @RequestBody String bio);
 
-    @GetExchange("bio")
+    @GetExchange("/bio")
     ResponseEntity<String> getBio(@RequestHeader("Authorization") String authorization);
 
     @DeleteExchange("/pic")
-    ResponseEntity<ServerResponseDTO> deleteProfilePicture(@RequestHeader String authorization);
+    ResponseEntity<ServerResponseDTO> deleteProfilePicture(@RequestHeader("Authorization") String authorization);
 
     @PostExchange("/pic")
-    ResponseEntity<ServerResponseDTO> uploadProfilePicture(@RequestHeader String authorization, @RequestBody FileUploadDTO dto);
+    ResponseEntity<ServerResponseDTO> uploadProfilePicture(@RequestHeader("Authorization") String authorization,
+                                                           @RequestBody FileUploadDTO dto);
 
     @GetExchange("/pic")
-    ResponseEntity<byte[]> getProfileImage(@RequestHeader String authorization);
+    ResponseEntity<byte[]> getProfileImage(@RequestHeader("Authorization") String authorization);
 }
