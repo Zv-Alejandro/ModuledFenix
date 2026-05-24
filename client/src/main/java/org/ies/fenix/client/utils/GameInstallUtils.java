@@ -48,6 +48,21 @@ public class GameInstallUtils {
                 .start();
     }
 
+    public static boolean canLaunchGame(Integer gameId) {
+        try {
+            Path installDirectory = getInstallPath(gameId);
+
+            if (installDirectory == null || !Files.exists(installDirectory)) {
+                return false;
+            }
+
+            return findExecutable(installDirectory).isPresent();
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public static Path getInstallPath(Integer gameId) throws IOException {
         if (gameId == null) {
             return null;
