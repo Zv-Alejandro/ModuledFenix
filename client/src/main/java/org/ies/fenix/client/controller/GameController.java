@@ -593,14 +593,42 @@ public class GameController {
 
     private boolean showPurchaseConfirmation() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirm purchase");
-        alert.setHeaderText("You don't own this game");
-        alert.setContentText("Do you want to acquire this game?");
+        alert.setTitle("Acquire game");
+        alert.setHeaderText(null);
+        alert.setGraphic(null);
 
-        ButtonType yes = new ButtonType("Yes");
-        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        FontIcon icon = new FontIcon("mdi2c-controller-classic");
+        icon.setIconSize(46);
+        icon.getStyleClass().add("purchase-dialog-icon");
+
+        Label title = new Label("You don't own this game yet");
+        title.getStyleClass().add("purchase-dialog-title");
+
+        Label message = new Label("To download and play this game, you need to acquire it first.");
+        message.setWrapText(true);
+        message.getStyleClass().add("purchase-dialog-message");
+
+        VBox content = new VBox(12, icon, title, message);
+        content.setAlignment(Pos.CENTER);
+        content.getStyleClass().add("purchase-dialog-content");
+
+        ButtonType yes = new ButtonType("Acquire game");
+        ButtonType no = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
         alert.getButtonTypes().setAll(yes, no);
+        alert.getDialogPane().setContent(content);
+
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/styles/styles.css").toExternalForm()
+        );
+
+        alert.getDialogPane().getStyleClass().add("purchase-dialog-pane");
+
+        Button yesButton = (Button) alert.getDialogPane().lookupButton(yes);
+        yesButton.getStyleClass().add("purchase-dialog-confirm-button");
+
+        Button noButton = (Button) alert.getDialogPane().lookupButton(no);
+        noButton.getStyleClass().add("purchase-dialog-cancel-button");
 
         return alert.showAndWait().orElse(no) == yes;
     }

@@ -10,7 +10,9 @@ CREATE TABLE client
     username VARCHAR(25) UNIQUE,
     email VARCHAR(50),
     password_hashed VARCHAR(128),
-    bio VARCHAR(250)
+    bio VARCHAR(250),
+    profile_image_key VARCHAR(255),
+    character_counter_password INT NOT NULL
 );
 
 CREATE TABLE tag
@@ -29,6 +31,8 @@ CREATE TABLE game
     size_mb DECIMAL(10,2),
     downloads INT,
     price DECIMAL(6,2),
+    game_logo_key VARCHAR(255),
+    game_file_key VARCHAR(255),
     CONSTRAINT fk_game_client
         FOREIGN KEY (dev_id)
             REFERENCES client(id)
@@ -100,43 +104,28 @@ CREATE TABLE auth_token
 CREATE INDEX idx_auth_token_client_id
     ON auth_token(client_id);
 
-ALTER TABLE client
-    ADD COLUMN profile_image_key VARCHAR(255),
-    ADD COLUMN character_counter_password INT NOT NULL;
-
-ALTER TABLE game
-    ADD COLUMN game_logo_key VARCHAR(255);
-
-ALTER TABLE game
-    ADD COLUMN game_file_key VARCHAR(255);
-
 INSERT INTO tag (name, description) VALUES
                                         ('Romance', 'Romantic stories and relationships'),
                                         ('Mystery', 'Stories focused on secrets and investigation'),
-                                        ('Sci-fi', 'Science fiction and futuristic stories'),
-                                        ('Fantasy', 'Magic, mythical worlds and fantasy elements'),
                                         ('Horror', 'Scary, dark or disturbing stories'),
                                         ('Drama', 'Emotional and dramatic stories'),
+                                        ('Fantasy', 'Magic, mythical worlds and fantasy elements'),
+                                        ('Sci-fi', 'Science fiction and futuristic stories'),
                                         ('Comedy', 'Light-hearted and funny stories'),
                                         ('Adventure', 'Exploration and journey-focused stories'),
-                                        ('Slice of life', 'Everyday life stories'),
-                                        ('Thriller', 'Suspense and tension-focused stories');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                        ('Psychological', 'Stories focused on the mind, emotions and inner conflict'),
+                                        ('Thriller', 'Suspense and tension-focused stories'),
+                                        ('Slice of Life', 'Everyday life stories'),
+                                        ('Supernatural', 'Stories involving paranormal or unexplained elements'),
+                                        ('Detective', 'Investigation stories focused on solving cases'),
+                                        ('School', 'Stories set in school or student life environments'),
+                                        ('Music', 'Stories where music has an important role'),
+                                        ('Post-apocalyptic', 'Stories set after a major catastrophe or collapse'),
+                                        ('Cyberpunk', 'Futuristic stories with technology, cities and social conflict'),
+                                        ('Historical', 'Stories inspired by historical periods or events'),
+                                        ('Action', 'Fast-paced stories with conflict, movement and intensity'),
+                                        ('Puzzle', 'Stories or games focused on solving puzzles and challenges'),
+                                        ('Emotional', 'Stories focused on strong feelings and personal experiences');
 
 
 

@@ -1,5 +1,6 @@
 package org.ies.fenix.client.controller;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -49,9 +50,6 @@ public class ClientController implements Initializable {
 
     @FXML
     private ImageView logoImage;
-
-    @FXML
-    private ImageView settingsImage;
 
     @FXML
     private Button loginButton;
@@ -275,6 +273,11 @@ public class ClientController implements Initializable {
     @FXML
     void switchEmailFormView() {
         stageManager.switchScene(FxmlView.EMAIL);
+    }
+
+    @FXML
+    private void closeApplication() {
+        Platform.exit();
     }
 
     void setEmail(String email) {

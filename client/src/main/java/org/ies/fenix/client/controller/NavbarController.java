@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.image.ImageView;
+import javafx.application.Platform;
 import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
@@ -148,6 +149,11 @@ public class NavbarController {
             e.printStackTrace();
             showError("Logout failed", "There was an error closing your session.");
         }
+    }
+
+    @FXML
+    public void closeApplication() {
+        Platform.exit();
     }
 
     private void closeLocalSession() {
