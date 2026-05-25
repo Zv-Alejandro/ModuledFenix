@@ -30,6 +30,7 @@ import java.util.Set;
 public class UploadGameController {
 
     private static final String DEFAULT_PRICE = "0";
+    private static final int MAX_SELECTED_TAGS = 6;
 
     private static final List<String> AVAILABLE_TAGS = List.of(
             "Romance",
@@ -73,6 +74,9 @@ public class UploadGameController {
 
     @FXML
     private Label gameFileNameLabel;
+
+    @FXML
+    private Label gameDropAreaLabel;
 
     @FXML
     private Label logoFileNameLabel;
@@ -146,18 +150,29 @@ public class UploadGameController {
             ToggleButton tagButton = new ToggleButton(tag);
             tagButton.getStyleClass().add("tag-chip");
 
-            tagButton.setOnAction(event -> {
-                if (tagButton.isSelected()) {
-                    selectedTags.add(tag);
-                } else {
-                    selectedTags.remove(tag);
-                }
-
-                updateSelectedTagsLabel();
-            });
+            tagButton.setOnAction(event -> handleTagSelection(tagButton, tag));
 
             tagsContainer.getChildren().add(tagButton);
         }
+    }
+
+    private void handleTagSelection(ToggleButton tagButton, String tag) {
+        if (tagButton.isSelected()) {
+            if (selectedTags.size() >= MAX_SELECTED_TAGS) {
+                tagButton.setSelected(false);
+                showError(
+                        "Tag limit reached",
+                        "You can select up to " + MAX_SELECTED_TAGS + " tags."
+                );
+                return;
+            }
+
+            selectedTags.add(tag);
+        } else {
+            selectedTags.remove(tag);
+        }
+
+        updateSelectedTagsLabel();
     }
 
     private void updateSelectedTagsLabel() {
@@ -166,7 +181,10 @@ public class UploadGameController {
             return;
         }
 
-        selectedTagsLabel.setText("Selected: " + String.join(", ", selectedTags));
+        selectedTagsLabel.setText(
+                "Selected (" + selectedTags.size() + "/" + MAX_SELECTED_TAGS + "): "
+                        + String.join(", ", selectedTags)
+        );
     }
 
     // ============================================================
@@ -215,6 +233,22 @@ public class UploadGameController {
 
         if (selectedLogoImage == null) {
             showError("Missing logo", "You must choose a logo image.");
+            return false;
+        }
+
+        if (selectedTags.size() > MAX_SELECTED_TAGS) {
+            showError(
+                    "Too many tags",
+                    "You can select up to " + MAX_SELECTED_TAGS + " tags."
+            );
+            return false;
+        }
+
+        if (!AVAILABLE_TAGS.containsAll(selectedTags)) {
+            showError(
+                    "Invalid tags",
+                    "Only the available tags can be used."
+            );
             return false;
         }
 
@@ -281,7 +315,23 @@ public class UploadGameController {
         }
 
         selectedGameFile = selectedFile;
+
         gameFileNameLabel.setText(selectedFile.getName());
+        updateGameDropArea(selectedFile);
+    }
+
+    private void updateGameDropArea(File selectedFile) {
+        if (gameDropAreaLabel == null || selectedFile == null) {
+            return;
+        }
+
+        gameDropAreaLabel.setText("Selected file:\n" + selectedFile.getName());
+
+        gameDropAreaLabel.getStyleClass().remove("upload-placeholder-text");
+
+        if (!gameDropAreaLabel.getStyleClass().contains("upload-selected-file-text")) {
+            gameDropAreaLabel.getStyleClass().add("upload-selected-file-text");
+        }
     }
 
     @FXML

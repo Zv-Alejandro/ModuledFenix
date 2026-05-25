@@ -167,11 +167,11 @@
                                           wrapText="true"
                                           prefHeight="220.0"
                                           maxWidth="Infinity"
-                                          promptText="Lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est lorem ipsum est."
+                                          promptText="Tell us about yourself"
                                           styleClass="profile-description"/>
                             </VBox>
 
-                            <Button text="EDIT"
+                            <Button text="SAVE"
                                     onAction="#updateProfileBio"
                                     styleClass="profile-edit-button"
                                     contentDisplay="RIGHT"

@@ -123,6 +123,7 @@ public class EmailFormController implements Initializable {
         stageManager.switchScene(FxmlView.LOGIN);
     }
 
+
     // ============================================================
     // HELPERS
     // ============================================================

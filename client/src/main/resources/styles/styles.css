@@ -1,3 +1,7 @@
+/* ============================================================
+   GLOBAL
+   ============================================================ */
+
 .root {
     -fx-background-color: #FAF7F2;
     -fx-font-family: "Arial";
@@ -17,7 +21,11 @@
     -fx-background-color: #FAF7F2;
 }
 
-/* NAVBAR - usar en navbar.fxml como styleClass="navbar-container" */
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+
 .navbar-container {
     -fx-background-color: #243B54;
 }
@@ -33,6 +41,11 @@
 
 .nav-button:hover {
     -fx-opacity: 1.0;
+}
+
+.nav-button:disabled {
+    -fx-opacity: 0.25;
+    -fx-cursor: default;
 }
 
 .hyperlink {
@@ -95,6 +108,7 @@
     -fx-border-color: #8C6A52;
     -fx-border-radius: 20px;
     -fx-background-radius: 20px;
+
     -fx-min-width: 40px;
     -fx-min-height: 40px;
     -fx-max-width: 40px;
@@ -120,6 +134,68 @@
     -fx-text-fill: #FAF7F2;
     -fx-opacity: 0.85;
 }
+
+
+/* ============================================================
+   PROFILE DROPDOWN MENU - NAVBAR
+   ============================================================ */
+
+.profile-menu-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 4px 6px;
+    -fx-cursor: hand;
+}
+
+.profile-menu-button:hover {
+    -fx-background-color: rgba(250, 247, 242, 0.10);
+    -fx-background-radius: 8px;
+}
+
+.profile-menu-button .arrow {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.profile-menu-button .label {
+    -fx-padding: 0;
+}
+
+.profile-menu-button .context-menu {
+    -fx-background-color: #FAF7F2;
+    -fx-background-radius: 10px;
+    -fx-border-color: #D9C5A1;
+    -fx-border-radius: 10px;
+    -fx-padding: 6px;
+}
+
+.profile-menu-button .menu-item {
+    -fx-background-color: transparent;
+    -fx-padding: 8px 18px;
+    -fx-cursor: hand;
+}
+
+.profile-menu-button .menu-item .label {
+    -fx-text-fill: #243B54;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.profile-menu-button .menu-item:focused,
+.profile-menu-button .menu-item:hover {
+    -fx-background-color: #D9C5A1;
+    -fx-background-radius: 8px;
+}
+
+.profile-menu-button .menu-item:focused .label,
+.profile-menu-button .menu-item:hover .label {
+    -fx-text-fill: #243B54;
+}
+
+
+/* ============================================================
+   COMMON TEXTS / CONTROLS
+   ============================================================ */
 
 .section-title {
     -fx-font-size: 38px;
@@ -148,6 +224,26 @@
     -fx-border-color: #98B6FA;
     -fx-border-width: 2px;
 }
+
+.invisible-game-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+.invisible-game-button:hover,
+.invisible-game-button:pressed {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+
+/* ============================================================
+   MARKETPLACE
+   ============================================================ */
 
 .horizontal-games-scroll {
     -fx-background-color: transparent;
@@ -184,12 +280,18 @@
     -fx-max-width: 280;
 }
 
+.card-click-wrapper,
+.library-card-click-wrapper {
+    -fx-background-color: transparent;
+}
+
 .card-image-wrapper {
     -fx-background-color: #FFFFFF;
     -fx-border-color: #D9C5A1;
     -fx-border-width: 2px;
     -fx-border-radius: 12px;
     -fx-background-radius: 12px;
+
     -fx-min-width: 280px;
     -fx-min-height: 170px;
     -fx-max-width: 280px;
@@ -213,36 +315,29 @@
 
 .tag {
     -fx-background-color: #98B6FA;
-    -fx-background-radius: 6px;
-    -fx-padding: 4 12 4 12;
+    -fx-background-radius: 8px;
+    -fx-padding: 0;
     -fx-text-fill: #243B54;
     -fx-opacity: 0.95;
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 
-#settingsImage {
-    -fx-image: url("../graphics/setting.png");
-}
-
-#logoImage {
-    -fx-image: url("../graphics/fenixLogo.png");
-}
-
-#logoName {
-    -fx-image: url("../graphics/fenixName.png");
-}
-
-#clientErrorLabel {
-    -fx-text-fill: #B3261E;
-    -fx-font-size: 12px;
+.marketplace-tag {
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-background-color: #98B6FA;
+    -fx-background-radius: 8px;
+    -fx-padding: 5px 6px;
+    -fx-text-fill: #243B54;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
 }
 
 
-
-/* LIBRARY */
-
-
+/* ============================================================
+   LIBRARY
+   ============================================================ */
 
 .library-root {
     -fx-background-color: #FAF7F2;
@@ -258,22 +353,14 @@
     -fx-border-width: 0 1px 0 0;
 }
 
-.library-left-scroll {
-    -fx-background-color: transparent;
-    -fx-background: transparent;
-    -fx-border-color: transparent;
-}
-
-.library-left-scroll > .viewport {
-    -fx-background-color: transparent;
-}
-
+.library-left-scroll,
 .library-right-scroll {
     -fx-background-color: transparent;
     -fx-background: transparent;
     -fx-border-color: transparent;
 }
 
+.library-left-scroll > .viewport,
 .library-right-scroll > .viewport {
     -fx-background-color: transparent;
 }
@@ -366,11 +453,76 @@
     -fx-opacity: 0.0;
 }
 
+/* EMPTY LIBRARY STATE */
 
+.library-left-empty-message {
+    -fx-text-fill: #8C6A52;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 20 0 20 0;
+}
 
-/* GAME */
+.library-empty-state {
+    -fx-background-color: transparent;
+}
 
+.library-empty-content {
+    -fx-background-color: rgba(250, 247, 242, 0.72);
+    -fx-background-radius: 18px;
+    -fx-padding: 34px 42px;
+}
 
+.library-empty-icon {
+    -fx-icon-color: #243B54;
+    -fx-opacity: 0.95;
+}
+
+.library-empty-title {
+    -fx-text-fill: #243B54;
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+}
+
+.library-empty-subtitle {
+    -fx-text-fill: #8C6A52;
+    -fx-font-size: 17px;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-max-width: 390px;
+}
+
+.library-empty-button {
+    -fx-background-color: #243B54;
+    -fx-text-fill: #FAF7F2;
+    -fx-background-radius: 10px;
+    -fx-padding: 11px 22px;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.library-empty-button:hover {
+    -fx-background-color: #8C6A52;
+}
+
+.library-empty-circle-primary {
+    -fx-fill: rgba(152, 182, 250, 0.32);
+    -fx-stroke: transparent;
+}
+
+.library-empty-circle-secondary {
+    -fx-fill: rgba(217, 197, 161, 0.38);
+    -fx-stroke: transparent;
+}
+
+.library-empty-circle-accent {
+    -fx-fill: rgba(140, 106, 82, 0.16);
+    -fx-stroke: transparent;
+}
+
+/* ============================================================
+   GAME
+   ============================================================ */
 
 .game-root {
     -fx-background-color: #FAF7F2;
@@ -399,8 +551,8 @@
 
 .game-left-panel {
     -fx-background-color: #FAF7F2;
-    -fx-border-color: transparent #D9C5A1 transparent transparent;
-    -fx-border-width: 0 1px 0 0;
+    -fx-border-color: transparent #8C6A52 transparent transparent;
+    -fx-border-width: 0 2px 0 0;
 }
 
 .game-right-panel {
@@ -471,10 +623,9 @@
 }
 
 
-
-/* PROFILE */
-
-
+/* ============================================================
+   PROFILE
+   ============================================================ */
 
 .profile-root {
     -fx-background-color: #FAF7F2;
@@ -484,7 +635,6 @@
     -fx-background-color: #FAF7F2;
 }
 
-/* CARD PRINCIPAL */
 .profile-main-card {
     -fx-background-color: #FFFFFF;
     -fx-border-color: #D9C5A1;
@@ -516,15 +666,19 @@
     -fx-border-width: 1px;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
-    -fx-min-width: 240px;
-    -fx-min-height: 260px;
+
+    -fx-pref-width: 180;
+    -fx-pref-height: 180;
+    -fx-min-width: 180;
+    -fx-min-height: 180;
+    -fx-max-width: 180;
+    -fx-max-height: 180;
 }
 
 .profile-avatar-image {
     -fx-opacity: 0.0;
 }
 
-/* TEXTOS */
 .profile-section-title {
     -fx-text-fill: #243B54;
     -fx-font-size: 20px;
@@ -571,7 +725,6 @@
     -fx-border-color: #98B6FA;
 }
 
-/* BOTONES */
 .profile-edit-button {
     -fx-background-color: #243B54;
     -fx-text-fill: #FAF7F2;
@@ -586,7 +739,6 @@
     -fx-background-color: #8C6A52;
 }
 
-/* OVERVIEW */
 .profile-overview-card {
     -fx-background-color: #FFFFFF;
     -fx-border-color: #D9C5A1;
@@ -618,40 +770,93 @@
 }
 
 
+/* ============================================================
+   PROFILE CREATED GAMES
+   ============================================================ */
 
-/* ICONS */
-
-
-
-#arrowBackIcon {
-    -fx-image: url("../graphics/arrow_back_icon.png");
+.profile-created-games-card {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D9C5A1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(36,59,84,0.10), 8, 0, 0, 2);
 }
 
-#arrowForwardIcon {
-    -fx-image: url("../graphics/arrow_forward_icon.png");
+.profile-created-game-card {
+    -fx-background-color: #FAF7F2;
+    -fx-border-color: #D9C5A1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-padding: 22px 18px 20px 18px;
+
+    -fx-min-width: 360px;
+    -fx-pref-width: 360px;
+    -fx-max-width: 360px;
+
+    -fx-min-height: 190px;
+    -fx-pref-height: 190px;
 }
 
-#arrowDownIcon {
-    -fx-image: url("../graphics/arrow_down_icon.png");
+.profile-created-game-card:hover {
+    -fx-border-color: #98B6FA;
+    -fx-background-color: #F3EBDC;
 }
 
-#personIcon {
-    -fx-image: url("../graphics/person_icon.png");
+.profile-created-game-logo-wrapper {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D9C5A1;
+    -fx-border-width: 2px;
+    -fx-border-radius: 999px;
+    -fx-background-radius: 999px;
+
+    -fx-min-width: 78px;
+    -fx-min-height: 78px;
+    -fx-pref-width: 78px;
+    -fx-pref-height: 78px;
+    -fx-max-width: 78px;
+    -fx-max-height: 78px;
 }
 
-#controllerIcon {
-    -fx-image: url("../graphics/controller_icon.png");
+.profile-created-game-title {
+    -fx-text-fill: #243B54;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
 }
 
-#brushIcon {
-    -fx-image: url("../graphics/brush_icon.png");
+.profile-created-game-tag {
+    -fx-background-color: #D9C5A1;
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-padding: 5px 12px;
+    -fx-text-fill: #243B54;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.profile-created-game-tag-empty {
+    -fx-text-fill: #8C6A52;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+}
+
+.profile-created-games-empty {
+    -fx-background-color: #FAF7F2;
+    -fx-border-color: #D9C5A1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 18px;
+    -fx-text-fill: #8C6A52;
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
 }
 
 
-
-/* UploadGame */
-
-
+/* ============================================================
+   UPLOAD GAME
+   ============================================================ */
 
 .create-game-root {
     -fx-background-color: #FAF7F2;
@@ -751,6 +956,7 @@
     -fx-border-radius: 999px;
     -fx-border-color: #D9C5A1;
     -fx-alignment: center;
+
     -fx-min-width: 190px;
     -fx-min-height: 190px;
     -fx-max-width: 190px;
@@ -767,14 +973,99 @@
     -fx-font-weight: 600;
 }
 
+.upload-selected-file-text {
+    -fx-text-fill: #243B54;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
 .upload-file-label {
     -fx-text-fill: #8C6A52;
     -fx-font-size: 13px;
 }
 
 
+/* ============================================================
+   TAG SELECTOR - UPLOAD GAME
+   ============================================================ */
 
-/* AUTH SCREENS */
+.tags-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.tags-scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.tags-scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.tags-scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #D9C5A1;
+    -fx-background-radius: 8px;
+}
+
+.tags-scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #8C6A52;
+}
+
+.tags-container {
+    -fx-background-color: #FAF7F2;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 14px;
+    -fx-border-color: #D9C5A1;
+    -fx-border-width: 1px;
+    -fx-padding: 14px;
+}
+
+.tag-chip {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-border-color: #D9C5A1;
+    -fx-border-width: 1px;
+
+    -fx-text-fill: #243B54;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+
+    -fx-padding: 7px 14px;
+    -fx-cursor: hand;
+}
+
+.tag-chip:hover {
+    -fx-background-color: #F3EBDC;
+    -fx-border-color: #8C6A52;
+}
+
+.tag-chip:selected {
+    -fx-background-color: #98B6FA;
+    -fx-border-color: #243B54;
+    -fx-text-fill: #243B54;
+}
+
+.tag-chip:selected:hover {
+    -fx-background-color: #D9C5A1;
+    -fx-border-color: #243B54;
+    -fx-text-fill: #243B54;
+}
+
+.selected-tags-label {
+    -fx-text-fill: #8C6A52;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+}
+
+
+/* ============================================================
+   AUTH SCREENS
+   ============================================================ */
 
 .auth-root {
     -fx-background-color: #FAF7F2;
@@ -893,253 +1184,140 @@
     -fx-underline: false;
 }
 
-
-
-/**/
-
-
-
-.invisible-game-button {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-background-insets: 0;
-    -fx-border-insets: 0;
-    -fx-padding: 0;
-    -fx-cursor: hand;
-}
-
-.invisible-game-button:hover {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-
-.invisible-game-button:pressed {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-
-.card-click-wrapper,
-.library-card-click-wrapper {
-    -fx-background-color: transparent;
-}
-
-.profile-avatar-wrapper {
-    -fx-pref-width: 180;
-    -fx-pref-height: 180;
-    -fx-min-width: 180;
-    -fx-min-height: 180;
-    -fx-max-width: 180;
-    -fx-max-height: 180;
-}
-
-/* TAG SELECTOR - UploadGame */
-
-.tags-scroll-pane {
-    -fx-background-color: transparent;
-    -fx-background: transparent;
-    -fx-border-color: transparent;
-    -fx-padding: 0;
-}
-
-.tags-scroll-pane > .viewport {
-    -fx-background-color: transparent;
-}
-
-.tags-scroll-pane .scroll-bar:vertical {
-    -fx-background-color: transparent;
-}
-
-.tags-scroll-pane .scroll-bar:vertical .thumb {
-    -fx-background-color: #D9C5A1;
-    -fx-background-radius: 8px;
-}
-
-.tags-scroll-pane .scroll-bar:vertical .thumb:hover {
-    -fx-background-color: #8C6A52;
-}
-
-.tags-container {
-    -fx-background-color: #FAF7F2;
-    -fx-background-radius: 14px;
-    -fx-border-radius: 14px;
-    -fx-border-color: #D9C5A1;
-    -fx-border-width: 1px;
-    -fx-padding: 14px;
-}
-
-.tag-chip {
-    -fx-background-color: #FFFFFF;
-    -fx-background-radius: 999px;
+.auth-close-button {
+    -fx-background-color: rgba(217, 197, 161, 0.85);
+    -fx-border-color: rgba(140, 106, 82, 0.55);
     -fx-border-radius: 999px;
-    -fx-border-color: #D9C5A1;
-    -fx-border-width: 1px;
-
+    -fx-background-radius: 999px;
     -fx-text-fill: #243B54;
-    -fx-font-size: 12px;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
-
-    -fx-padding: 7px 14px;
     -fx-cursor: hand;
+    -fx-padding: 0;
 }
 
-.tag-chip:hover {
-    -fx-background-color: #F3EBDC;
-    -fx-border-color: #8C6A52;
-}
-
-.tag-chip:selected {
+.auth-close-button:hover {
     -fx-background-color: #98B6FA;
     -fx-border-color: #243B54;
     -fx-text-fill: #243B54;
 }
 
-.tag-chip:selected:hover {
-    -fx-background-color: #D9C5A1;
-    -fx-border-color: #243B54;
-    -fx-text-fill: #243B54;
+/* ============================================================
+   IMAGE IDS
+   ============================================================ */
+
+#settingsImage {
+    -fx-image: url("../graphics/setting.png");
 }
 
-.selected-tags-label {
-    -fx-text-fill: #8C6A52;
+#logoImage {
+    -fx-image: url("../graphics/fenixLogo.png");
+}
+
+#logoName {
+    -fx-image: url("../graphics/fenixName.png");
+}
+
+#clientErrorLabel {
+    -fx-text-fill: #B3261E;
     -fx-font-size: 12px;
-    -fx-font-style: italic;
 }
 
-.nav-button:disabled {
-    -fx-opacity: 0.25;
-    -fx-cursor: default;
+#arrowBackIcon {
+    -fx-image: url("../graphics/arrow_back_icon.png");
 }
 
-/* PROFILE DROPDOWN MENU - NAVBAR */
-
-.profile-menu-button {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-padding: 4px 6px;
-    -fx-cursor: hand;
+#arrowForwardIcon {
+    -fx-image: url("../graphics/arrow_forward_icon.png");
 }
 
-.profile-menu-button:hover {
-    -fx-background-color: rgba(250, 247, 242, 0.10);
-    -fx-background-radius: 8px;
+#arrowDownIcon {
+    -fx-image: url("../graphics/arrow_down_icon.png");
 }
 
-.profile-menu-button .arrow {
-    -fx-background-color: transparent;
-    -fx-padding: 0;
+#personIcon {
+    -fx-image: url("../graphics/person_icon.png");
 }
 
-.profile-menu-button .label {
-    -fx-padding: 0;
+#controllerIcon {
+    -fx-image: url("../graphics/controller_icon.png");
 }
 
-.profile-menu-button .context-menu {
-    -fx-background-color: #FAF7F2;
-    -fx-background-radius: 10px;
-    -fx-border-color: #D9C5A1;
-    -fx-border-radius: 10px;
-    -fx-padding: 6px;
+#brushIcon {
+    -fx-image: url("../graphics/brush_icon.png");
 }
 
-.profile-menu-button .menu-item {
-    -fx-background-color: transparent;
-    -fx-padding: 8px 18px;
-    -fx-cursor: hand;
-}
 
-.profile-menu-button .menu-item .label {
-    -fx-text-fill: #243B54;
-    -fx-font-size: 13px;
-    -fx-font-weight: bold;
-}
+/* ============================================================
+   PURCHASE CONFIRMATION DIALOG
+   ============================================================ */
 
-.profile-menu-button .menu-item:focused,
-.profile-menu-button .menu-item:hover {
-    -fx-background-color: #D9C5A1;
-    -fx-background-radius: 8px;
-}
-
-.profile-menu-button .menu-item:focused .label,
-.profile-menu-button .menu-item:hover .label {
-    -fx-text-fill: #243B54;
-}
-
-/* PROFILE CREATED GAMES */
-
-.profile-created-games-card {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #D9C5A1;
-    -fx-border-width: 1px;
-    -fx-border-radius: 14px;
-    -fx-background-radius: 14px;
-    -fx-effect: dropshadow(gaussian, rgba(36,59,84,0.10), 8, 0, 0, 2);
-}
-
-.profile-created-game-card {
+.purchase-dialog-pane {
     -fx-background-color: #FAF7F2;
     -fx-border-color: #D9C5A1;
     -fx-border-width: 1px;
-    -fx-border-radius: 14px;
-    -fx-background-radius: 14px;
-    -fx-padding: 22px 18px 20px 18px;
-
-    -fx-min-width: 360px;
-    -fx-pref-width: 360px;
-    -fx-max-width: 360px;
-
-    -fx-min-height: 190px;
-    -fx-pref-height: 190px;
 }
 
-.profile-created-game-card:hover {
-    -fx-border-color: #98B6FA;
-    -fx-background-color: #F3EBDC;
-}
-
-.profile-created-game-logo-wrapper {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #D9C5A1;
-    -fx-border-width: 2px;
-    -fx-border-radius: 999px;
-    -fx-background-radius: 999px;
-    -fx-min-width: 78px;
-    -fx-min-height: 78px;
-    -fx-pref-width: 78px;
-    -fx-pref-height: 78px;
-    -fx-max-width: 78px;
-    -fx-max-height: 78px;
-}
-
-.profile-created-game-title {
-    -fx-text-fill: #243B54;
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-}
-
-.profile-created-game-tag {
-    -fx-background-color: #D9C5A1;
-    -fx-background-radius: 999px;
-    -fx-border-radius: 999px;
-    -fx-padding: 5px 12px;
-    -fx-text-fill: #243B54;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-}
-
-.profile-created-game-tag-empty {
-    -fx-text-fill: #8C6A52;
-    -fx-font-size: 12px;
-    -fx-font-style: italic;
-}
-
-.profile-created-games-empty {
+.purchase-dialog-pane > .button-bar {
     -fx-background-color: #FAF7F2;
-    -fx-border-color: #D9C5A1;
-    -fx-border-width: 1px;
-    -fx-border-radius: 12px;
-    -fx-background-radius: 12px;
-    -fx-padding: 18px;
+    -fx-padding: 8px 38px 22px 0px;
+}
+
+.purchase-dialog-pane > .button-bar > .container {
+    -fx-background-color: #FAF7F2;
+    -fx-alignment: center;
+    -fx-spacing: 18px;
+}
+
+.purchase-dialog-content {
+    -fx-background-color: #FAF7F2;
+    -fx-padding: 24px 28px 18px 28px;
+}
+
+.purchase-dialog-icon {
+    -fx-icon-color: #243B54;
+}
+
+.purchase-dialog-title {
+    -fx-text-fill: #243B54;
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+}
+
+.purchase-dialog-message {
     -fx-text-fill: #8C6A52;
     -fx-font-size: 14px;
-    -fx-font-style: italic;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-max-width: 310px;
+}
+
+.purchase-dialog-confirm-button {
+    -fx-background-color: #243B54;
+    -fx-text-fill: #FAF7F2;
+    -fx-background-radius: 8px;
+    -fx-padding: 9px 18px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-min-width: 145px;
+    -fx-pref-width: 145px;
+}
+
+.purchase-dialog-confirm-button:hover {
+    -fx-background-color: #8C6A52;
+}
+
+.purchase-dialog-cancel-button {
+    -fx-background-color: #D9C5A1;
+    -fx-text-fill: #243B54;
+    -fx-background-radius: 8px;
+    -fx-padding: 9px 18px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-min-width: 145px;
+    -fx-pref-width: 145px;
+}
+
+.purchase-dialog-cancel-button:hover {
+    -fx-background-color: #98B6FA;
 }

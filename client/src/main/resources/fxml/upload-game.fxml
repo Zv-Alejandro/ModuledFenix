@@ -154,7 +154,11 @@
                                            styleClass="upload-drop-area-small"
                                            onMouseClicked="#chooseGameFile">
 
-                                    <Label text="No file selected"
+                                    <Label fx:id="gameDropAreaLabel"
+                                           text="No file selected"
+                                           wrapText="true"
+                                           alignment="CENTER"
+                                           textAlignment="CENTER"
                                            styleClass="upload-placeholder-text"/>
                                 </StackPane>
 

@@ -4,11 +4,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.ies.fenix.client.api.SessionManager;
@@ -33,6 +33,11 @@ public class MarketplaceController implements Initializable {
     private static final int MAX_VISIBLE_TAGS = 6;
     private static final int RECOMMENDATION_ROWS = 3;
     private static final int DISCOVER_GAMES_LIMIT = 21;
+
+    private static final int TAG_COLUMNS = 3;
+    private static final double MARKETPLACE_TAG_WIDTH = 84.0;
+    private static final double MARKETPLACE_TAG_HEIGHT = 32.0;
+    private static final double MARKETPLACE_TAGS_GRID_WIDTH = 280.0;
 
     // ============================================================
     // FXML FIELDS
@@ -164,7 +169,7 @@ public class MarketplaceController implements Initializable {
     }
 
     // ============================================================
-    // RECOMMENDATIONS
+    // EXPLORE GAMES
     // ============================================================
 
     private void renderRecommendations(List<GameResponseDTO> games) {
@@ -248,7 +253,6 @@ public class MarketplaceController implements Initializable {
         titleLabel.setMaxWidth(280.0);
 
         GridPane tagsGrid = createMarketplaceTagsGrid(game.getTags());
-        tagsGrid.setAlignment(Pos.CENTER_LEFT);
 
         VBox infoBox = new VBox(8.0);
         infoBox.setAlignment(Pos.TOP_LEFT);
@@ -266,9 +270,11 @@ public class MarketplaceController implements Initializable {
 
     private GridPane createMarketplaceTagsGrid(List<String> tags) {
         GridPane tagsGrid = new GridPane();
-        tagsGrid.setHgap(4.0);
-        tagsGrid.setVgap(4.0);
-        tagsGrid.setAlignment(Pos.TOP_RIGHT);
+        tagsGrid.setHgap(6.0);
+        tagsGrid.setVgap(6.0);
+        tagsGrid.setAlignment(Pos.TOP_LEFT);
+        tagsGrid.setPrefWidth(MARKETPLACE_TAGS_GRID_WIDTH);
+        tagsGrid.setMaxWidth(MARKETPLACE_TAGS_GRID_WIDTH);
 
         if (tags == null || tags.isEmpty()) {
             return tagsGrid;
@@ -281,8 +287,8 @@ public class MarketplaceController implements Initializable {
         for (int i = 0; i < visibleTags.size(); i++) {
             Label tagLabel = createTagLabel(visibleTags.get(i));
 
-            int col = i % 3;
-            int row = i / 3;
+            int col = i % TAG_COLUMNS;
+            int row = i / TAG_COLUMNS;
 
             tagsGrid.add(tagLabel, col, row);
         }
@@ -292,13 +298,19 @@ public class MarketplaceController implements Initializable {
 
     private Label createTagLabel(String text) {
         Label tagLabel = new Label(text);
-        tagLabel.getStyleClass().add("tag");
+        tagLabel.getStyleClass().addAll("tag", "marketplace-tag");
 
-        tagLabel.setStyle("""
-                -fx-font-size: 9px;
-                -fx-padding: 2 6 2 6;
-                -fx-background-radius: 5px;
-                """);
+        tagLabel.setMinWidth(MARKETPLACE_TAG_WIDTH);
+        tagLabel.setPrefWidth(MARKETPLACE_TAG_WIDTH);
+        tagLabel.setMaxWidth(MARKETPLACE_TAG_WIDTH);
+
+        tagLabel.setMinHeight(MARKETPLACE_TAG_HEIGHT);
+        tagLabel.setPrefHeight(MARKETPLACE_TAG_HEIGHT);
+        tagLabel.setMaxHeight(MARKETPLACE_TAG_HEIGHT);
+
+        tagLabel.setAlignment(Pos.CENTER);
+        tagLabel.setTextOverrun(OverrunStyle.ELLIPSIS);
+        tagLabel.setWrapText(false);
 
         return tagLabel;
     }

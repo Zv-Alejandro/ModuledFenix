@@ -60,16 +60,9 @@
                 <Button mnemonicParsing="false"
                         prefHeight="34.0"
                         prefWidth="34.0"
-                        textAlignment="RIGHT"
-                        styleClass="auth-settings-button">
-                    <graphic>
-                        <ImageView fx:id="settingsImage"
-                                   fitHeight="18.0"
-                                   fitWidth="15.0"
-                                   pickOnBounds="true"
-                                   preserveRatio="true"/>
-                    </graphic>
-                </Button>
+                        text="✕"
+                        onAction="#closeApplication"
+                        styleClass="auth-close-button"/>
             </HBox>
         </top>
 

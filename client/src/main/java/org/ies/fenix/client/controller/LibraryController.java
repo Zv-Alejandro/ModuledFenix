@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
@@ -331,25 +332,93 @@ public class LibraryController {
     // ============================================================
 
     private void showEmptyLibraryMessage() {
-        Label leftMessage = new Label("You don't have any games yet.");
-        leftMessage.setStyle("""
-                -fx-font-size: 16px;
-                -fx-text-fill: #777777;
-                -fx-font-weight: bold;
-                -fx-padding: 20 0 20 0;
-                """);
+        leftGamesList.getChildren().add(createLeftEmptyMessage());
 
-        leftGamesList.getChildren().add(leftMessage);
+        StackPane emptyState = createEmptyLibraryState();
+        libraryGrid.add(emptyState, 0, 0);
+        GridPane.setColumnSpan(emptyState, MAX_COLUMNS);
+    }
 
-        Label gridMessage = new Label("Your library is empty.");
-        gridMessage.setStyle("""
-                -fx-font-size: 22px;
-                -fx-text-fill: #777777;
-                -fx-font-weight: bold;
-                -fx-padding: 20 0 0 0;
-                """);
+    private Label createLeftEmptyMessage() {
+        Label leftMessage = new Label("No games acquired yet");
+        leftMessage.getStyleClass().add("library-left-empty-message");
+        return leftMessage;
+    }
 
-        libraryGrid.add(gridMessage, 0, 0);
+    private StackPane createEmptyLibraryState() {
+        StackPane emptyState = new StackPane();
+        emptyState.setPrefSize(850, 520);
+        emptyState.setMinSize(650, 420);
+        emptyState.getStyleClass().add("library-empty-state");
+
+        Circle circlePrimary = createEmptyCircle(
+                160,
+                -250,
+                -105,
+                "library-empty-circle-primary"
+        );
+
+        Circle circleSecondary = createEmptyCircle(
+                120,
+                260,
+                -45,
+                "library-empty-circle-secondary"
+        );
+
+        Circle circleAccent = createEmptyCircle(
+                95,
+                -60,
+                150,
+                "library-empty-circle-accent"
+        );
+
+        VBox content = createEmptyLibraryContent();
+
+        emptyState.getChildren().addAll(
+                circlePrimary,
+                circleSecondary,
+                circleAccent,
+                content
+        );
+
+        return emptyState;
+    }
+
+    private Circle createEmptyCircle(double radius,
+                                     double translateX,
+                                     double translateY,
+                                     String styleClass) {
+        Circle circle = new Circle(radius);
+        circle.setTranslateX(translateX);
+        circle.setTranslateY(translateY);
+        circle.setMouseTransparent(true);
+        circle.getStyleClass().add(styleClass);
+
+        return circle;
+    }
+
+    private VBox createEmptyLibraryContent() {
+        FontIcon icon = new FontIcon("mdi2b-book-open-page-variant");
+        icon.setIconSize(58);
+        icon.getStyleClass().add("library-empty-icon");
+
+        Label title = new Label("Your library is empty");
+        title.getStyleClass().add("library-empty-title");
+
+        Label subtitle = new Label("Acquire a game from the marketplace and it will appear here.");
+        subtitle.setWrapText(true);
+        subtitle.getStyleClass().add("library-empty-subtitle");
+
+        Button exploreButton = new Button("Explore marketplace");
+        exploreButton.getStyleClass().add("library-empty-button");
+        exploreButton.setOnAction(event -> switchToMarketplaceScene());
+
+        VBox content = new VBox(16, icon, title, subtitle, exploreButton);
+        content.setAlignment(Pos.CENTER);
+        content.setMaxWidth(440);
+        content.getStyleClass().add("library-empty-content");
+
+        return content;
     }
 
     // ============================================================
