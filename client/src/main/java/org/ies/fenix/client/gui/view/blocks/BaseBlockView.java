@@ -47,7 +47,7 @@ public abstract class BaseBlockView extends HBox {
         return (m != null) ? m.getType() : createModel().getType();
     }
 
-    protected BaseBlockModel getModel() {
+    public BaseBlockModel getModel() {
         return model;
     }
 }

@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.util.StringConverter;
 import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.util.EditorRegistry;
 import org.ies.fenix.client.gui.model.script.OptionBlockModel;
@@ -45,18 +46,30 @@ public class OptionBlockView extends BaseBlockView {
 
         jumpSceneCombo = new ComboBox<>();
         jumpSceneCombo.setItems(EditorRegistry.getScenes());
+        jumpSceneCombo.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(SceneBlockModel scene) {
+                if (scene == null) {
+                    return "";
+                }
+
+                String name = scene.getName();
+
+                if (name == null || name.isBlank()) {
+                    return "Unnamed scene";
+                }
+
+                return name;
+            }
+
+            @Override
+            public SceneBlockModel fromString(String string) {
+                return null;
+            }
+        });
         jumpSceneCombo.getStyleClass().add("block-combo");
 
-        // ===== INITIAL VALUES =====
-
-        optionSentenceArea.setText(model.getOptionSentence());
         jumpSceneCombo.setValue(model.getSceneBlockModel());
-
-        // ===== LISTENERS =====
-
-        optionSentenceArea.textProperty().addListener((obs, oldV, newV) -> {
-            model.setOptionSentence(newV);
-        });
 
         jumpSceneCombo.valueProperty().addListener((obs, oldV, newV) -> {
             model.setSceneBlockModel(newV);
