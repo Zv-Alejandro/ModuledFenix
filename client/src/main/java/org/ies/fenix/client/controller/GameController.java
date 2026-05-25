@@ -11,7 +11,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -33,7 +32,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -46,6 +44,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static org.ies.fenix.client.utils.ImageUtils.initialConfig;
+import static org.ies.fenix.client.utils.ImageUtils.setCoverImage;
 
 public class GameController {
 
@@ -107,6 +106,7 @@ public class GameController {
     private final IPurchaseController purchaseApiService;
 
     private Integer selectedGameId;
+    private byte[] currentBannerBytes;
 
     public GameController(StageManager stageManager,
                           IClientController clientApiService,
@@ -140,9 +140,10 @@ public class GameController {
         selectedGameBannerImage.setSmooth(true);
         selectedGameBannerImage.setCache(false);
         selectedGameBannerImage.setViewport(null);
+        selectedGameBannerImage.setVisible(false);
 
-        selectedGameBannerImage.fitWidthProperty().bind(bannerWrapper.widthProperty());
-        selectedGameBannerImage.fitHeightProperty().bind(bannerWrapper.heightProperty());
+        bannerWrapper.widthProperty().addListener((observable, oldValue, newValue) -> refreshBannerCover());
+        bannerWrapper.heightProperty().addListener((observable, oldValue, newValue) -> refreshBannerCover());
     }
 
     private void configureBannerClip() {
@@ -250,9 +251,9 @@ public class GameController {
         Label tagLabel = new Label(text);
         tagLabel.getStyleClass().addAll("tag", "game-tag");
 
-        tagLabel.setMinWidth(92.0);
-        tagLabel.setPrefWidth(92.0);
-        tagLabel.setMaxWidth(92.0);
+        tagLabel.setMinWidth(105.0);
+        tagLabel.setPrefWidth(105.0);
+        tagLabel.setMaxWidth(105.0);
 
         tagLabel.setMinHeight(26.0);
         tagLabel.setPrefHeight(26.0);
@@ -284,9 +285,9 @@ public class GameController {
                 return;
             }
 
-            Image image = new Image(new ByteArrayInputStream(response.getBody()));
+            currentBannerBytes = response.getBody();
 
-            Platform.runLater(() -> showBannerImage(image));
+            Platform.runLater(this::refreshBannerCover);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -299,11 +300,33 @@ public class GameController {
                 && response.getBody().length > 0;
     }
 
-    private void showBannerImage(Image image) {
-        selectedGameBannerImage.setViewport(null);
-        selectedGameBannerImage.setPreserveRatio(false);
-        selectedGameBannerImage.setImage(image);
-        selectedGameBannerImage.setVisible(true);
+    private void refreshBannerCover() {
+        if (currentBannerBytes == null || currentBannerBytes.length == 0) {
+            return;
+        }
+
+        double width = bannerWrapper.getWidth();
+        double height = bannerWrapper.getHeight();
+
+        if (width <= 0) {
+            width = bannerWrapper.getPrefWidth();
+        }
+
+        if (height <= 0) {
+            height = bannerWrapper.getPrefHeight();
+        }
+
+        if (width <= 0 || height <= 0) {
+            return;
+        }
+
+        setCoverImage(
+                currentBannerBytes,
+                selectedGameBannerImage,
+                width,
+                height
+        );
+
         selectedGameBannerImage.setManaged(true);
         selectedGameBannerImage.setOpacity(1.0);
         selectedGameBannerImage.toFront();

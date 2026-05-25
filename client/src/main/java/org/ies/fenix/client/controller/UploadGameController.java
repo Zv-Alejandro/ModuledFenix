@@ -467,8 +467,7 @@ public class UploadGameController {
                         "Image files",
                         "*.png",
                         "*.jpg",
-                        "*.jpeg",
-                        "*.webp"
+                        "*.jpeg"
                 )
         );
 

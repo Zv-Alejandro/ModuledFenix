@@ -13,8 +13,9 @@
 
 <HBox alignment="CENTER_LEFT"
       spacing="20.0"
+      minWidth="0.0"
+      maxWidth="Infinity"
       styleClass="navbar-container"
-      stylesheets="@../styles/styles.css"
       xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.ies.fenix.client.controller.NavbarController">
@@ -23,7 +24,7 @@
         <Insets top="30.0" right="30.0" bottom="18.0" left="30.0"/>
     </padding>
 
-    <!-- Flecha atrás -->
+    <!-- BACK NAVIGATION -->
     <Button fx:id="backButton"
             styleClass="nav-button"
             onAction="#goBackFromNavbar">
@@ -34,7 +35,7 @@
         </graphic>
     </Button>
 
-    <!-- Flecha adelante -->
+    <!-- FORWARD NAVIGATION -->
     <Button fx:id="forwardButton"
             styleClass="nav-button"
             onAction="#goForwardFromNavbar">
@@ -45,7 +46,7 @@
         </graphic>
     </Button>
 
-    <!-- Navegación -->
+    <!-- MAIN NAVIGATION TABS -->
     <Hyperlink fx:id="marketplace"
                text="MARKET PLACE"
                onAction="#goMarketplace"/>
@@ -60,14 +61,18 @@
 
     <Region HBox.hgrow="ALWAYS"/>
 
-    <!-- Botón crear -->
+    <!-- UPLOAD GAME ACTION -->
     <Button text="Upload your own visual novel"
             styleClass="main-action-button"
             onAction="#goUpload"/>
 
-    <!-- Perfil -->
-    <StackPane prefWidth="40"
-               prefHeight="40"
+    <!-- USER IMAGE / DEFAULT ICON -->
+    <StackPane prefWidth="40.0"
+               prefHeight="40.0"
+               minWidth="40.0"
+               minHeight="40.0"
+               maxWidth="40.0"
+               maxHeight="40.0"
                styleClass="profile-wrapper">
 
         <FontIcon fx:id="topProfileIcon"
@@ -76,13 +81,13 @@
                   iconColor="#B8B8B8"/>
 
         <ImageView fx:id="topProfileImage"
-                   fitWidth="40"
-                   fitHeight="40"
+                   fitWidth="40.0"
+                   fitHeight="40.0"
                    preserveRatio="true"
                    visible="false"/>
     </StackPane>
 
-    <!-- Menú de usuario -->
+    <!-- USER MENU -->
     <MenuButton styleClass="profile-menu-button">
         <graphic>
             <FontIcon iconLiteral="mdi2c-chevron-down"

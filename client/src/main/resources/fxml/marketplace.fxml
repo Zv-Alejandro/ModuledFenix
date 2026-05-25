@@ -11,9 +11,13 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane fx:id="root"
-            prefHeight="800.0"
             prefWidth="1300.0"
-            stylesheets="@../styles/styles.css"
+            prefHeight="800.0"
+            minWidth="0.0"
+            minHeight="0.0"
+            maxWidth="Infinity"
+            maxHeight="Infinity"
+            styleClass="marketplace-root"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.ies.fenix.client.controller.MarketplaceController">
@@ -22,20 +26,27 @@
         <ScrollPane fitToWidth="true"
                     hbarPolicy="NEVER"
                     vbarPolicy="AS_NEEDED"
+                    pannable="true"
+                    maxWidth="Infinity"
+                    maxHeight="Infinity"
                     styleClass="main-scroll">
 
             <content>
                 <VBox spacing="35.0"
+                      fillWidth="true"
+                      maxWidth="Infinity"
                       styleClass="content-container">
 
                     <padding>
                         <Insets top="45.0" right="30.0" bottom="45.0" left="30.0"/>
                     </padding>
 
-                    <!-- LATEST RELEASED -->
-                    <VBox spacing="18.0">
+                    <!-- LATEST RELEASED SECTION -->
+                    <VBox spacing="18.0"
+                          maxWidth="Infinity">
 
-                        <HBox alignment="CENTER_LEFT">
+                        <HBox alignment="CENTER_LEFT"
+                              maxWidth="Infinity">
 
                             <VBox spacing="5.0">
                                 <Label text="Latest released"
@@ -50,6 +61,7 @@
                             <TextField fx:id="searchField"
                                        promptText="Search"
                                        prefWidth="420.0"
+                                       maxWidth="420.0"
                                        styleClass="search-field"/>
                         </HBox>
 
@@ -59,6 +71,7 @@
                                     vbarPolicy="NEVER"
                                     pannable="true"
                                     prefViewportHeight="285.0"
+                                    maxWidth="Infinity"
                                     styleClass="horizontal-games-scroll">
 
                             <content>
@@ -69,8 +82,9 @@
                         </ScrollPane>
                     </VBox>
 
-                    <!-- EXPLORE GAMES -->
-                    <VBox spacing="18.0">
+                    <!-- EXPLORE GAMES SECTION -->
+                    <VBox spacing="18.0"
+                          maxWidth="Infinity">
 
                         <VBox spacing="5.0">
                             <Label text="Explore games"
@@ -80,18 +94,20 @@
                                    styleClass="section-subtitle"/>
                         </VBox>
 
-                        <ScrollPane fitToHeight="true"
-                                    fitToWidth="true"
+                        <ScrollPane fitToWidth="true"
+                                    fitToHeight="false"
                                     hbarPolicy="NEVER"
                                     vbarPolicy="NEVER"
                                     pannable="false"
                                     prefViewportHeight="850.0"
+                                    maxWidth="Infinity"
                                     styleClass="horizontal-games-scroll">
 
                             <content>
                                 <GridPane fx:id="recommendationsContainer"
                                           hgap="24.0"
                                           vgap="24.0"
+                                          maxWidth="Infinity"
                                           styleClass="games-row"/>
                             </content>
                         </ScrollPane>

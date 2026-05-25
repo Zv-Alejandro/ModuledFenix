@@ -10,7 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -31,7 +30,6 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignP;
 import org.springframework.http.ResponseEntity;
 
-import java.io.ByteArrayInputStream;
 import java.util.List;
 
 public class LibraryController {
@@ -255,9 +253,12 @@ public class LibraryController {
                     game.getGameId()
             ).getBody();
 
-            if (bytes != null && bytes.length > 0) {
-                cover.setImage(new Image(new ByteArrayInputStream(bytes)));
-            }
+            ImageUtils.setCoverImage(
+                    bytes,
+                    cover,
+                    170,
+                    245
+            );
 
         } catch (Exception ignored) {
         }
