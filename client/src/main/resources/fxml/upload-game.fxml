@@ -48,7 +48,7 @@
                             <Label text="Create your game"
                                    styleClass="create-game-title"/>
 
-                            <Label text="Upload your game file and the images that will be shown in the application."
+                            <Label text="Upload your game file and the images that will represent it across the application."
                                    wrapText="true"
                                    styleClass="create-game-subtitle"/>
                         </VBox>
@@ -97,7 +97,7 @@
                                     <Label text="Tags"
                                            styleClass="game-info"/>
 
-                                    <Label text="Choose the tags that best describe your game."
+                                    <Label text="Choose the tags that best describe your game. You can select up to 6."
                                            wrapText="true"
                                            styleClass="section-subtitle"/>
 
@@ -146,7 +146,7 @@
                                 <Label text="Game file"
                                        styleClass="card-title"/>
 
-                                <Label text="Select the file you want to upload to the application. It does have to be ZIP."
+                                <Label text="Upload the ZIP file that contains the playable game."
                                        wrapText="true"
                                        styleClass="section-subtitle"/>
 
@@ -163,7 +163,7 @@
                                 </StackPane>
 
                                 <HBox alignment="CENTER_LEFT" spacing="12.0">
-                                    <Button text="Choose file"
+                                    <Button text="Choose ZIP file"
                                             styleClass="game-download-button"
                                             onAction="#chooseGameFile"/>
 
@@ -186,14 +186,14 @@
                             </padding>
 
                             <VBox spacing="4.0">
-                                <Label text="Game media"
+                                <Label text="Game images"
                                        styleClass="game-title"/>
 
-                                <Label text="Add the images that will represent the game in the app."
+                                <Label text="Add the images that will be shown in Library, Marketplace and the Game page."
                                        styleClass="section-subtitle"/>
                             </VBox>
 
-                            <!-- TOP ROW: LOGO + VERTICAL IMAGE -->
+                            <!-- TOP ROW: LOGO + LIBRARY COVER -->
                             <HBox spacing="18.0">
 
                                 <!-- LOGO CARD -->
@@ -210,7 +210,7 @@
                                         <Label text="Game logo"
                                                styleClass="card-title"/>
 
-                                        <Label text="This image will be used as the icon of the game."
+                                        <Label text="Square image. Used as the small game icon in lists and profile areas."
                                                wrapText="true"
                                                styleClass="section-subtitle"/>
                                     </VBox>
@@ -240,7 +240,7 @@
 
                                     <Region VBox.vgrow="ALWAYS"/>
 
-                                    <Button text="Choose game logo"
+                                    <Button text="Choose square logo"
                                             maxWidth="Infinity"
                                             styleClass="game-download-button"
                                             onAction="#chooseLogoImage"/>
@@ -251,12 +251,16 @@
                                            styleClass="upload-file-label"/>
                                 </VBox>
 
-                                <!-- VERTICAL IMAGE -->
+                                <!-- LIBRARY COVER -->
                                 <VBox spacing="10.0"
                                       HBox.hgrow="ALWAYS">
 
-                                    <Label text="Marketplace cover"
+                                    <Label text="Library cover"
                                            styleClass="card-title"/>
+
+                                    <Label text="Vertical image. This will be shown as the main cover in Library."
+                                           wrapText="true"
+                                           styleClass="section-subtitle"/>
 
                                     <StackPane prefHeight="410.0"
                                                styleClass="upload-drop-area"
@@ -269,7 +273,7 @@
                                                    pickOnBounds="true"/>
                                     </StackPane>
 
-                                    <Button text="Choose marketplace cover"
+                                    <Button text="Choose vertical Library cover"
                                             maxWidth="Infinity"
                                             styleClass="game-download-button"
                                             onAction="#chooseVerticalImage"/>
@@ -282,11 +286,15 @@
 
                             </HBox>
 
-                            <!-- HORIZONTAL IMAGE 1 -->
+                            <!-- MARKETPLACE IMAGE -->
                             <VBox spacing="10.0">
 
-                                <Label text="Game page banner"
+                                <Label text="Marketplace image"
                                        styleClass="card-title"/>
+
+                                <Label text="Horizontal image. This will be shown in Marketplace cards and game lists."
+                                       wrapText="true"
+                                       styleClass="section-subtitle"/>
 
                                 <StackPane prefHeight="210.0"
                                            styleClass="upload-drop-area"
@@ -300,7 +308,7 @@
                                 </StackPane>
 
                                 <HBox alignment="CENTER_LEFT" spacing="12.0">
-                                    <Button text="Choose game page banner"
+                                    <Button text="Choose horizontal Marketplace image"
                                             styleClass="game-download-button"
                                             onAction="#chooseHorizontalImageOne"/>
 
@@ -311,11 +319,15 @@
                                 </HBox>
                             </VBox>
 
-                            <!-- HORIZONTAL IMAGE 2 -->
+                            <!-- GAME PAGE BACKGROUND -->
                             <VBox spacing="10.0">
 
-                                <Label text="Game preview image"
+                                <Label text="Game page background"
                                        styleClass="card-title"/>
+
+                                <Label text="Horizontal image. This will be used as the large banner/background on the Game screen."
+                                       wrapText="true"
+                                       styleClass="section-subtitle"/>
 
                                 <StackPane prefHeight="210.0"
                                            styleClass="upload-drop-area"
@@ -329,7 +341,7 @@
                                 </StackPane>
 
                                 <HBox alignment="CENTER_LEFT" spacing="12.0">
-                                    <Button text="Choose preview image"
+                                    <Button text="Choose horizontal Game background"
                                             styleClass="game-download-button"
                                             onAction="#chooseHorizontalImageTwo"/>
 

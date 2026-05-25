@@ -36,7 +36,7 @@ public class MarketplaceController implements Initializable {
 
     private static final int TAG_COLUMNS = 3;
     private static final double MARKETPLACE_TAG_WIDTH = 84.0;
-    private static final double MARKETPLACE_TAG_HEIGHT = 32.0;
+    private static final double MARKETPLACE_TAG_HEIGHT = 24.0;
     private static final double MARKETPLACE_TAGS_GRID_WIDTH = 280.0;
 
     // ============================================================

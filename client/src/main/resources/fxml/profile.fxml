@@ -13,7 +13,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
@@ -248,18 +249,22 @@
                     </HBox>
 
                     <!-- CREATED GAMES BOX -->
-                    <TilePane fx:id="createdGamesContainer"
-                              prefColumns="3"
+                    <GridPane fx:id="createdGamesContainer"
                               hgap="18.0"
                               vgap="18.0"
-                              tileAlignment="TOP_CENTER"
                               styleClass="profile-created-games-card">
+
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="33.33"/>
+                            <ColumnConstraints percentWidth="33.33"/>
+                            <ColumnConstraints percentWidth="33.33"/>
+                        </columnConstraints>
 
                         <padding>
                             <Insets top="22.0" right="22.0" bottom="22.0" left="22.0"/>
                         </padding>
 
-                    </TilePane>
+                    </GridPane>
 
                 </VBox>
             </content>

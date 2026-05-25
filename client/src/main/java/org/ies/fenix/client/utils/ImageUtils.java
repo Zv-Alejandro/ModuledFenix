@@ -172,6 +172,52 @@ public class ImageUtils {
             imageView.setVisible(false);
         }
     }
+
+    public static void setCoverImageFromFile(
+            java.io.File imageFile,
+            ImageView imageView,
+            double width,
+            double height
+    ) {
+        try {
+            if (imageFile == null || imageView == null) {
+                if (imageView != null) {
+                    imageView.setVisible(false);
+                }
+                return;
+            }
+
+            byte[] imageBytes = java.nio.file.Files.readAllBytes(imageFile.toPath());
+            setCoverImage(imageBytes, imageView, width, height);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            imageView.setVisible(false);
+        }
+    }
+
+    public static void setAvatarFromFile(
+            java.io.File imageFile,
+            ImageView imageView,
+            double size
+    ) {
+        try {
+            if (imageFile == null || imageView == null) {
+                if (imageView != null) {
+                    imageView.setVisible(false);
+                }
+                return;
+            }
+
+            byte[] imageBytes = java.nio.file.Files.readAllBytes(imageFile.toPath());
+            setAvatar(imageBytes, imageView, size);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            imageView.setVisible(false);
+        }
+    }
+
     public static void initialConfig(
             IClientController clientApiService,
             SessionManager sessionManager,

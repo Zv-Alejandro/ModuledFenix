@@ -1,17 +1,20 @@
 package org.ies.fenix.client.controller;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
@@ -48,6 +51,9 @@ public class LibraryController {
     @FXML
     private GridPane libraryGrid;
 
+    @FXML
+    private ScrollPane rightLibraryScroll;
+
     // ============================================================
     // DEPENDENCIES
     // ============================================================
@@ -76,7 +82,17 @@ public class LibraryController {
 
     @FXML
     private void initialize() {
+        configureRightLibraryArea();
         loadLibrary();
+    }
+
+    private void configureRightLibraryArea() {
+        libraryGrid.prefWidthProperty().bind(
+                Bindings.createDoubleBinding(
+                        () -> rightLibraryScroll.getViewportBounds().getWidth(),
+                        rightLibraryScroll.viewportBoundsProperty()
+                )
+        );
     }
 
     // ============================================================
@@ -118,9 +134,12 @@ public class LibraryController {
     private void clearLibraryViews() {
         leftGamesList.getChildren().clear();
         libraryGrid.getChildren().clear();
+        libraryGrid.setAlignment(Pos.TOP_LEFT);
     }
 
     private void renderLibraryGames(List<LibraryGameDTO> games) {
+        libraryGrid.setAlignment(Pos.TOP_LEFT);
+
         int col = 0;
         int row = 0;
 
@@ -335,8 +354,13 @@ public class LibraryController {
         leftGamesList.getChildren().add(createLeftEmptyMessage());
 
         StackPane emptyState = createEmptyLibraryState();
+
+        libraryGrid.setAlignment(Pos.CENTER);
         libraryGrid.add(emptyState, 0, 0);
+
         GridPane.setColumnSpan(emptyState, MAX_COLUMNS);
+        GridPane.setHgrow(emptyState, Priority.ALWAYS);
+        GridPane.setVgrow(emptyState, Priority.ALWAYS);
     }
 
     private Label createLeftEmptyMessage() {
@@ -347,27 +371,28 @@ public class LibraryController {
 
     private StackPane createEmptyLibraryState() {
         StackPane emptyState = new StackPane();
-        emptyState.setPrefSize(850, 520);
-        emptyState.setMinSize(650, 420);
+
+        emptyState.setMinHeight(520.0);
+        emptyState.setMaxWidth(Double.MAX_VALUE);
         emptyState.getStyleClass().add("library-empty-state");
 
         Circle circlePrimary = createEmptyCircle(
                 160,
-                -250,
+                -230,
                 -105,
                 "library-empty-circle-primary"
         );
 
         Circle circleSecondary = createEmptyCircle(
                 120,
-                260,
+                240,
                 -45,
                 "library-empty-circle-secondary"
         );
 
         Circle circleAccent = createEmptyCircle(
                 95,
-                -60,
+                -40,
                 150,
                 "library-empty-circle-accent"
         );
@@ -380,6 +405,8 @@ public class LibraryController {
                 circleAccent,
                 content
         );
+
+        StackPane.setAlignment(content, Pos.CENTER);
 
         return emptyState;
     }

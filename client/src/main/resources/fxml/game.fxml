@@ -9,9 +9,10 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.layout.StackPane?>
 <BorderPane fx:id="root"
             prefHeight="850.0"
             prefWidth="1400.0"
@@ -23,15 +24,16 @@
 
     <center>
         <ScrollPane fitToWidth="true"
+                    fitToHeight="true"
                     hbarPolicy="NEVER"
                     vbarPolicy="AS_NEEDED"
                     styleClass="main-scroll">
 
             <content>
                 <VBox spacing="0.0"
+                      fillWidth="true"
                       styleClass="game-container">
 
-                    <!-- BIG BANNER -->
                     <!-- BIG BANNER -->
                     <StackPane fx:id="bannerWrapper"
                                prefHeight="360.0"
@@ -48,16 +50,23 @@
                     <!-- LOWER CONTENT -->
                     <GridPane styleClass="game-main-grid"
                               hgap="0.0"
-                              vgap="0.0">
+                              vgap="0.0"
+                              VBox.vgrow="ALWAYS">
 
                         <columnConstraints>
                             <ColumnConstraints percentWidth="68.0"/>
                             <ColumnConstraints percentWidth="32.0"/>
                         </columnConstraints>
 
+                        <rowConstraints>
+                            <RowConstraints vgrow="ALWAYS"/>
+                        </rowConstraints>
+
                         <!-- LEFT PANEL -->
                         <VBox GridPane.columnIndex="0"
+                              GridPane.rowIndex="0"
                               spacing="24.0"
+                              minHeight="500.0"
                               styleClass="game-left-panel">
 
                             <padding>
@@ -91,7 +100,9 @@
 
                         <!-- RIGHT PANEL -->
                         <VBox GridPane.columnIndex="1"
+                              GridPane.rowIndex="0"
                               spacing="24.0"
+                              minHeight="500.0"
                               styleClass="game-right-panel">
 
                             <padding>

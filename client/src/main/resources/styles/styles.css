@@ -278,6 +278,9 @@
     -fx-pref-width: 280;
     -fx-min-width: 280;
     -fx-max-width: 280;
+
+    -fx-min-height: 255px;
+    -fx-pref-height: 255px;
 }
 
 .card-click-wrapper,
@@ -314,26 +317,36 @@
 }
 
 .tag {
-    -fx-background-color: #98B6FA;
-    -fx-background-radius: 8px;
+    -fx-background-color: #C8D7FF;
+    -fx-background-radius: 7px;
     -fx-padding: 0;
     -fx-text-fill: #243B54;
     -fx-opacity: 0.95;
-    -fx-font-size: 13px;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
 }
 
 .marketplace-tag {
     -fx-alignment: center;
     -fx-text-alignment: center;
-    -fx-background-color: #98B6FA;
-    -fx-background-radius: 8px;
-    -fx-padding: 5px 6px;
+    -fx-background-color: #C8D7FF;
+    -fx-background-radius: 7px;
+    -fx-padding: 2px 6px;
     -fx-text-fill: #243B54;
-    -fx-font-size: 13px;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
 }
 
+.game-tag {
+    -fx-background-color: #C8D7FF;
+    -fx-background-radius: 7px;
+    -fx-padding: 3px 8px;
+    -fx-text-fill: #243B54;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
 
 /* ============================================================
    LIBRARY
@@ -464,6 +477,7 @@
 
 .library-empty-state {
     -fx-background-color: transparent;
+    -fx-alignment: center;
 }
 
 .library-empty-content {
@@ -547,16 +561,19 @@
 
 .game-main-grid {
     -fx-background-color: #FAF7F2;
+    -fx-min-height: 500px;
 }
 
 .game-left-panel {
     -fx-background-color: #FAF7F2;
     -fx-border-color: transparent #8C6A52 transparent transparent;
     -fx-border-width: 0 2px 0 0;
+    -fx-min-height: 500px;
 }
 
 .game-right-panel {
     -fx-background-color: #FAF7F2;
+    -fx-min-height: 500px;
 }
 
 .game-main-quote {
@@ -791,12 +808,9 @@
     -fx-background-radius: 14px;
     -fx-padding: 22px 18px 20px 18px;
 
-    -fx-min-width: 360px;
-    -fx-pref-width: 360px;
-    -fx-max-width: 360px;
-
-    -fx-min-height: 190px;
-    -fx-pref-height: 190px;
+    -fx-min-height: 225px;
+    -fx-pref-height: 225px;
+    -fx-max-height: 225px;
 }
 
 .profile-created-game-card:hover {
@@ -986,6 +1000,64 @@
     -fx-font-size: 13px;
 }
 
+/* ============================================================
+   UPLOAD GAME ALERTS
+   ============================================================ */
+
+.upload-alert-pane {
+    -fx-background-color: #FAF7F2;
+    -fx-border-color: #D9C5A1;
+    -fx-border-width: 1px;
+}
+
+.upload-alert-pane > .button-bar {
+    -fx-background-color: #FAF7F2;
+    -fx-padding: 8px 24px 20px 24px;
+}
+
+.upload-alert-pane > .button-bar > .container {
+    -fx-background-color: #FAF7F2;
+    -fx-alignment: center-right;
+}
+
+.upload-alert-content {
+    -fx-background-color: #FAF7F2;
+}
+
+.upload-alert-title {
+    -fx-text-fill: #243B54;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.upload-alert-message {
+    -fx-text-fill: #8C6A52;
+    -fx-font-size: 15px;
+    -fx-max-width: 390px;
+}
+
+.upload-alert-error-icon {
+    -fx-icon-color: #8C6A52;
+}
+
+.upload-alert-info-icon {
+    -fx-icon-color: #243B54;
+}
+
+.upload-alert-button {
+    -fx-background-color: #243B54;
+    -fx-text-fill: #FAF7F2;
+    -fx-background-radius: 8px;
+    -fx-padding: 9px 24px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-min-width: 120px;
+}
+
+.upload-alert-button:hover {
+    -fx-background-color: #8C6A52;
+}
 
 /* ============================================================
    TAG SELECTOR - UPLOAD GAME
