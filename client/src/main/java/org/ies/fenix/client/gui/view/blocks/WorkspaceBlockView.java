@@ -1,6 +1,7 @@
 package org.ies.fenix.client.gui.view.blocks;
 
 import javafx.geometry.Insets;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.model.script.CharacterCreateBlockModel;
@@ -71,7 +72,27 @@ public class WorkspaceBlockView extends ContainerBlockView {
             index = childrenContainer.getChildren().size();
         }
 
+        block.setPaletteBlock(false);
+        setupBlockRemoval(block);
+
         childrenContainer.getChildren().add(index, block);
+    }
+
+    private void setupBlockRemoval(BaseBlockView block) {
+
+        block.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
+
+            if (event.getButton() != MouseButton.SECONDARY) {
+                return;
+            }
+
+            if (!childrenContainer.getChildren().contains(block)) {
+                return;
+            }
+
+            removeBlock(block);
+            event.consume();
+        });
     }
 
     public void removeBlock(BaseBlockView block) {

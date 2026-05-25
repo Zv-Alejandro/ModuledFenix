@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.util.StringConverter;
 import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.util.EditorRegistry;
 import org.ies.fenix.client.gui.model.script.DialogBlockModel;
@@ -79,12 +80,34 @@ public class DialogBlockView extends BaseBlockView {
 
         characterCombo = new ComboBox<>();
         characterCombo.setItems(EditorRegistry.getCharacters());
+        characterCombo.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(FenixCharacterModel character) {
+                if (character == null) {
+                    return "";
+                }
+
+                String name = character.getName();
+
+                if (name == null || name.isBlank()) {
+                    return "Unnamed character";
+                }
+
+                return name;
+            }
+
+            @Override
+            public FenixCharacterModel fromString(String string) {
+                return null;
+            }
+        });
         characterCombo.setValue(model.getCharacter());
         characterCombo.getStyleClass().add("block-combo");
 
         characterCombo.valueProperty().addListener((obs, oldValue, newValue) -> {
             model.setCharacter(newValue);
         });
+
 
         // ===== DIALOG TEXT =====
 

@@ -12,6 +12,7 @@ import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.model.script.SceneBlockModel;
 import org.ies.fenix.client.gui.service.DragAndDropService;
 import org.ies.fenix.client.gui.util.BlockFactory;
+import org.ies.fenix.client.gui.util.EditorRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,7 @@ public class SceneBlockView extends ContainerBlockView {
 
         sceneNameField.textProperty().addListener((obs, oldV, newV) -> {
             model.setName(newV);
+            EditorRegistry.updateScene(model);
         });
 
         HBox row = new HBox(10, title, sceneNameField);

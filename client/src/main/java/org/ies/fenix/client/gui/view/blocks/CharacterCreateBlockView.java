@@ -9,6 +9,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import org.ies.fenix.client.gui.model.script.BaseBlockModel;
 import org.ies.fenix.client.gui.model.script.CharacterCreateBlockModel;
+import org.ies.fenix.client.gui.util.EditorRegistry;
 
 public class CharacterCreateBlockView extends BaseBlockView {
 
@@ -99,7 +100,16 @@ public class CharacterCreateBlockView extends BaseBlockView {
         nameField.setText(model.getName());
         nameField.getStyleClass().add("block-textfield");
 
-        nameField.textProperty().addListener((obs, o, n) -> model.setName(n));
+        nameField.textProperty().addListener((obs, o, n) -> {
+            model.setName(n);
+            EditorRegistry.updateCharacter(model);
+        });
+
+        nameField.setMinWidth(140);
+        nameField.setPrefWidth(220);
+        nameField.setMaxWidth(Double.MAX_VALUE);
+
+
 
         nameField.setMinWidth(140);
         nameField.setPrefWidth(220);
@@ -121,6 +131,7 @@ public class CharacterCreateBlockView extends BaseBlockView {
 
         colorPicker.valueProperty().addListener((obs, o, n) -> {
             model.setColor(toHex(n));
+            EditorRegistry.updateCharacter(model);
         });
 
         colorPicker.setMinWidth(Region.USE_PREF_SIZE);
