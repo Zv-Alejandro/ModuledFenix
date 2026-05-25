@@ -2,6 +2,7 @@ package org.ies.fenix.client;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.application.Platform;
 import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlLoader;
 import org.ies.fenix.client.config.FxmlView;

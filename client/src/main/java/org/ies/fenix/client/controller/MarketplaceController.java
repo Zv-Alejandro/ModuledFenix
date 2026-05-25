@@ -35,9 +35,14 @@ public class MarketplaceController implements Initializable {
     private static final int DISCOVER_GAMES_LIMIT = 21;
 
     private static final int TAG_COLUMNS = 3;
-    private static final double MARKETPLACE_TAG_WIDTH = 84.0;
+
+    private static final double MARKETPLACE_CARD_WIDTH = 320.0;
+    private static final double MARKETPLACE_IMAGE_WIDTH = 300.0;
+    private static final double MARKETPLACE_IMAGE_HEIGHT = 150.0;
+
+    private static final double MARKETPLACE_TAG_WIDTH = 98.0;
     private static final double MARKETPLACE_TAG_HEIGHT = 24.0;
-    private static final double MARKETPLACE_TAGS_GRID_WIDTH = 280.0;
+    private static final double MARKETPLACE_TAGS_GRID_WIDTH = 320.0;
 
     // ============================================================
     // FXML FIELDS
@@ -136,7 +141,9 @@ public class MarketplaceController implements Initializable {
     }
 
     private List<GameResponseDTO> filterGamesByTitle(String searchText) {
-        String normalizedSearchText = searchText == null ? "" : searchText.trim().toLowerCase();
+        String normalizedSearchText = searchText == null
+                ? ""
+                : searchText.trim().toLowerCase();
 
         if (normalizedSearchText.isBlank()) {
             return loadedGames;
@@ -230,12 +237,12 @@ public class MarketplaceController implements Initializable {
         HBox imageWrapper = new HBox();
         imageWrapper.setAlignment(Pos.CENTER);
         imageWrapper.setPrefHeight(170.0);
-        imageWrapper.setPrefWidth(280.0);
+        imageWrapper.setPrefWidth(MARKETPLACE_CARD_WIDTH);
         imageWrapper.getStyleClass().add("card-image-wrapper");
 
         ImageView imageView = new ImageView();
-        imageView.setFitHeight(150.0);
-        imageView.setFitWidth(260.0);
+        imageView.setFitHeight(MARKETPLACE_IMAGE_HEIGHT);
+        imageView.setFitWidth(MARKETPLACE_IMAGE_WIDTH);
         imageView.setPreserveRatio(false);
         imageView.getStyleClass().add("card-image");
 
@@ -250,14 +257,14 @@ public class MarketplaceController implements Initializable {
         Label titleLabel = new Label(getSafeText(game.getTitle(), "Untitled"));
         titleLabel.getStyleClass().add("card-title");
         titleLabel.setWrapText(true);
-        titleLabel.setMaxWidth(280.0);
+        titleLabel.setMaxWidth(MARKETPLACE_CARD_WIDTH);
 
         GridPane tagsGrid = createMarketplaceTagsGrid(game.getTags());
 
         VBox infoBox = new VBox(8.0);
         infoBox.setAlignment(Pos.TOP_LEFT);
-        infoBox.setPrefWidth(280.0);
-        infoBox.setMaxWidth(280.0);
+        infoBox.setPrefWidth(MARKETPLACE_CARD_WIDTH);
+        infoBox.setMaxWidth(MARKETPLACE_CARD_WIDTH);
 
         infoBox.getChildren().addAll(titleLabel, tagsGrid);
 
@@ -334,7 +341,12 @@ public class MarketplaceController implements Initializable {
                 return;
             }
 
-            setCoverImage(response.getBody(), imageView, 260.0, 150.0);
+            setCoverImage(
+                    response.getBody(),
+                    imageView,
+                    MARKETPLACE_IMAGE_WIDTH,
+                    MARKETPLACE_IMAGE_HEIGHT
+            );
 
         } catch (Exception e) {
             e.printStackTrace();

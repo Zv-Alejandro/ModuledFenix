@@ -1,83 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.GridPane?>
 
 <BorderPane fx:id="root"
-            prefHeight="800.0"
             prefWidth="1300.0"
+            prefHeight="800.0"
+            minWidth="0.0"
+            minHeight="0.0"
+            maxWidth="Infinity"
+            maxHeight="Infinity"
             styleClass="library-root"
-            stylesheets="@../styles/styles.css"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.ies.fenix.client.controller.LibraryController">
 
     <center>
-        <HBox spacing="0.0" styleClass="library-main-container">
+        <HBox spacing="0.0"
+              maxWidth="Infinity"
+              maxHeight="Infinity"
+              styleClass="library-main-container">
 
-            <!-- PANEL IZQUIERDO -->
+            <!-- LEFT LIBRARY PANEL -->
             <VBox prefWidth="360.0"
                   minWidth="360.0"
                   maxWidth="360.0"
+                  maxHeight="Infinity"
                   styleClass="library-left-panel">
 
                 <padding>
-                    <Insets top="20" right="15" bottom="20" left="20"/>
+                    <Insets top="20.0" right="15.0" bottom="20.0" left="20.0"/>
                 </padding>
 
-                <HBox alignment="CENTER_LEFT" styleClass="library-search-wrapper">
+                <!-- SEARCH AREA -->
+                <HBox alignment="CENTER_LEFT"
+                      styleClass="library-search-wrapper">
+
                     <TextField fx:id="searchField"
                                promptText="Search"
                                HBox.hgrow="ALWAYS"
                                styleClass="library-search-field"/>
 
-                    <Label text="≡" styleClass="library-filter-icon"/>
+                    <Label text="≡"
+                           styleClass="library-filter-icon"/>
                 </HBox>
 
+                <!-- OWNED GAMES LIST -->
                 <ScrollPane fitToWidth="true"
                             hbarPolicy="NEVER"
                             vbarPolicy="AS_NEEDED"
                             VBox.vgrow="ALWAYS"
+                            maxHeight="Infinity"
                             styleClass="library-left-scroll">
 
                     <content>
-                        <!-- LISTA DINÁMICA DE JUEGOS -->
                         <VBox fx:id="leftGamesList"
                               spacing="22.0"
+                              maxWidth="Infinity"
                               styleClass="library-left-games-list">
 
                             <padding>
-                                <Insets top="28" right="5" bottom="20" left="0"/>
+                                <Insets top="28.0" right="5.0" bottom="20.0" left="0.0"/>
                             </padding>
                         </VBox>
                     </content>
                 </ScrollPane>
             </VBox>
 
-            <!-- PANEL DERECHO -->
+            <!-- RIGHT LIBRARY PANEL -->
             <ScrollPane fx:id="rightLibraryScroll"
                         fitToWidth="true"
                         hbarPolicy="NEVER"
                         vbarPolicy="AS_NEEDED"
                         HBox.hgrow="ALWAYS"
+                        maxWidth="Infinity"
+                        maxHeight="Infinity"
                         styleClass="library-right-scroll">
 
                 <content>
-                    <!-- GRID DINÁMICO DE PORTADAS -->
                     <GridPane fx:id="libraryGrid"
-                              hgap="18"
-                              vgap="24"
+                              hgap="18.0"
+                              vgap="24.0"
                               maxWidth="Infinity"
                               styleClass="library-grid">
 
                         <padding>
-                            <Insets top="70" right="28" bottom="30" left="28"/>
+                            <Insets top="70.0" right="28.0" bottom="30.0" left="28.0"/>
                         </padding>
                     </GridPane>
                 </content>

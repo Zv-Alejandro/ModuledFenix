@@ -21,6 +21,41 @@
     -fx-background-color: #FAF7F2;
 }
 
+/* ============================================================
+   RESPONSIVE LAYOUT BASE
+   ============================================================ */
+
+.marketplace-root,
+.library-root,
+.game-root,
+.profile-root,
+.create-game-root {
+    -fx-background-color: #FAF7F2;
+}
+
+.content-container,
+.profile-container,
+.game-container,
+.create-game-page,
+.library-main-container {
+    -fx-background-color: #FAF7F2;
+}
+
+.main-scroll,
+.library-left-scroll,
+.library-right-scroll,
+.horizontal-games-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.main-scroll > .viewport,
+.library-left-scroll > .viewport,
+.library-right-scroll > .viewport,
+.horizontal-games-scroll > .viewport {
+    -fx-background-color: transparent;
+}
 
 /* ============================================================
    NAVBAR
@@ -275,9 +310,9 @@
 
 .card {
     -fx-spacing: 10;
-    -fx-pref-width: 280;
-    -fx-min-width: 280;
-    -fx-max-width: 280;
+    -fx-pref-width: 320;
+    -fx-min-width: 320;
+    -fx-max-width: 320;
 
     -fx-min-height: 255px;
     -fx-pref-height: 255px;
@@ -295,9 +330,12 @@
     -fx-border-radius: 12px;
     -fx-background-radius: 12px;
 
-    -fx-min-width: 280px;
+    -fx-min-width: 320px;
+    -fx-pref-width: 320px;
+    -fx-max-width: 320px;
+
     -fx-min-height: 170px;
-    -fx-max-width: 280px;
+    -fx-pref-height: 170px;
     -fx-max-height: 170px;
 }
 

@@ -1,33 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.ProgressBar?>
-
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+
 <BorderPane fx:id="root"
+            prefWidth="1400.0"
+            prefHeight="850.0"
+            minWidth="0.0"
+            minHeight="0.0"
+            maxWidth="Infinity"
+            maxHeight="Infinity"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.ies.fenix.client.controller.BaseLayoutController"
-            prefWidth="1400" prefHeight="850">
+            fx:controller="org.ies.fenix.client.controller.BaseLayoutController">
 
-    <!-- NAVBAR GLOBAL -->
+    <!-- GLOBAL NAVBAR -->
     <top>
-        <fx:include fx:id="navbar" source="navbar.fxml"/>    </top>
+        <fx:include fx:id="navbar" source="navbar.fxml"/>
+    </top>
 
-    <!-- CONTENIDO DINÁMICO -->
+    <!-- DYNAMIC SCREEN CONTENT -->
     <center>
-        <StackPane fx:id="contentArea"/>
+        <StackPane fx:id="contentArea"
+                   minWidth="0.0"
+                   minHeight="0.0"
+                   maxWidth="Infinity"
+                   maxHeight="Infinity"/>
     </center>
 
-    <!-- PROGRESS BAR GLOBAL -->
+    <!-- GLOBAL PROGRESS BAR -->
     <bottom>
         <HBox alignment="BOTTOM_RIGHT">
+            <padding>
+                <Insets right="12.0" bottom="4.0"/>
+            </padding>
+
             <ProgressBar fx:id="progressBar"
-                         prefWidth="260"
-                         prefHeight="4"
-                         progress="0"
+                         prefWidth="260.0"
+                         prefHeight="4.0"
+                         progress="0.0"
                          visible="false"
                          managed="false"/>
         </HBox>
