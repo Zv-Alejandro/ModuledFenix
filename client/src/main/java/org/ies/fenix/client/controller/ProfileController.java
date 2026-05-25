@@ -12,7 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -44,6 +45,8 @@ import static org.ies.fenix.client.utils.ImageUtils.setCoverImage;
 
 public class ProfileController implements Initializable {
 
+    private static final int CREATED_GAMES_COLUMNS = 3;
+
     // ============================================================
     // FXML FIELDS
     // ============================================================
@@ -73,7 +76,7 @@ public class ProfileController implements Initializable {
     private Label gamesAcquiredValue;
 
     @FXML
-    private TilePane createdGamesContainer;
+    private GridPane createdGamesContainer;
 
     // ============================================================
     // DEPENDENCIES
@@ -205,8 +208,22 @@ public class ProfileController implements Initializable {
                 return;
             }
 
+            int col = 0;
+            int row = 0;
+
             for (GameResponseDTO game : games) {
-                createdGamesContainer.getChildren().add(createCreatedGameCard(game));
+                VBox card = createCreatedGameCard(game);
+
+                createdGamesContainer.add(card, col, row);
+                GridPane.setHgrow(card, Priority.ALWAYS);
+                GridPane.setVgrow(card, Priority.NEVER);
+
+                col++;
+
+                if (col == CREATED_GAMES_COLUMNS) {
+                    col = 0;
+                    row++;
+                }
             }
 
         } catch (Exception e) {
@@ -222,12 +239,15 @@ public class ProfileController implements Initializable {
         emptyLabel.setAlignment(Pos.CENTER);
         emptyLabel.getStyleClass().add("profile-created-games-empty");
 
-        createdGamesContainer.getChildren().add(emptyLabel);
+        createdGamesContainer.add(emptyLabel, 0, 0);
+        GridPane.setColumnSpan(emptyLabel, CREATED_GAMES_COLUMNS);
+        GridPane.setHgrow(emptyLabel, Priority.ALWAYS);
     }
 
     private VBox createCreatedGameCard(GameResponseDTO game) {
         VBox card = new VBox(12);
         card.setAlignment(Pos.CENTER);
+        card.setMaxWidth(Double.MAX_VALUE);
         card.getStyleClass().add("profile-created-game-card");
 
         StackPane logoWrapper = createCreatedGameLogoWrapper(game);
@@ -287,7 +307,7 @@ public class ProfileController implements Initializable {
         tagsBox.setHgap(7);
         tagsBox.setVgap(7);
         tagsBox.setAlignment(Pos.CENTER);
-        tagsBox.setPrefWrapLength(230);
+        tagsBox.setMaxWidth(Double.MAX_VALUE);
 
         if (game.getTags() == null || game.getTags().isEmpty()) {
             Label noTags = new Label("No tags");

@@ -46,23 +46,35 @@
     </Button>
 
     <!-- Navegación -->
-    <Hyperlink fx:id="marketplace" text="MARKET PLACE" onAction="#goMarketplace"/>
-    <Hyperlink fx:id="library" text="LIBRARY" onAction="#goLibrary"/>
-    <Hyperlink fx:id="username" text="USERNAME" onAction="#goProfile"/>
+    <Hyperlink fx:id="marketplace"
+               text="MARKET PLACE"
+               onAction="#goMarketplace"/>
+
+    <Hyperlink fx:id="library"
+               text="LIBRARY"
+               onAction="#goLibrary"/>
+
+    <Hyperlink fx:id="username"
+               text="USERNAME"
+               onAction="#goProfile"/>
 
     <Region HBox.hgrow="ALWAYS"/>
 
     <!-- Botón crear -->
-    <Button text="Create your own visual novel"
+    <Button text="Upload your own visual novel"
             styleClass="main-action-button"
             onAction="#goUpload"/>
 
     <!-- Perfil -->
-    <StackPane prefWidth="40" prefHeight="40" styleClass="profile-wrapper">
+    <StackPane prefWidth="40"
+               prefHeight="40"
+               styleClass="profile-wrapper">
+
         <FontIcon fx:id="topProfileIcon"
                   iconLiteral="mdi2a-account-outline"
                   iconSize="22"
                   iconColor="#B8B8B8"/>
+
         <ImageView fx:id="topProfileImage"
                    fitWidth="40"
                    fitHeight="40"
@@ -79,6 +91,9 @@
         </graphic>
 
         <items>
+            <MenuItem text="Abrir editor GUI"
+                      onAction="#goScriptEditor"/>
+
             <MenuItem text="Cerrar sesión"
                       onAction="#logout"/>
 

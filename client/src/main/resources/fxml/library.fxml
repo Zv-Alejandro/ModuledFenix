@@ -36,6 +36,7 @@
                                promptText="Search"
                                HBox.hgrow="ALWAYS"
                                styleClass="library-search-field"/>
+
                     <Label text="≡" styleClass="library-filter-icon"/>
                 </HBox>
 
@@ -44,11 +45,13 @@
                             vbarPolicy="AS_NEEDED"
                             VBox.vgrow="ALWAYS"
                             styleClass="library-left-scroll">
+
                     <content>
                         <!-- LISTA DINÁMICA DE JUEGOS -->
                         <VBox fx:id="leftGamesList"
                               spacing="22.0"
                               styleClass="library-left-games-list">
+
                             <padding>
                                 <Insets top="28" right="5" bottom="20" left="0"/>
                             </padding>
@@ -58,17 +61,21 @@
             </VBox>
 
             <!-- PANEL DERECHO -->
-            <ScrollPane fitToWidth="true"
+            <ScrollPane fx:id="rightLibraryScroll"
+                        fitToWidth="true"
                         hbarPolicy="NEVER"
                         vbarPolicy="AS_NEEDED"
                         HBox.hgrow="ALWAYS"
                         styleClass="library-right-scroll">
+
                 <content>
                     <!-- GRID DINÁMICO DE PORTADAS -->
                     <GridPane fx:id="libraryGrid"
                               hgap="18"
                               vgap="24"
+                              maxWidth="Infinity"
                               styleClass="library-grid">
+
                         <padding>
                             <Insets top="70" right="28" bottom="30" left="28"/>
                         </padding>

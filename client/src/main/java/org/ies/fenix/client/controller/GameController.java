@@ -241,14 +241,27 @@ public class GameController {
     }
 
     private HBox createTagRow() {
-        HBox row = new HBox(10.0);
+        HBox row = new HBox(8.0);
         row.setAlignment(Pos.CENTER_LEFT);
         return row;
     }
 
     private Label createTagLabel(String text) {
         Label tagLabel = new Label(text);
-        tagLabel.getStyleClass().add("tag");
+        tagLabel.getStyleClass().addAll("tag", "game-tag");
+
+        tagLabel.setMinWidth(92.0);
+        tagLabel.setPrefWidth(92.0);
+        tagLabel.setMaxWidth(92.0);
+
+        tagLabel.setMinHeight(26.0);
+        tagLabel.setPrefHeight(26.0);
+        tagLabel.setMaxHeight(26.0);
+
+        tagLabel.setAlignment(Pos.CENTER);
+        tagLabel.setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
+        tagLabel.setWrapText(false);
+
         return tagLabel;
     }
 

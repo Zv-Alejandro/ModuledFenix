@@ -29,7 +29,7 @@
                       styleClass="content-container">
 
                     <padding>
-                        <Insets top="45.0" right="30.0" bottom="30.0" left="30.0"/>
+                        <Insets top="45.0" right="30.0" bottom="45.0" left="30.0"/>
                     </padding>
 
                     <!-- LATEST RELEASED -->
@@ -58,7 +58,7 @@
                                     hbarPolicy="AS_NEEDED"
                                     vbarPolicy="NEVER"
                                     pannable="true"
-                                    prefViewportHeight="250.0"
+                                    prefViewportHeight="285.0"
                                     styleClass="horizontal-games-scroll">
 
                             <content>
@@ -69,7 +69,7 @@
                         </ScrollPane>
                     </VBox>
 
-                    <!-- RECOMMENDATIONS -->
+                    <!-- EXPLORE GAMES -->
                     <VBox spacing="18.0">
 
                         <VBox spacing="5.0">
@@ -81,11 +81,11 @@
                         </VBox>
 
                         <ScrollPane fitToHeight="true"
-                                    fitToWidth="false"
-                                    hbarPolicy="AS_NEEDED"
+                                    fitToWidth="true"
+                                    hbarPolicy="NEVER"
                                     vbarPolicy="NEVER"
-                                    pannable="true"
-                                    prefViewportHeight="740.0"
+                                    pannable="false"
+                                    prefViewportHeight="850.0"
                                     styleClass="horizontal-games-scroll">
 
                             <content>

@@ -1,11 +1,11 @@
 package org.ies.fenix.client.controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.image.ImageView;
-import javafx.application.Platform;
 import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
@@ -125,8 +125,13 @@ public class NavbarController {
         stageManager.switchScene(FxmlView.UPLOAD_GAME);
     }
 
+    @FXML
+    public void goScriptEditor() {
+        stageManager.switchScene(FxmlView.GUI);
+    }
+
     // ============================================================
-    // LOGOUT
+    // LOGOUT / CLOSE
     // ============================================================
 
     @FXML
