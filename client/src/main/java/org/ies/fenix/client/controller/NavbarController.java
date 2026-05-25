@@ -153,6 +153,7 @@ public class NavbarController {
 
     @FXML
     public void closeApplication() {
+        logout();
         Platform.exit();
     }
 
