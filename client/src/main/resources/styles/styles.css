@@ -321,6 +321,7 @@
 .card-click-wrapper,
 .library-card-click-wrapper {
     -fx-background-color: transparent;
+    -fx-background-radius: 18px;
 }
 
 .card-image-wrapper {
