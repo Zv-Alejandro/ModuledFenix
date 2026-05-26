@@ -12,18 +12,13 @@ import org.ies.fenix.client.config.FxmlView;
 /**
  * Controller for the main application layout.
  *
- * <p>The base layout is the shared structure used by the main screens of the application.
- * It contains:</p>
+ * <p>This controller manages the shared structure used by the main screens of the
+ * application. It is responsible for the global navbar, the central content area
+ * and the global progress bar.</p>
  *
- * <ul>
- *     <li>The global navbar at the top.</li>
- *     <li>A central content area where each screen is injected dynamically.</li>
- *     <li>A global progress bar at the bottom.</li>
- * </ul>
- *
- * <p>This controller is intentionally simple. It should not contain business logic from
- * Marketplace, Library, Profile or Game screens. Its responsibility is only to manage the
- * shared layout.</p>
+ * <p>Business logic from specific screens such as Marketplace, Library, Profile
+ * or Game should not be placed here. This controller only manages the common
+ * visual shell of the application.</p>
  */
 public class BaseLayoutController {
 
@@ -51,11 +46,11 @@ public class BaseLayoutController {
     // ============================================================
 
     /**
-     * Configures the base layout after the FXML has been loaded.
+     * Configures the base layout once the FXML file has been loaded.
      *
-     * <p>The root and content area are allowed to grow as much as the stage allows. This is
-     * important for maximized screens, because injected views may have fixed preferred sizes
-     * in their FXML files.</p>
+     * <p>The root and the content area are allowed to grow as much as the stage
+     * allows. This prevents injected views from staying fixed to their preferred
+     * FXML size when the application window is maximized.</p>
      */
     @FXML
     private void initialize() {
@@ -70,10 +65,9 @@ public class BaseLayoutController {
     /**
      * Replaces the current central content with the given node.
      *
-     * <p>If the injected node is a {@link Region}, it is configured so it can expand to fill
-     * the available space inside the {@link StackPane}. This avoids visual issues where the
-     * application window is maximized but the screen content remains stuck at its preferred
-     * FXML width, leaving an empty area on the right.</p>
+     * <p>If the injected node is a {@link Region}, it is configured to expand
+     * inside the {@link StackPane}. This avoids empty areas when the window is
+     * resized or maximized.</p>
      *
      * @param node screen content to display in the central area
      */
@@ -103,6 +97,9 @@ public class BaseLayoutController {
 
     /**
      * Shows the global progress bar in indeterminate mode.
+     *
+     * <p>This is useful when an operation is running but its exact progress
+     * cannot be calculated.</p>
      */
     public void showProgress() {
         progressBar.setVisible(true);
@@ -131,7 +128,8 @@ public class BaseLayoutController {
     }
 
     /**
-     * Returns the global progress bar in case another controller needs direct access to it.
+     * Returns the global progress bar in case another controller needs to bind
+     * its progress property directly.
      *
      * @return global progress bar
      */
