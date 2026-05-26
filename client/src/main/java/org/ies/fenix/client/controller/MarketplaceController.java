@@ -11,10 +11,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import org.ies.fenix.client.api.SessionManager;
-import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
-import org.ies.fenix.controller.IClientController;
 import org.ies.fenix.controller.IGameController;
 import org.ies.fenix.controller.dto.game.GameResponseDTO;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +36,8 @@ public class MarketplaceController implements Initializable {
     private static final int TAG_COLUMNS = 3;
 
     private static final double MARKETPLACE_CARD_WIDTH = 320.0;
-    private static final double MARKETPLACE_IMAGE_WIDTH = 300.0;
-    private static final double MARKETPLACE_IMAGE_HEIGHT = 150.0;
+    private static final double MARKETPLACE_IMAGE_WIDTH = 320.0;
+    private static final double MARKETPLACE_IMAGE_HEIGHT = 170.0;
 
     private static final double MARKETPLACE_TAG_WIDTH = 98.0;
     private static final double MARKETPLACE_TAG_HEIGHT = 24.0;
@@ -62,18 +61,15 @@ public class MarketplaceController implements Initializable {
     // ============================================================
 
     private final StageManager stageManager;
-    private final IClientController clientApiService;
     private final IGameController gameApiService;
     private final SessionManager sessionManager;
 
     private List<GameResponseDTO> loadedGames = new ArrayList<>();
 
     public MarketplaceController(StageManager stageManager,
-                                 IClientController clientApiService,
                                  IGameController gameApiService,
                                  SessionManager sessionManager) {
         this.stageManager = stageManager;
-        this.clientApiService = clientApiService;
         this.gameApiService = gameApiService;
         this.sessionManager = sessionManager;
     }
@@ -232,29 +228,48 @@ public class MarketplaceController implements Initializable {
 
         return wrapper;
     }
-
     private HBox createImageWrapper(GameResponseDTO game) {
+
         HBox imageWrapper = new HBox();
         imageWrapper.setAlignment(Pos.CENTER);
+
         imageWrapper.setPrefHeight(170.0);
         imageWrapper.setPrefWidth(MARKETPLACE_CARD_WIDTH);
+
         imageWrapper.getStyleClass().add("card-image-wrapper");
 
         ImageView imageView = new ImageView();
+
         imageView.setFitHeight(MARKETPLACE_IMAGE_HEIGHT);
         imageView.setFitWidth(MARKETPLACE_IMAGE_WIDTH);
+
         imageView.setPreserveRatio(false);
+
         imageView.getStyleClass().add("card-image");
 
         loadHorizontalOneIntoImageView(game, imageView);
 
         imageWrapper.getChildren().add(imageView);
 
+        // ============================================================
+        // CLIP REDONDEADO
+        // ============================================================
+
+        Rectangle clip = new Rectangle();
+
+        clip.setWidth(MARKETPLACE_CARD_WIDTH);
+        clip.setHeight(170.0);
+
+        clip.setArcWidth(24);
+        clip.setArcHeight(24);
+
+        imageWrapper.setClip(clip);
+
         return imageWrapper;
     }
 
     private VBox createInfoRow(GameResponseDTO game) {
-        Label titleLabel = new Label(getSafeText(game.getTitle(), "Untitled"));
+        Label titleLabel = new Label(getSafeText(game.getTitle()));
         titleLabel.getStyleClass().add("card-title");
         titleLabel.setWrapText(true);
         titleLabel.setMaxWidth(MARKETPLACE_CARD_WIDTH);
@@ -385,27 +400,6 @@ public class MarketplaceController implements Initializable {
 
         stageManager.openGame(game.getId());
     }
-
-    @FXML
-    void switchProfileScene() {
-        stageManager.switchScene(FxmlView.PROFILE);
-    }
-
-    @FXML
-    void switchToLibraryScene() {
-        stageManager.switchScene(FxmlView.LIBRARY);
-    }
-
-    @FXML
-    void switchToUploadGameScene() {
-        stageManager.switchScene(FxmlView.UPLOAD_GAME);
-    }
-
-    @FXML
-    public void reloadView() {
-        stageManager.reloadCurrentScene();
-    }
-
     // ============================================================
     // HELPERS
     // ============================================================
@@ -414,9 +408,9 @@ public class MarketplaceController implements Initializable {
         return sessionManager.getAuthorizationHeader();
     }
 
-    private String getSafeText(String text, String fallback) {
+    private String getSafeText(String text) {
         if (text == null || text.isBlank()) {
-            return fallback;
+            return "Untitled";
         }
 
         return text;
