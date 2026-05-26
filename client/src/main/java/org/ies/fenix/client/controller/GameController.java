@@ -639,13 +639,22 @@ public class GameController {
     // ============================================================
 
     /**
-     * Launches the selected game if it has already been installed.
+     * Launches the selected game only if it is installed and owned by the current user.
      */
     @FXML
     private void onPlay() {
         if (selectedGameId == null) {
             showError("No game selected", "Please select a game to play.");
             updatePlayButtonState();
+            return;
+        }
+
+        if (!hasPurchased(selectedGameId)) {
+            updatePlayButtonState();
+            showError(
+                    "Game not owned",
+                    "You need to acquire this game before playing it with this account."
+            );
             return;
         }
 
@@ -670,13 +679,29 @@ public class GameController {
         }
     }
 
+    /**
+     * Updates the play button depending on both local installation and current user ownership.
+     */
     private void updatePlayButtonState() {
         if (playButton == null) {
             return;
         }
 
-        boolean canPlay = GameInstallUtils.canLaunchGame(selectedGameId);
+        boolean canPlay = canCurrentUserLaunchGame(selectedGameId);
         playButton.setDisable(!canPlay);
+    }
+
+    /**
+     * Checks whether the current logged user can launch the selected game.
+     *
+     * <p>A game can only be launched when it is installed locally and the current
+     * user owns it according to the database.</p>
+     *
+     * @param gameId game identifier
+     * @return {@code true} if the current user can launch the game
+     */
+    private boolean canCurrentUserLaunchGame(Integer gameId) {
+        return GameInstallUtils.canLaunchGame(gameId) && hasPurchased(gameId);
     }
 
     // ============================================================
@@ -684,6 +709,10 @@ public class GameController {
     // ============================================================
 
     private boolean hasPurchased(Integer gameId) {
+        if (gameId == null || sessionManager.getClientId() == null) {
+            return false;
+        }
+
         Integer clientId = sessionManager.getClientId();
 
         try {
@@ -698,6 +727,7 @@ public class GameController {
             return purchased != null && purchased;
 
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
