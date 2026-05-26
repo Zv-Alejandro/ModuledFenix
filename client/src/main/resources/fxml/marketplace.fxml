@@ -32,7 +32,7 @@
                     styleClass="main-scroll">
 
             <content>
-                <VBox spacing="35.0"
+                <VBox spacing="28.0"
                       fillWidth="true"
                       maxWidth="Infinity"
                       styleClass="content-container">
@@ -41,29 +41,33 @@
                         <Insets top="45.0" right="30.0" bottom="45.0" left="30.0"/>
                     </padding>
 
-                    <!-- LATEST RELEASED SECTION -->
-                    <VBox spacing="18.0"
+                    <!-- MARKETPLACE HEADER -->
+                    <HBox alignment="CENTER_LEFT"
                           maxWidth="Infinity">
 
-                        <HBox alignment="CENTER_LEFT"
-                              maxWidth="Infinity">
+                        <VBox spacing="5.0">
+                            <Label fx:id="marketplaceHeaderTitle"
+                                   text="Latest released"
+                                   styleClass="section-title"/>
 
-                            <VBox spacing="5.0">
-                                <Label text="Latest released"
-                                       styleClass="section-title"/>
+                            <Label fx:id="marketplaceHeaderSubtitle"
+                                   text="New histories to play!"
+                                   styleClass="section-subtitle"/>
+                        </VBox>
 
-                                <Label text="New histories to play!"
-                                       styleClass="section-subtitle"/>
-                            </VBox>
+                        <Region HBox.hgrow="ALWAYS"/>
 
-                            <Region HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="searchField"
+                                   promptText="Search"
+                                   prefWidth="420.0"
+                                   maxWidth="420.0"
+                                   styleClass="search-field"/>
+                    </HBox>
 
-                            <TextField fx:id="searchField"
-                                       promptText="Search"
-                                       prefWidth="420.0"
-                                       maxWidth="420.0"
-                                       styleClass="search-field"/>
-                        </HBox>
+                    <!-- LATEST RELEASED CAROUSEL -->
+                    <VBox fx:id="latestReleasedSection"
+                          spacing="18.0"
+                          maxWidth="Infinity">
 
                         <ScrollPane fitToHeight="true"
                                     fitToWidth="false"
@@ -86,7 +90,9 @@
                     <VBox spacing="18.0"
                           maxWidth="Infinity">
 
-                        <VBox spacing="5.0">
+                        <VBox fx:id="exploreGamesHeader"
+                              spacing="5.0">
+
                             <Label text="Explore games"
                                    styleClass="section-title"/>
 

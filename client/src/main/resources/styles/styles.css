@@ -332,11 +332,10 @@
     -fx-background-radius: 12px;
 
     -fx-min-width: 320px;
-    -fx-pref-width: 320px;
-    -fx-max-width: 320px;
-
     -fx-min-height: 170px;
+    -fx-pref-width: 320px;
     -fx-pref-height: 170px;
+    -fx-max-width: 320px;
     -fx-max-height: 170px;
 }
 

@@ -39,8 +39,8 @@ import java.util.List;
  * <p>The library shows the games acquired by the current user in two ways:
  * a compact list on the left and a visual grid on the right.</p>
  *
- * <p>Installed games can be launched directly from the grid. Non-installed games
- * remain visible but their play button is disabled.</p>
+ * <p>Installed games can be launched directly from the grid only if they also
+ * belong to the current logged user according to the database.</p>
  */
 public class LibraryController {
 
@@ -308,7 +308,7 @@ public class LibraryController {
 
     private Button createPlayButton(LibraryGameDTO game) {
         Button playButton = new Button("  PLAY");
-        boolean canPlay = GameInstallUtils.canLaunchGame(game.getGameId());
+        boolean canPlay = canCurrentUserLaunchGame(game.getGameId());
 
         playButton.setGraphic(new FontIcon(MaterialDesignP.PLAY));
         playButton.setStyle(canPlay ? getPlayButtonStyle() : getDisabledPlayButtonStyle());
@@ -528,6 +528,14 @@ public class LibraryController {
             return;
         }
 
+        if (!hasPurchased(gameId)) {
+            showError(
+                    "Game not owned",
+                    "You need to acquire this game before playing it with this account."
+            );
+            return;
+        }
+
         if (!GameInstallUtils.canLaunchGame(gameId)) {
             showError(
                     "Game not installed",
@@ -544,6 +552,49 @@ public class LibraryController {
                     "Game not installed",
                     "The game executable could not be found. Try downloading it again."
             );
+        }
+    }
+
+    /**
+     * Checks whether the current logged user can launch the given game.
+     *
+     * <p>Although the library only renders games owned by the current user, this
+     * method also checks the database before launching to avoid using a local
+     * installation from another account.</p>
+     *
+     * @param gameId game identifier
+     * @return {@code true} if the game is installed and owned by the current user
+     */
+    private boolean canCurrentUserLaunchGame(Integer gameId) {
+        return GameInstallUtils.canLaunchGame(gameId) && hasPurchased(gameId);
+    }
+
+    /**
+     * Checks whether the current logged user owns the given game.
+     *
+     * @param gameId game identifier
+     * @return {@code true} if the current user owns the game
+     */
+    private boolean hasPurchased(Integer gameId) {
+        if (gameId == null || sessionManager.getClientId() == null) {
+            return false;
+        }
+
+        Integer clientId = sessionManager.getClientId();
+
+        try {
+            ResponseEntity<Boolean> response =
+                    purchaseApiService.hasPurchased(
+                            buildHeader(),
+                            clientId,
+                            gameId
+                    );
+
+            Boolean purchased = response.getBody();
+            return purchased != null && purchased;
+
+        } catch (Exception e) {
+            return false;
         }
     }
 
