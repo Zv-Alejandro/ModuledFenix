@@ -81,7 +81,6 @@ public class MarketplaceController implements Initializable {
     // ============================================================
 
     private final StageManager stageManager;
-    private final IClientController clientApiService;
     private final IGameController gameApiService;
     private final SessionManager sessionManager;
 
@@ -92,11 +91,9 @@ public class MarketplaceController implements Initializable {
     private List<GameResponseDTO> loadedGames = new ArrayList<>();
 
     public MarketplaceController(StageManager stageManager,
-                                 IClientController clientApiService,
                                  IGameController gameApiService,
                                  SessionManager sessionManager) {
         this.stageManager = stageManager;
-        this.clientApiService = clientApiService;
         this.gameApiService = gameApiService;
         this.sessionManager = sessionManager;
     }

@@ -61,7 +61,7 @@ public class Main extends Application {
             }
 
             if (clazz == MarketplaceController.class) {
-                return new MarketplaceController(stageManager, clientApiService, gamesApiService, sessionManager);
+                return new MarketplaceController(stageManager, gamesApiService, sessionManager);
             }
 
             if (clazz == LibraryController.class) {
