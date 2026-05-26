@@ -569,7 +569,7 @@ public class GameService {
      * @return list of matching game DTOs
      */
     public List<GameResponseDTO> getGames(GameSearchDTO dto) {
-        java.util.List<Game> games;
+        List<Game> games;
 
         if (dto.getTitle() != null && !dto.getTitle().isEmpty())
             games = gameRepository.findByTitleContainingIgnoreCase(dto.getTitle());
@@ -654,7 +654,7 @@ public class GameService {
             dto.setTags(List.of());
         }
 
-        dto.setTeasers(java.util.List.of());
+        dto.setTeasers(List.of());
 
         return dto;
     }
