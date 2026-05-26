@@ -20,6 +20,13 @@ import java.util.ResourceBundle;
 
 import static org.ies.fenix.client.utils.EmailValidator.isValidEmail;
 
+/**
+ * Controller for the first step of the user registration flow.
+ *
+ * <p>This screen asks the user for an email address before moving to the
+ * account creation form. The email is validated locally and then passed to
+ * {@link ClientController}, where the rest of the registration data is entered.</p>
+ */
 public class EmailFormController implements Initializable {
 
     // ============================================================
@@ -64,8 +71,18 @@ public class EmailFormController implements Initializable {
     // ============================================================
 
     private final StageManager stageManager;
+
+    // ============================================================
+    // STATE
+    // ============================================================
+
     private final StringProperty errorProperty = new SimpleStringProperty();
 
+    /**
+     * Creates the controller with the required navigation manager.
+     *
+     * @param stageManager application scene manager
+     */
     public EmailFormController(StageManager stageManager) {
         this.stageManager = stageManager;
     }
@@ -74,6 +91,13 @@ public class EmailFormController implements Initializable {
     // INITIALIZATION
     // ============================================================
 
+    /**
+     * Configures bindings, listeners and static image properties after the FXML
+     * has been loaded.
+     *
+     * @param location  FXML location
+     * @param resources localization resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         configureErrorLabel();
@@ -81,16 +105,28 @@ public class EmailFormController implements Initializable {
         configureImages();
     }
 
+    /**
+     * Binds the error label to the internal error property.
+     *
+     * <p>The label is only visible and managed when there is an active error
+     * message. This avoids leaving empty space in the layout.</p>
+     */
     private void configureErrorLabel() {
         clientErrorLabel.textProperty().bind(errorProperty);
         clientErrorLabel.visibleProperty().bind(errorProperty.isNotEmpty());
         clientErrorLabel.managedProperty().bind(clientErrorLabel.visibleProperty());
     }
 
+    /**
+     * Clears the current error as soon as the user edits the email field.
+     */
     private void configureErrorResetListener() {
         emailTextField.textProperty().addListener((observable, oldText, newText) -> clearError());
     }
 
+    /**
+     * Applies static configuration to the decorative images of the screen.
+     */
     private void configureImages() {
         logoImage.setFitWidth(294.0);
         logoImage.setSmooth(true);
@@ -103,8 +139,14 @@ public class EmailFormController implements Initializable {
     // NAVIGATION
     // ============================================================
 
+    /**
+     * Validates the email and opens the user creation screen.
+     *
+     * <p>If the email is valid, it is passed to the next controller so the user
+     * does not need to write it again.</p>
+     */
     @FXML
-    void switchToUserCreateView() {
+    private void switchToUserCreateView() {
         String email = getEmailText();
 
         if (!isValidEmail(email)) {
@@ -118,16 +160,23 @@ public class EmailFormController implements Initializable {
         controller.setEmail(email);
     }
 
+    /**
+     * Returns to the login screen.
+     */
     @FXML
-    void switchLogInView() {
+    private void switchLogInView() {
         stageManager.switchScene(FxmlView.LOGIN);
     }
-
 
     // ============================================================
     // HELPERS
     // ============================================================
 
+    /**
+     * Returns the current email text without surrounding blank spaces.
+     *
+     * @return trimmed email text, or an empty string if the field is empty
+     */
     private String getEmailText() {
         if (emailTextField.getText() == null) {
             return "";
@@ -136,10 +185,18 @@ public class EmailFormController implements Initializable {
         return emailTextField.getText().trim();
     }
 
+    /**
+     * Shows an error message in the form.
+     *
+     * @param message error message to display
+     */
     private void showError(String message) {
         errorProperty.set(message);
     }
 
+    /**
+     * Clears the current form error.
+     */
     private void clearError() {
         errorProperty.set("");
     }

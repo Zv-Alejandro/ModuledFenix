@@ -11,9 +11,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import org.ies.fenix.client.api.SessionManager;
+import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
+import org.ies.fenix.controller.IClientController;
 import org.ies.fenix.controller.IGameController;
 import org.ies.fenix.controller.dto.game.GameResponseDTO;
 import org.springframework.http.ResponseEntity;
@@ -88,6 +89,9 @@ public class MarketplaceController implements Initializable {
     // MARKETPLACE DATA
     // ============================================================
 
+    /**
+     * Loads all games from the backend and renders the marketplace sections.
+     */
     private void loadMarketplaceGames() {
         try {
             ResponseEntity<List<GameResponseDTO>> response =
@@ -123,6 +127,9 @@ public class MarketplaceController implements Initializable {
     // SEARCH
     // ============================================================
 
+    /**
+     * Re-renders marketplace sections whenever the user changes the search text.
+     */
     private void configureSearch() {
         if (searchField == null) {
             return;
@@ -228,42 +235,23 @@ public class MarketplaceController implements Initializable {
 
         return wrapper;
     }
-    private HBox createImageWrapper(GameResponseDTO game) {
 
+    private HBox createImageWrapper(GameResponseDTO game) {
         HBox imageWrapper = new HBox();
         imageWrapper.setAlignment(Pos.CENTER);
-
         imageWrapper.setPrefHeight(170.0);
         imageWrapper.setPrefWidth(MARKETPLACE_CARD_WIDTH);
-
         imageWrapper.getStyleClass().add("card-image-wrapper");
 
         ImageView imageView = new ImageView();
-
         imageView.setFitHeight(MARKETPLACE_IMAGE_HEIGHT);
         imageView.setFitWidth(MARKETPLACE_IMAGE_WIDTH);
-
         imageView.setPreserveRatio(false);
-
         imageView.getStyleClass().add("card-image");
 
         loadHorizontalOneIntoImageView(game, imageView);
 
         imageWrapper.getChildren().add(imageView);
-
-        // ============================================================
-        // CLIP REDONDEADO
-        // ============================================================
-
-        Rectangle clip = new Rectangle();
-
-        clip.setWidth(MARKETPLACE_CARD_WIDTH);
-        clip.setHeight(170.0);
-
-        clip.setArcWidth(24);
-        clip.setArcHeight(24);
-
-        imageWrapper.setClip(clip);
 
         return imageWrapper;
     }

@@ -10,6 +10,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -46,7 +47,25 @@ import java.util.zip.ZipInputStream;
 import static org.ies.fenix.client.utils.ImageUtils.initialConfig;
 import static org.ies.fenix.client.utils.ImageUtils.setCoverImage;
 
+/**
+ * Controller for the game detail screen.
+ *
+ * <p>This screen shows the selected game information, its banner, tags and
+ * actions related to purchase, download and play.</p>
+ *
+ * <p>The controller also handles ZIP extraction after download and stores the
+ * installation path so the game can be launched later.</p>
+ */
 public class GameController {
+
+    private static final int MAX_VISIBLE_TAGS = 6;
+    private static final int TAGS_PER_ROW = 3;
+
+    private static final double TAG_WIDTH = 105.0;
+    private static final double TAG_HEIGHT = 26.0;
+    private static final double TAG_ROW_SPACING = 8.0;
+
+    private static final int DOWNLOAD_BUFFER_SIZE = 8192;
 
     // ============================================================
     // FXML FIELDS
@@ -105,9 +124,23 @@ public class GameController {
     private final RestClient restClient;
     private final IPurchaseController purchaseApiService;
 
+    // ============================================================
+    // STATE
+    // ============================================================
+
     private Integer selectedGameId;
     private byte[] currentBannerBytes;
 
+    /**
+     * Creates the game detail controller.
+     *
+     * @param stageManager       application scene manager
+     * @param clientApiService   client API service
+     * @param gameApiService     game API service
+     * @param sessionManager     current user session manager
+     * @param restClient         REST client used for file download
+     * @param purchaseApiService purchase API service
+     */
     public GameController(StageManager stageManager,
                           IClientController clientApiService,
                           IGameController gameApiService,
@@ -126,6 +159,9 @@ public class GameController {
     // INITIALIZATION
     // ============================================================
 
+    /**
+     * Initializes navbar user data, banner behavior and play button state.
+     */
     @FXML
     private void initialize() {
         initialConfig(clientApiService, sessionManager, username, topProfileImage, topProfileIcon);
@@ -146,6 +182,9 @@ public class GameController {
         bannerWrapper.heightProperty().addListener((observable, oldValue, newValue) -> refreshBannerCover());
     }
 
+    /**
+     * Clips the banner image to the banner wrapper bounds.
+     */
     private void configureBannerClip() {
         Rectangle clip = new Rectangle();
 
@@ -159,6 +198,11 @@ public class GameController {
     // SELECTED GAME
     // ============================================================
 
+    /**
+     * Sets the selected game and loads its information from the backend.
+     *
+     * @param selectedGameId selected game identifier
+     */
     public void setSelectedGameId(Integer selectedGameId) {
         this.selectedGameId = selectedGameId;
         loadSelectedGame();
@@ -221,13 +265,13 @@ public class GameController {
         HBox secondRow = createTagRow();
 
         List<String> visibleTags = tags.stream()
-                .limit(6)
+                .limit(MAX_VISIBLE_TAGS)
                 .toList();
 
         for (int i = 0; i < visibleTags.size(); i++) {
             Label tagLabel = createTagLabel(visibleTags.get(i));
 
-            if (i < 3) {
+            if (i < TAGS_PER_ROW) {
                 firstRow.getChildren().add(tagLabel);
             } else {
                 secondRow.getChildren().add(tagLabel);
@@ -242,7 +286,7 @@ public class GameController {
     }
 
     private HBox createTagRow() {
-        HBox row = new HBox(8.0);
+        HBox row = new HBox(TAG_ROW_SPACING);
         row.setAlignment(Pos.CENTER_LEFT);
         return row;
     }
@@ -251,16 +295,16 @@ public class GameController {
         Label tagLabel = new Label(text);
         tagLabel.getStyleClass().addAll("tag", "game-tag");
 
-        tagLabel.setMinWidth(105.0);
-        tagLabel.setPrefWidth(105.0);
-        tagLabel.setMaxWidth(105.0);
+        tagLabel.setMinWidth(TAG_WIDTH);
+        tagLabel.setPrefWidth(TAG_WIDTH);
+        tagLabel.setMaxWidth(TAG_WIDTH);
 
-        tagLabel.setMinHeight(26.0);
-        tagLabel.setPrefHeight(26.0);
-        tagLabel.setMaxHeight(26.0);
+        tagLabel.setMinHeight(TAG_HEIGHT);
+        tagLabel.setPrefHeight(TAG_HEIGHT);
+        tagLabel.setMaxHeight(TAG_HEIGHT);
 
         tagLabel.setAlignment(Pos.CENTER);
-        tagLabel.setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
+        tagLabel.setTextOverrun(OverrunStyle.ELLIPSIS);
         tagLabel.setWrapText(false);
 
         return tagLabel;
@@ -300,6 +344,9 @@ public class GameController {
                 && response.getBody().length > 0;
     }
 
+    /**
+     * Recalculates the banner image so it covers the available banner area.
+     */
     private void refreshBannerCover() {
         if (currentBannerBytes == null || currentBannerBytes.length == 0) {
             return;
@@ -336,6 +383,12 @@ public class GameController {
     // DOWNLOAD
     // ============================================================
 
+    /**
+     * Downloads the selected game.
+     *
+     * <p>If the user has not purchased the game yet, the controller asks for
+     * confirmation and creates the purchase before requesting the download.</p>
+     */
     @FXML
     private void onDownload() {
         try {
@@ -433,6 +486,9 @@ public class GameController {
         return filename;
     }
 
+    /**
+     * Starts the download task and binds it to the global progress bar.
+     */
     private void startDownload(Resource resource, File target) {
         BaseLayoutController base = stageManager.getBaseLayoutController();
 
@@ -465,6 +521,12 @@ public class GameController {
         new Thread(downloadTask).start();
     }
 
+    /**
+     * Creates the background task that writes the downloaded file to disk.
+     *
+     * <p>If the downloaded file is a ZIP, it is extracted and its installation
+     * path is stored for later launch.</p>
+     */
     private Task<Void> createDownloadTask(Resource resource, File target, Integer gameId) {
         return new Task<>() {
             @Override
@@ -474,7 +536,7 @@ public class GameController {
                 try (InputStream in = resource.getInputStream();
                      OutputStream out = new FileOutputStream(target)) {
 
-                    byte[] buffer = new byte[8192];
+                    byte[] buffer = new byte[DOWNLOAD_BUFFER_SIZE];
                     long totalRead = 0;
                     int read;
 
@@ -504,6 +566,16 @@ public class GameController {
                 && file.getName().toLowerCase().endsWith(".zip");
     }
 
+    /**
+     * Extracts a ZIP file into a folder with the same name as the ZIP.
+     *
+     * <p>The normalized target path is checked before extracting each entry to
+     * avoid path traversal problems.</p>
+     *
+     * @param zipFile ZIP file to extract
+     * @return extraction directory
+     * @throws Exception if the file cannot be extracted
+     */
     private Path unzipFile(File zipFile) throws Exception {
         Path outputDirectory = getExtractionDirectory(zipFile);
 
@@ -566,6 +638,9 @@ public class GameController {
     // PLAY
     // ============================================================
 
+    /**
+     * Launches the selected game if it has already been installed.
+     */
     @FXML
     private void onPlay() {
         if (selectedGameId == null) {
@@ -627,6 +702,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Asks the user to confirm the purchase before downloading a game.
+     */
     private boolean showPurchaseConfirmation() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Acquire game");
@@ -696,22 +774,22 @@ public class GameController {
     // ============================================================
 
     @FXML
-    void switchProfileScene() {
+    private void switchProfileScene() {
         stageManager.switchScene(FxmlView.PROFILE);
     }
 
     @FXML
-    void switchToMarketplaceScene() {
+    private void switchToMarketplaceScene() {
         stageManager.switchScene(FxmlView.MARKETPLACE);
     }
 
     @FXML
-    void switchToLibraryScene() {
+    private void switchToLibraryScene() {
         stageManager.switchScene(FxmlView.LIBRARY);
     }
 
     @FXML
-    void switchToUploadGameScene() {
+    private void switchToUploadGameScene() {
         stageManager.switchScene(FxmlView.UPLOAD_GAME);
     }
 

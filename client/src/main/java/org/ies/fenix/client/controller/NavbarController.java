@@ -14,6 +14,13 @@ import org.ies.fenix.controller.IClientController;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.springframework.http.ResponseEntity;
 
+/**
+ * Controller for the global navigation bar.
+ *
+ * <p>The navbar is shared by the main application screens and provides access
+ * to navigation history, main sections, profile information, logout and app
+ * closing.</p>
+ */
 public class NavbarController {
 
     private static final String TAB_ACTIVE = "tab-active";
@@ -52,6 +59,13 @@ public class NavbarController {
     private final IClientController clientApiService;
     private final SessionManager sessionManager;
 
+    /**
+     * Creates the navbar controller with its required services.
+     *
+     * @param stageManager     application scene manager
+     * @param clientApiService client API service
+     * @param sessionManager   current user session manager
+     */
     public NavbarController(StageManager stageManager,
                             IClientController clientApiService,
                             SessionManager sessionManager) {
@@ -64,6 +78,9 @@ public class NavbarController {
     // INITIALIZATION
     // ============================================================
 
+    /**
+     * Initializes the navbar user data and history buttons.
+     */
     @FXML
     public void initialize() {
         ImageUtils.initialConfig(
@@ -81,16 +98,25 @@ public class NavbarController {
     // NAVIGATION HISTORY
     // ============================================================
 
+    /**
+     * Navigates to the previous screen stored in the navbar history.
+     */
     @FXML
     public void goBackFromNavbar() {
         stageManager.goBackFromNavbar();
     }
 
+    /**
+     * Navigates to the next screen stored in the navbar history.
+     */
     @FXML
     public void goForwardFromNavbar() {
         stageManager.goForwardFromNavbar();
     }
 
+    /**
+     * Enables or disables the history buttons depending on the current history state.
+     */
     private void updateHistoryButtons() {
         if (backButton != null) {
             backButton.setDisable(!stageManager.canGoBackFromNavbar());
@@ -134,6 +160,9 @@ public class NavbarController {
     // LOGOUT / CLOSE
     // ============================================================
 
+    /**
+     * Closes the current server session if possible, then clears the local session.
+     */
     @FXML
     public void logout() {
         requestLogOut();
@@ -157,12 +186,18 @@ public class NavbarController {
         }
     }
 
+    /**
+     * Logs out and closes the JavaFX application.
+     */
     @FXML
     public void closeApplication() {
         requestLogOut();
         Platform.exit();
     }
 
+    /**
+     * Clears local session data and returns to the login screen.
+     */
     private void closeLocalSession() {
         sessionManager.clearSession();
         stageManager.clearNavbarHistory();
@@ -173,6 +208,11 @@ public class NavbarController {
     // ACTIVE TAB
     // ============================================================
 
+    /**
+     * Updates the visual state of the navbar tabs.
+     *
+     * @param view currently active view
+     */
     public void setActiveTab(FxmlView view) {
         clearTabStyles();
 
@@ -225,10 +265,20 @@ public class NavbarController {
     // GETTERS
     // ============================================================
 
+    /**
+     * Returns the navbar profile image.
+     *
+     * @return top profile image view
+     */
     public ImageView getTopProfileImage() {
         return topProfileImage;
     }
 
+    /**
+     * Returns the fallback profile icon shown when the user has no profile image.
+     *
+     * @return top profile icon
+     */
     public FontIcon getTopProfileIcon() {
         return topProfileIcon;
     }
