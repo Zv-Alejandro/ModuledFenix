@@ -31,6 +31,7 @@ public class GameService {
     @Autowired private ClientService clientService;
 
     private static final String BASE_UPLOAD_DIR = Paths.get("").toAbsolutePath() + "/uploads/games/";
+    private static final int MIME_DETECTION_BYTES = 8192;
 
 
     // ============================================================
@@ -160,33 +161,41 @@ public class GameService {
     private String saveGameFile(Game game, MultipartFile file) {
         validateMime(file,
                 "application/zip",
-                "application/x-zip-compressed",
-                "application/octet-stream"
+                "application/x-zip-compressed"
         );
 
         return saveFile(
                 BASE_UPLOAD_DIR + game.getId() + "/files",
                 file,
-                "zip"
+                "zip",
+                false
         );
     }
 
     private String saveImage(Game game, MultipartFile file, String folder) {
-        validateMimeStartsWith(file, "image/");
+        String extension = getJavaFxCompatibleImageExtension(file);
+
         return saveFile(
                 BASE_UPLOAD_DIR + game.getId() + "/" + folder,
                 file,
-                "png"
+                extension,
+                true
         );
     }
 
-    private String saveFile(String folderPath, MultipartFile file, String defaultExt) {
+    private String saveFile(String folderPath,
+                            MultipartFile file,
+                            String defaultExt,
+                            boolean forceDefaultExt) {
         try {
             File folder = new File(folderPath);
             if (!folder.exists()) folder.mkdirs();
 
             String key = UUID.randomUUID().toString().replace("-", "");
-            String ext = FileUtils.getExtension(file.getOriginalFilename());
+            String ext = forceDefaultExt
+                    ? defaultExt
+                    : FileUtils.getExtension(file.getOriginalFilename());
+
             if (ext.isEmpty()) ext = defaultExt;
 
             File target = new File(folder, key + "." + ext);
@@ -199,21 +208,58 @@ public class GameService {
         }
     }
 
+    private String getJavaFxCompatibleImageExtension(MultipartFile file) {
+        try {
+            String detected = FileUtils.getContentType(
+                    readHeaderBytes(file),
+                    file.getOriginalFilename()
+            );
+
+            return switch (detected) {
+                case "image/png" -> "png";
+                case "image/jpeg" -> "jpg";
+                case "image/gif" -> "gif";
+                case "image/bmp", "image/x-ms-bmp" -> "bmp";
+                default -> throw new IllegalArgumentException(
+                        "Invalid image type: " + detected + ". Allowed formats: PNG, JPG, JPEG, GIF and BMP"
+                );
+            };
+        } catch (IOException e) {
+            throw new RuntimeException("Error validating image type", e);
+        }
+    }
+
     private void validateMime(MultipartFile file, String... allowed) {
         try {
-            String detected = FileUtils.getContentType(file.getBytes(), file.getOriginalFilename());
-            if (Arrays.stream(allowed).noneMatch(detected::equals))
+            String detected = FileUtils.getContentType(
+                    readHeaderBytes(file),
+                    file.getOriginalFilename()
+            );
+
+            if (Arrays.stream(allowed).noneMatch(detected::equals)) {
                 throw new IllegalArgumentException("Invalid file type: " + detected);
+            }
         } catch (IOException e) {
             throw new RuntimeException("Error validating file type", e);
         }
     }
 
+    private byte[] readHeaderBytes(MultipartFile file) throws IOException {
+        try (var inputStream = file.getInputStream()) {
+            return inputStream.readNBytes(MIME_DETECTION_BYTES);
+        }
+    }
+
     private void validateMimeStartsWith(MultipartFile file, String prefix) {
         try {
-            String detected = FileUtils.getContentType(file.getBytes(), file.getOriginalFilename());
-            if (!detected.startsWith(prefix))
+            String detected = FileUtils.getContentType(
+                    readHeaderBytes(file),
+                    file.getOriginalFilename()
+            );
+
+            if (!detected.startsWith(prefix)) {
                 throw new IllegalArgumentException("Invalid image type: " + detected);
+            }
         } catch (IOException e) {
             throw new RuntimeException("Error validating image type", e);
         }

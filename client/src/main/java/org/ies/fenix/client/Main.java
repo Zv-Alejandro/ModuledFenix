@@ -77,7 +77,7 @@ public class Main extends Application {
             }
 
             if (clazz == UploadGameController.class) {
-                return new UploadGameController(stageManager, gamesApiService, tagApiService, sessionManager, restClient);
+                return new UploadGameController(stageManager, tagApiService, sessionManager, restClient);
             }
 
             if (clazz == BaseLayoutController.class) {

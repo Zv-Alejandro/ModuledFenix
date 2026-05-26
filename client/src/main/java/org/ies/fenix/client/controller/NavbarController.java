@@ -136,6 +136,11 @@ public class NavbarController {
 
     @FXML
     public void logout() {
+        requestLogOut();
+        closeLocalSession();
+    }
+
+    public void requestLogOut() {
         try {
             String authorization = sessionManager.getAuthorizationHeader();
 
@@ -144,12 +149,8 @@ public class NavbarController {
 
                 if (!response.getStatusCode().is2xxSuccessful()) {
                     showError("Logout failed", "The server could not close your session.");
-                    return;
                 }
             }
-
-            closeLocalSession();
-
         } catch (Exception e) {
             e.printStackTrace();
             showError("Logout failed", "There was an error closing your session.");
@@ -158,7 +159,7 @@ public class NavbarController {
 
     @FXML
     public void closeApplication() {
-        logout();
+        requestLogOut();
         Platform.exit();
     }
 
