@@ -17,6 +17,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
@@ -46,8 +47,8 @@ public class LibraryController {
     private static final int MAX_COLUMNS = 4;
 
     private static final double LEFT_LOGO_SIZE = 36.0;
-    private static final double COVER_WIDTH = 170.0;
-    private static final double COVER_HEIGHT = 245.0;
+    private static final double COVER_WIDTH = 210.0;
+    private static final double COVER_HEIGHT = 285.0;
 
     // ============================================================
     // FXML FIELDS
@@ -246,6 +247,10 @@ public class LibraryController {
     private StackPane createLibraryCard(LibraryGameDTO game) {
         StackPane cardWrapper = new StackPane();
         cardWrapper.getStyleClass().add("library-card-click-wrapper");
+        Rectangle clip = new Rectangle(COVER_WIDTH, COVER_HEIGHT);
+        clip.setArcWidth(24);
+        clip.setArcHeight(24);
+        cardWrapper.setClip(clip);
 
         VBox card = new VBox();
         card.getStyleClass().add("library-card");
