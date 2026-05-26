@@ -11,9 +11,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -43,9 +43,21 @@ import java.util.ResourceBundle;
 import static org.ies.fenix.client.utils.ImageUtils.setAvatar;
 import static org.ies.fenix.client.utils.ImageUtils.setCoverImage;
 
+/**
+ * Controller for the user profile screen.
+ *
+ * <p>This screen displays the current user's account information, biography,
+ * profile picture, activity counters and games published by the user.</p>
+ *
+ * <p>It also allows the user to update their bio and upload a profile image.</p>
+ */
 public class ProfileController implements Initializable {
 
     private static final int CREATED_GAMES_COLUMNS = 3;
+    private static final int PROFILE_IMAGE_SIZE = 180;
+    private static final int NAVBAR_PROFILE_IMAGE_SIZE = 40;
+    private static final int CREATED_GAME_LOGO_SIZE = 72;
+    private static final int CREATED_GAME_LOGO_RADIUS = 36;
 
     // ============================================================
     // FXML FIELDS
@@ -88,6 +100,15 @@ public class ProfileController implements Initializable {
     private final SessionManager sessionManager;
     private final IPurchaseController purchaseApiService;
 
+    /**
+     * Creates the profile controller.
+     *
+     * @param stageManager       application scene manager
+     * @param clientApiService   client API service
+     * @param gameApiService     game API service
+     * @param sessionManager     current user session manager
+     * @param purchaseApiService purchase API service
+     */
     public ProfileController(StageManager stageManager,
                              IClientController clientApiService,
                              IGameController gameApiService,
@@ -104,6 +125,12 @@ public class ProfileController implements Initializable {
     // INITIALIZATION
     // ============================================================
 
+    /**
+     * Loads all profile data once the FXML has been initialized.
+     *
+     * @param location  FXML location
+     * @param resources localization resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadClientInfo();
@@ -117,6 +144,10 @@ public class ProfileController implements Initializable {
     // PROFILE DATA
     // ============================================================
 
+    /**
+     * Loads basic client information such as username, email, password mask
+     * and created games count.
+     */
     private void loadClientInfo() {
         try {
             ResponseEntity<ClientInfoDTO> response = clientApiService.getClientInfo(buildHeader());
@@ -137,6 +168,9 @@ public class ProfileController implements Initializable {
         }
     }
 
+    /**
+     * Loads the current user's biography.
+     */
     private void loadBio() {
         try {
             ResponseEntity<String> response = clientApiService.getBio(buildHeader());
@@ -150,6 +184,9 @@ public class ProfileController implements Initializable {
         }
     }
 
+    /**
+     * Loads the profile image if the user has uploaded one.
+     */
     private void loadProfileImage() {
         try {
             ResponseEntity<byte[]> response = clientApiService.getProfileImage(buildHeader());
@@ -158,7 +195,7 @@ public class ProfileController implements Initializable {
                     && response.getBody() != null
                     && response.getBody().length > 0) {
 
-                setCoverImage(response.getBody(), profileImage, 180);
+                setCoverImage(response.getBody(), profileImage, PROFILE_IMAGE_SIZE);
                 profileIcon.setVisible(false);
             }
 
@@ -167,6 +204,9 @@ public class ProfileController implements Initializable {
         }
     }
 
+    /**
+     * Loads the amount of games acquired by the current user.
+     */
     private void loadGamesAcquiredCount() {
         try {
             Integer clientId = sessionManager.getClientId();
@@ -187,6 +227,9 @@ public class ProfileController implements Initializable {
         }
     }
 
+    /**
+     * Loads and renders the games published by the current user.
+     */
     private void loadCreatedGames() {
         createdGamesContainer.getChildren().clear();
 
@@ -208,23 +251,7 @@ public class ProfileController implements Initializable {
                 return;
             }
 
-            int col = 0;
-            int row = 0;
-
-            for (GameResponseDTO game : games) {
-                VBox card = createCreatedGameCard(game);
-
-                createdGamesContainer.add(card, col, row);
-                GridPane.setHgrow(card, Priority.ALWAYS);
-                GridPane.setVgrow(card, Priority.NEVER);
-
-                col++;
-
-                if (col == CREATED_GAMES_COLUMNS) {
-                    col = 0;
-                    row++;
-                }
-            }
+            renderCreatedGames(games);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -232,6 +259,34 @@ public class ProfileController implements Initializable {
         }
     }
 
+    /**
+     * Places published game cards in a fixed-column grid.
+     *
+     * @param games games published by the current user
+     */
+    private void renderCreatedGames(List<GameResponseDTO> games) {
+        int col = 0;
+        int row = 0;
+
+        for (GameResponseDTO game : games) {
+            VBox card = createCreatedGameCard(game);
+
+            createdGamesContainer.add(card, col, row);
+            GridPane.setHgrow(card, Priority.ALWAYS);
+            GridPane.setVgrow(card, Priority.NEVER);
+
+            col++;
+
+            if (col == CREATED_GAMES_COLUMNS) {
+                col = 0;
+                row++;
+            }
+        }
+    }
+
+    /**
+     * Shows a message when the user has not published any games.
+     */
     private void showEmptyCreatedGamesMessage() {
         Label emptyLabel = new Label("You have not published any games yet.");
         emptyLabel.setWrapText(true);
@@ -243,6 +298,10 @@ public class ProfileController implements Initializable {
         GridPane.setColumnSpan(emptyLabel, CREATED_GAMES_COLUMNS);
         GridPane.setHgrow(emptyLabel, Priority.ALWAYS);
     }
+
+    // ============================================================
+    // CREATED GAME CARDS
+    // ============================================================
 
     private VBox createCreatedGameCard(GameResponseDTO game) {
         VBox card = new VBox(12);
@@ -270,12 +329,16 @@ public class ProfileController implements Initializable {
         wrapper.getStyleClass().add("profile-created-game-logo-wrapper");
 
         ImageView logo = new ImageView();
-        logo.setFitWidth(72);
-        logo.setFitHeight(72);
+        logo.setFitWidth(CREATED_GAME_LOGO_SIZE);
+        logo.setFitHeight(CREATED_GAME_LOGO_SIZE);
         logo.setPreserveRatio(false);
         logo.setSmooth(true);
 
-        Circle clip = new Circle(36, 36, 36);
+        Circle clip = new Circle(
+                CREATED_GAME_LOGO_RADIUS,
+                CREATED_GAME_LOGO_RADIUS,
+                CREATED_GAME_LOGO_RADIUS
+        );
         logo.setClip(clip);
 
         try {
@@ -329,6 +392,9 @@ public class ProfileController implements Initializable {
     // PROFILE ACTIONS
     // ============================================================
 
+    /**
+     * Updates the current user's biography and reloads the profile screen.
+     */
     @FXML
     public void updateProfileBio() {
         try {
@@ -347,6 +413,9 @@ public class ProfileController implements Initializable {
         }
     }
 
+    /**
+     * Lets the user choose and upload a new profile picture.
+     */
     @FXML
     public void uploadProfilePicture() {
         File selectedFile = chooseProfileImage();
@@ -402,6 +471,10 @@ public class ProfileController implements Initializable {
         return clientApiService.uploadProfilePicture(buildHeader(), dto);
     }
 
+    /**
+     * Reloads the profile image after a successful upload and updates the navbar
+     * avatar as well.
+     */
     private void refreshProfileImage() {
         ResponseEntity<byte[]> response = clientApiService.getProfileImage(buildHeader());
 
@@ -413,7 +486,7 @@ public class ProfileController implements Initializable {
 
         byte[] imageBytes = response.getBody();
 
-        setCoverImage(imageBytes, profileImage, 180);
+        setCoverImage(imageBytes, profileImage, PROFILE_IMAGE_SIZE);
         profileIcon.setVisible(false);
 
         NavbarController navbar = stageManager
@@ -424,7 +497,7 @@ public class ProfileController implements Initializable {
                 imageBytes,
                 navbar.getTopProfileImage(),
                 navbar.getTopProfileIcon(),
-                40
+                NAVBAR_PROFILE_IMAGE_SIZE
         );
 
         System.out.println("profile picture updated");
@@ -435,17 +508,17 @@ public class ProfileController implements Initializable {
     // ============================================================
 
     @FXML
-    void switchLibraryScene() {
+    private void switchLibraryScene() {
         stageManager.switchScene(FxmlView.LIBRARY);
     }
 
     @FXML
-    void switchToMarketplaceScene() {
+    private void switchToMarketplaceScene() {
         stageManager.switchScene(FxmlView.MARKETPLACE);
     }
 
     @FXML
-    void switchToUploadGameScene() {
+    private void switchToUploadGameScene() {
         stageManager.switchScene(FxmlView.UPLOAD_GAME);
     }
 

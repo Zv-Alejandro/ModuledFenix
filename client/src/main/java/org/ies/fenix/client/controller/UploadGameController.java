@@ -1,22 +1,21 @@
 package org.ies.fenix.client.controller;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
-import javafx.stage.FileChooser;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.kordamp.ikonli.javafx.FontIcon;
+import javafx.stage.FileChooser;
 import org.ies.fenix.client.api.SessionManager;
 import org.ies.fenix.client.config.FxmlView;
 import org.ies.fenix.client.config.StageManager;
@@ -24,6 +23,7 @@ import org.ies.fenix.client.utils.ImageUtils;
 import org.ies.fenix.controller.IGameController;
 import org.ies.fenix.controller.ITagController;
 import org.ies.fenix.controller.dto.game.GameResponseDTO;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +36,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Controller for the game upload screen.
+ *
+ * <p>This controller lets a creator publish a new game by selecting the game ZIP,
+ * logo image, optional preview images and tags. The final request is sent as a
+ * multipart upload to the backend.</p>
+ */
 public class UploadGameController {
 
     private static final String DEFAULT_PRICE = "0";
@@ -115,6 +122,14 @@ public class UploadGameController {
     private File selectedHorizontalImageOne;
     private File selectedHorizontalImageTwo;
 
+    /**
+     * Creates the upload game controller.
+     *
+     * @param stageManager   application scene manager
+     * @param tagApiService  tag API service
+     * @param sessionManager current user session manager
+     * @param restClient     REST client used for multipart upload
+     */
     public UploadGameController(StageManager stageManager,
                                 ITagController tagApiService,
                                 SessionManager sessionManager,
@@ -126,9 +141,12 @@ public class UploadGameController {
     }
 
     // ============================================================
-    // INITIALIZE
+    // INITIALIZATION
     // ============================================================
 
+    /**
+     * Initializes image previews, loads tags and updates the selected tag label.
+     */
     @FXML
     private void initialize() {
         configureImageViews();
@@ -154,6 +172,9 @@ public class UploadGameController {
     // TAGS
     // ============================================================
 
+    /**
+     * Loads available tags from the database and renders them as selectable chips.
+     */
     private void loadAvailableTags() {
         tagsContainer.getChildren().clear();
         selectedTags.clear();
@@ -196,6 +217,12 @@ public class UploadGameController {
         }
     }
 
+    /**
+     * Adds or removes a tag from the selected tag set.
+     *
+     * <p>Only existing database tags are allowed, and the number of selected tags
+     * is limited to {@link #MAX_SELECTED_TAGS}.</p>
+     */
     private void handleTagSelection(ToggleButton tagButton, String tag) {
         if (!availableTags.contains(tag)) {
             tagButton.setSelected(false);
@@ -242,6 +269,9 @@ public class UploadGameController {
         stageManager.goBack();
     }
 
+    /**
+     * Validates the upload form and sends the game data to the backend.
+     */
     @FXML
     private void submitGame() {
         try {
@@ -305,6 +335,11 @@ public class UploadGameController {
     // UPLOAD
     // ============================================================
 
+    /**
+     * Builds the multipart body used to publish a game.
+     *
+     * @return multipart request body
+     */
     private MultiValueMap<String, Object> buildUploadBody() {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 
