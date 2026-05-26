@@ -295,9 +295,7 @@ public class GameService {
      * @throws IllegalArgumentException if the uploaded file is not a supported ZIP type
      */
     private String saveGameFile(Game game, MultipartFile file) {
-        validateMime(file,
-                "application/zip",
-                "application/x-zip-compressed"
+        validateMime(file
         );
 
         return saveFile(
@@ -406,19 +404,18 @@ public class GameService {
      * loading large files completely into memory.
      * </p>
      *
-     * @param file    uploaded file to validate
-     * @param allowed allowed MIME types
+     * @param file uploaded file to validate
      * @throws IllegalArgumentException if the detected MIME type is not allowed
      * @throws RuntimeException         if the file cannot be read
      */
-    private void validateMime(MultipartFile file, String... allowed) {
+    private void validateMime(MultipartFile file) {
         try {
             String detected = FileUtils.getContentType(
                     readHeaderBytes(file),
                     file.getOriginalFilename()
             );
 
-            if (Arrays.stream(allowed).noneMatch(detected::equals)) {
+            if (Arrays.stream(new String[]{"application/zip", "application/x-zip-compressed"}).noneMatch(detected::equals)) {
                 throw new IllegalArgumentException("Invalid file type: " + detected);
             }
         } catch (IOException e) {
@@ -429,21 +426,6 @@ public class GameService {
     private byte[] readHeaderBytes(MultipartFile file) throws IOException {
         try (var inputStream = file.getInputStream()) {
             return inputStream.readNBytes(MIME_DETECTION_BYTES);
-        }
-    }
-
-    private void validateMimeStartsWith(MultipartFile file, String prefix) {
-        try {
-            String detected = FileUtils.getContentType(
-                    readHeaderBytes(file),
-                    file.getOriginalFilename()
-            );
-
-            if (!detected.startsWith(prefix)) {
-                throw new IllegalArgumentException("Invalid image type: " + detected);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Error validating image type", e);
         }
     }
 
