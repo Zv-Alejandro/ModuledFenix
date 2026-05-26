@@ -27,13 +27,18 @@ import java.util.ResourceBundle;
 
 import static org.ies.fenix.client.utils.ImageUtils.setCoverImage;
 
+/**
+ * Controller for the marketplace screen.
+ *
+ * <p>The marketplace loads all published games, renders the latest releases,
+ * builds a discovery grid and filters both sections using the search field.</p>
+ */
 public class MarketplaceController implements Initializable {
 
     private static final int LATEST_RELEASED_LIMIT = 10;
     private static final int MAX_VISIBLE_TAGS = 6;
     private static final int RECOMMENDATION_ROWS = 3;
     private static final int DISCOVER_GAMES_LIMIT = 21;
-
     private static final int TAG_COLUMNS = 3;
 
     private static final double MARKETPLACE_CARD_WIDTH = 320.0;
@@ -66,6 +71,10 @@ public class MarketplaceController implements Initializable {
     private final IGameController gameApiService;
     private final SessionManager sessionManager;
 
+    // ============================================================
+    // STATE
+    // ============================================================
+
     private List<GameResponseDTO> loadedGames = new ArrayList<>();
 
     public MarketplaceController(StageManager stageManager,
@@ -92,6 +101,9 @@ public class MarketplaceController implements Initializable {
     // MARKETPLACE DATA
     // ============================================================
 
+    /**
+     * Loads all games from the backend and renders the marketplace sections.
+     */
     private void loadMarketplaceGames() {
         try {
             ResponseEntity<List<GameResponseDTO>> response =
@@ -127,6 +139,9 @@ public class MarketplaceController implements Initializable {
     // SEARCH
     // ============================================================
 
+    /**
+     * Re-renders marketplace sections whenever the user changes the search text.
+     */
     private void configureSearch() {
         if (searchField == null) {
             return;
@@ -387,17 +402,17 @@ public class MarketplaceController implements Initializable {
     }
 
     @FXML
-    void switchProfileScene() {
+    private void switchProfileScene() {
         stageManager.switchScene(FxmlView.PROFILE);
     }
 
     @FXML
-    void switchToLibraryScene() {
+    private void switchToLibraryScene() {
         stageManager.switchScene(FxmlView.LIBRARY);
     }
 
     @FXML
-    void switchToUploadGameScene() {
+    private void switchToUploadGameScene() {
         stageManager.switchScene(FxmlView.UPLOAD_GAME);
     }
 

@@ -27,6 +27,13 @@ import org.springframework.web.client.RestClientException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for login and user registration screens.
+ *
+ * <p>This controller is reused by different authentication-related FXML views.
+ * Depending on the loaded screen, some fields such as {@code passwordCheck} may
+ * be present or absent.</p>
+ */
 public class ClientController implements Initializable {
 
     // ============================================================
@@ -74,10 +81,21 @@ public class ClientController implements Initializable {
     private final IClientController clientApiService;
     private final SessionManager sessionManager;
 
+    // ============================================================
+    // STATE
+    // ============================================================
+
     private final StringProperty errorProperty = new SimpleStringProperty();
 
     private String email = "";
 
+    /**
+     * Creates the authentication controller.
+     *
+     * @param stageManager     application scene manager
+     * @param clientApiService client API service
+     * @param sessionManager   current user session manager
+     */
     public ClientController(StageManager stageManager,
                             IClientController clientApiService,
                             SessionManager sessionManager) {
@@ -90,18 +108,30 @@ public class ClientController implements Initializable {
     // INITIALIZATION
     // ============================================================
 
+    /**
+     * Configures error handling once the FXML has been loaded.
+     *
+     * @param location  FXML location
+     * @param resources localization resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         configureErrorLabel();
         configureErrorResetListeners();
     }
 
+    /**
+     * Binds the visible error label to the internal error property.
+     */
     private void configureErrorLabel() {
         clientErrorLabel.textProperty().bind(errorProperty);
         clientErrorLabel.visibleProperty().bind(errorProperty.isNotEmpty());
         clientErrorLabel.managedProperty().bind(clientErrorLabel.visibleProperty());
     }
 
+    /**
+     * Clears form errors when the user edits any authentication field.
+     */
     private void configureErrorResetListeners() {
         username.textProperty().addListener((obs, oldVal, newVal) -> clearError());
         password.textProperty().addListener((obs, oldVal, newVal) -> clearError());
@@ -115,6 +145,10 @@ public class ClientController implements Initializable {
     // LOGIN
     // ============================================================
 
+    /**
+     * Validates the login form, sends login data to the server and opens the marketplace
+     * when authentication succeeds.
+     */
     public void loadUserAndOpenMarketPlace() {
         String name = username.getText();
         String rawPassword = password.getText();
@@ -205,6 +239,9 @@ public class ClientController implements Initializable {
     // REGISTER
     // ============================================================
 
+    /**
+     * Validates the register form, creates the user account and returns to the login view.
+     */
     public void saveUserAndOpenLogInView() {
         String name = username.getText();
         String rawPassword = password.getText();
@@ -270,16 +307,27 @@ public class ClientController implements Initializable {
     // NAVIGATION
     // ============================================================
 
+    /**
+     * Opens the email form used as the first step of registration.
+     */
     @FXML
-    void switchEmailFormView() {
+    private void switchEmailFormView() {
         stageManager.switchScene(FxmlView.EMAIL);
     }
 
+    /**
+     * Closes the JavaFX application.
+     */
     @FXML
     private void closeApplication() {
         Platform.exit();
     }
 
+    /**
+     * Receives the email entered in the previous registration step.
+     *
+     * @param email user email
+     */
     void setEmail(String email) {
         this.email = email;
     }

@@ -32,9 +32,22 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+/**
+ * Controller for the user's game library.
+ *
+ * <p>The library shows the games acquired by the current user in two ways:
+ * a compact list on the left and a visual grid on the right.</p>
+ *
+ * <p>Installed games can be launched directly from the grid. Non-installed games
+ * remain visible but their play button is disabled.</p>
+ */
 public class LibraryController {
 
     private static final int MAX_COLUMNS = 4;
+
+    private static final double LEFT_LOGO_SIZE = 36.0;
+    private static final double COVER_WIDTH = 170.0;
+    private static final double COVER_HEIGHT = 245.0;
 
     // ============================================================
     // FXML FIELDS
@@ -62,6 +75,15 @@ public class LibraryController {
     private final SessionManager sessionManager;
     private final IPurchaseController purchaseApiService;
 
+    /**
+     * Creates the library controller.
+     *
+     * @param stageManager       application scene manager
+     * @param clientApiService   client API service
+     * @param gameApiService     game API service
+     * @param sessionManager     current user session manager
+     * @param purchaseApiService purchase API service
+     */
     public LibraryController(StageManager stageManager,
                              IClientController clientApiService,
                              IGameController gameApiService,
@@ -78,12 +100,20 @@ public class LibraryController {
     // INITIALIZATION
     // ============================================================
 
+    /**
+     * Configures the library layout and loads the current user's games.
+     */
     @FXML
     private void initialize() {
         configureRightLibraryArea();
         loadLibrary();
     }
 
+    /**
+     * Binds the grid width to the visible viewport of the scroll pane.
+     *
+     * <p>This keeps the grid aligned with the available right-side space.</p>
+     */
     private void configureRightLibraryArea() {
         libraryGrid.prefWidthProperty().bind(
                 Bindings.createDoubleBinding(
@@ -97,6 +127,9 @@ public class LibraryController {
     // LIBRARY DATA
     // ============================================================
 
+    /**
+     * Loads and renders the games acquired by the current user.
+     */
     private void loadLibrary() {
         try {
             List<LibraryGameDTO> games = requestLibraryGames();
@@ -180,8 +213,8 @@ public class LibraryController {
 
     private ImageView createLogoImageView(LibraryGameDTO game) {
         ImageView icon = new ImageView();
-        icon.setFitWidth(36);
-        icon.setFitHeight(36);
+        icon.setFitWidth(LEFT_LOGO_SIZE);
+        icon.setFitHeight(LEFT_LOGO_SIZE);
         icon.setPreserveRatio(true);
 
         loadLogoIntoImageView(game, icon);
@@ -199,7 +232,7 @@ public class LibraryController {
             ImageUtils.setAvatar(
                     bytes,
                     icon,
-                    36
+                    LEFT_LOGO_SIZE
             );
 
         } catch (Exception ignored) {
@@ -237,8 +270,8 @@ public class LibraryController {
 
     private ImageView createCoverImageView(LibraryGameDTO game) {
         ImageView cover = new ImageView();
-        cover.setFitWidth(170);
-        cover.setFitHeight(245);
+        cover.setFitWidth(COVER_WIDTH);
+        cover.setFitHeight(COVER_HEIGHT);
         cover.setPreserveRatio(false);
 
         loadVerticalCoverIntoImageView(game, cover);
@@ -256,8 +289,8 @@ public class LibraryController {
             ImageUtils.setCoverImage(
                     bytes,
                     cover,
-                    170,
-                    245
+                    COVER_WIDTH,
+                    COVER_HEIGHT
             );
 
         } catch (Exception ignored) {
@@ -329,6 +362,9 @@ public class LibraryController {
                 """;
     }
 
+    /**
+     * Shows the play button and blurs the cover while the user hovers the card.
+     */
     private void configureCardHover(StackPane cardWrapper,
                                     ImageView cover,
                                     Button playButton) {
@@ -454,17 +490,17 @@ public class LibraryController {
     // ============================================================
 
     @FXML
-    void switchProfileScene() {
+    private void switchProfileScene() {
         stageManager.switchScene(FxmlView.PROFILE);
     }
 
     @FXML
-    void switchToMarketplaceScene() {
+    private void switchToMarketplaceScene() {
         stageManager.switchScene(FxmlView.MARKETPLACE);
     }
 
     @FXML
-    void switchToUploadGameScene() {
+    private void switchToUploadGameScene() {
         stageManager.switchScene(FxmlView.UPLOAD_GAME);
     }
 
