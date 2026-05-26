@@ -1431,3 +1431,21 @@
 .purchase-dialog-cancel-button:hover {
     -fx-background-color: #98B6FA;
 }
+
+.main-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-padding: 0;
+    -fx-border-width: 0;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+
+.main-scroll > .viewport {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.main-scroll > .corner {
+    -fx-background-color: transparent;
+}

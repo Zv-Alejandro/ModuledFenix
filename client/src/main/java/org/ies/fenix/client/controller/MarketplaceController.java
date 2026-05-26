@@ -27,23 +27,18 @@ import java.util.ResourceBundle;
 
 import static org.ies.fenix.client.utils.ImageUtils.setCoverImage;
 
-/**
- * Controller for the marketplace screen.
- *
- * <p>The marketplace loads all published games, renders the latest releases,
- * builds a discovery grid and filters both sections using the search field.</p>
- */
 public class MarketplaceController implements Initializable {
 
     private static final int LATEST_RELEASED_LIMIT = 10;
     private static final int MAX_VISIBLE_TAGS = 6;
     private static final int RECOMMENDATION_ROWS = 3;
     private static final int DISCOVER_GAMES_LIMIT = 21;
+
     private static final int TAG_COLUMNS = 3;
 
     private static final double MARKETPLACE_CARD_WIDTH = 320.0;
-    private static final double MARKETPLACE_IMAGE_WIDTH = 300.0;
-    private static final double MARKETPLACE_IMAGE_HEIGHT = 150.0;
+    private static final double MARKETPLACE_IMAGE_WIDTH = 320.0;
+    private static final double MARKETPLACE_IMAGE_HEIGHT = 170.0;
 
     private static final double MARKETPLACE_TAG_WIDTH = 98.0;
     private static final double MARKETPLACE_TAG_HEIGHT = 24.0;
@@ -67,22 +62,15 @@ public class MarketplaceController implements Initializable {
     // ============================================================
 
     private final StageManager stageManager;
-    private final IClientController clientApiService;
     private final IGameController gameApiService;
     private final SessionManager sessionManager;
-
-    // ============================================================
-    // STATE
-    // ============================================================
 
     private List<GameResponseDTO> loadedGames = new ArrayList<>();
 
     public MarketplaceController(StageManager stageManager,
-                                 IClientController clientApiService,
                                  IGameController gameApiService,
                                  SessionManager sessionManager) {
         this.stageManager = stageManager;
-        this.clientApiService = clientApiService;
         this.gameApiService = gameApiService;
         this.sessionManager = sessionManager;
     }
@@ -269,7 +257,7 @@ public class MarketplaceController implements Initializable {
     }
 
     private VBox createInfoRow(GameResponseDTO game) {
-        Label titleLabel = new Label(getSafeText(game.getTitle(), "Untitled"));
+        Label titleLabel = new Label(getSafeText(game.getTitle()));
         titleLabel.getStyleClass().add("card-title");
         titleLabel.setWrapText(true);
         titleLabel.setMaxWidth(MARKETPLACE_CARD_WIDTH);
@@ -400,27 +388,6 @@ public class MarketplaceController implements Initializable {
 
         stageManager.openGame(game.getId());
     }
-
-    @FXML
-    private void switchProfileScene() {
-        stageManager.switchScene(FxmlView.PROFILE);
-    }
-
-    @FXML
-    private void switchToLibraryScene() {
-        stageManager.switchScene(FxmlView.LIBRARY);
-    }
-
-    @FXML
-    private void switchToUploadGameScene() {
-        stageManager.switchScene(FxmlView.UPLOAD_GAME);
-    }
-
-    @FXML
-    public void reloadView() {
-        stageManager.reloadCurrentScene();
-    }
-
     // ============================================================
     // HELPERS
     // ============================================================
@@ -429,9 +396,9 @@ public class MarketplaceController implements Initializable {
         return sessionManager.getAuthorizationHeader();
     }
 
-    private String getSafeText(String text, String fallback) {
+    private String getSafeText(String text) {
         if (text == null || text.isBlank()) {
-            return fallback;
+            return "Untitled";
         }
 
         return text;
