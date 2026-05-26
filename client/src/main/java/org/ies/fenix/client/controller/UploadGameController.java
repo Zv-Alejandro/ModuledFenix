@@ -98,7 +98,6 @@ public class UploadGameController {
     // ============================================================
 
     private final StageManager stageManager;
-    private final IGameController gameApiService;
     private final ITagController tagApiService;
     private final SessionManager sessionManager;
     private final RestClient restClient;
@@ -117,12 +116,10 @@ public class UploadGameController {
     private File selectedHorizontalImageTwo;
 
     public UploadGameController(StageManager stageManager,
-                                IGameController gameApiService,
                                 ITagController tagApiService,
                                 SessionManager sessionManager,
                                 RestClient restClient) {
         this.stageManager = stageManager;
-        this.gameApiService = gameApiService;
         this.tagApiService = tagApiService;
         this.sessionManager = sessionManager;
         this.restClient = restClient;
