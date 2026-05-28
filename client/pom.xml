@@ -40,11 +40,6 @@
             <artifactId>spring-boot-starter-restclient</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.dlsc.gemsfx</groupId>
-            <artifactId>gemsfx</artifactId>
-            <version>2.16.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.dlsc.formsfx</groupId>
             <artifactId>formsfx-core</artifactId>
             <version>11.6.0</version>
@@ -144,14 +139,21 @@
             <artifactId>cssfx</artifactId>
             <version>11.5.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.ies.fenix</groupId>
-            <artifactId>server</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.openjfx</groupId>
@@ -159,6 +161,18 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>org.ies.fenix.client.Main</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.ies.fenix.client.Launcher</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
 
