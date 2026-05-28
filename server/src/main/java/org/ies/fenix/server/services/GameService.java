@@ -31,7 +31,7 @@ import java.util.*;
  * <ul>
  *     <li>Creating and publishing games.</li>
  *     <li>Validating uploaded game files and image files.</li>
- *     <li>Persisting game files, logos and teaser images in the local file system.</li>
+ *     <li>Persisting game files, logos, and teaser images in the local file system.</li>
  *     <li>Retrieving games for marketplace, profile and detail views.</li>
  *     <li>Downloading stored game files.</li>
  *     <li>Formatting game metadata such as size and download counters.</li>
@@ -78,7 +78,7 @@ public class GameService {
      * <p>
      * The method validates the authenticated client, checks the required input,
      * ensures that the game title is unique, persists the {@link Game} entity,
-     * stores the uploaded files and finally returns the created game as a DTO.
+     * stores the uploaded files, and finally returns the created game as a DTO.
      * </p>
      *
      * @param token              authorization token of the developer creating the game
@@ -166,7 +166,7 @@ public class GameService {
      * @param title    game title
      * @param gameFile uploaded game ZIP file
      * @param logoFile uploaded logo image
-     * @throws IllegalArgumentException if the title, game file or logo image is missing
+     * @throws IllegalArgumentException if the title, game file, or logo image is missing
      */
     private void validateGameInput(String title, MultipartFile gameFile, MultipartFile logoFile) {
         if (title == null || title.isBlank()) throw new IllegalArgumentException("Title is required");

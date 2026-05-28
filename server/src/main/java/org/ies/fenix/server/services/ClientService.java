@@ -69,7 +69,6 @@ public class ClientService {
 
     public LoginResponseDTO login(ClientLoginDTO dto) {
         Optional<Client> clientOpt = clientRepository.findByUsername(dto.getUsername());
-
         if (clientOpt.isEmpty()) {
             return LoginResponseDTO.builder()
                     .status("WARN")
