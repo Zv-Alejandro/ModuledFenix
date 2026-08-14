@@ -19,9 +19,10 @@ El editor visual completo y la generación automática de proyectos Ren’Py se 
 ---
 ## 🪞 Pantallas principales de la intefaz del cliente
 
-| Login | Home | Upload | Create | Profile | Publish | Game |
-|--------|--------|--------|--------|--------|--------|--------|
-| ![LoginScreen](images/login.png) | ![HomeScreen](images/home.png) | ![UploadScreen](images/upload.png) | ![CreateScreen](images/create.png) | ![ProfileScreen](images/profile.png) | ![PublishScreen](images/publish.png) | ![GameScreen](images/game.png) | 
+| Login | Home | Upload | Create | Profile | Game |
+|--------|--------|--------|--------|--------|--------|
+| ![LoginScreen](images/login.png) | ![HomeScreen](images/home.png) | ![UploadScreen](images/upload.png) | ![CreateScreen](images/create.png) | ![ProfileScreen](images/profile.png) | ![GameScreen](images/game.png) | 
+---
 
 ## 🧩 Arquitectura
 
