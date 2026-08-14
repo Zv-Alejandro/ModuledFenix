@@ -156,9 +156,4 @@ Metodología **ágil** basada en iteraciones cortas:
 
 Este proyecto se publica con fines educativos y puede reutilizarse bajo licencia **MIT**.
 
----
-
-## 🧩 Repositorio
-
-> [GitHub – ModuledFenix](https://github.com/Zv-Alejandro/ModuledFenix)
 
